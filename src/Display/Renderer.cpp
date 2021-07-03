@@ -1,8 +1,6 @@
+#include <stdarg.h>
+#include "../String.hpp"
 #include "Renderer.hpp"
-
-Renderer MainRenderer;
-
-Renderer::Renderer() { }
 
 Renderer::Renderer(Framebuffer framebuffer, PSF1 *font, uint32_t foregroundColour, uint32_t backgroundColour) :
     Buffer(framebuffer), Font(font), ForegroundColour(foregroundColour), BackGroundColour(backgroundColour)
@@ -10,17 +8,36 @@ Renderer::Renderer(Framebuffer framebuffer, PSF1 *font, uint32_t foregroundColou
     Cursor = {0, 0};
 }
 
-void Renderer::Printf(const char *format)
+char FormattedStringBuffer[200];
+void Renderer::Printf(const char *format, ...)
 {
-    for(unsigned int i = 0; format[i] != 0; i++)
+    va_list args;
+    va_start(args, format);
+    FormatString(FormattedStringBuffer, format, args);
+    va_end(args);
+
+    for(unsigned int i = 0; FormattedStringBuffer[i] != 0; i++)
     {
-        if(format[i] == '\n')
+        if(FormattedStringBuffer[i] == '\n')
         {
             Cursor.X = 0;
             Cursor.Y += 16;
             continue;
         }
-        PutChar(Cursor.X, Cursor.Y, format[i]);
+        else if(FormattedStringBuffer[i] == '\t')
+        {
+            Cursor.X += 64;
+            Cursor.X /= 64;
+            Cursor.X *= 64;
+            if(Cursor.X + 8 > Buffer.Width)
+            {
+                Cursor.X = 0;
+                Cursor.Y += 16;
+            }
+            continue;
+        }
+
+        PutChar(Cursor.X, Cursor.Y, FormattedStringBuffer[i]);
         Cursor.X += 8;
         if(Cursor.X + 8 > Buffer.Width)
         {
@@ -28,6 +45,48 @@ void Renderer::Printf(const char *format)
             Cursor.Y += 16;
         }
     }
+}
+
+void Renderer::PrintErrorf(const char *format, ...)
+{
+    uint32_t oldForegroundColour = ForegroundColour;
+    SetForegroundColour(COLOUR_RED);
+
+    va_list args;
+    va_start(args, format);
+    FormatString(FormattedStringBuffer, format, args);
+    va_end(args);
+
+    for(unsigned int i = 0; FormattedStringBuffer[i] != 0; i++)
+    {
+        if(FormattedStringBuffer[i] == '\n')
+        {
+            Cursor.X = 0;
+            Cursor.Y += 16;
+            continue;
+        }
+        else if(FormattedStringBuffer[i] == '\t')
+        {
+            Cursor.X += 64;
+            Cursor.X /= 64;
+            Cursor.X *= 64;
+            if(Cursor.X + 8 > Buffer.Width)
+            {
+                Cursor.X = 0;
+                Cursor.Y += 16;
+            }
+            continue;
+        }
+
+        PutChar(Cursor.X, Cursor.Y, FormattedStringBuffer[i]);
+        Cursor.X += 8;
+        if(Cursor.X + 8 > Buffer.Width)
+        {
+            Cursor.X = 0;
+            Cursor.Y += 16;
+        }
+    }
+    MainRenderer.SetForegroundColour(oldForegroundColour);
 }
 
 void Renderer::PutChar(const uint32_t xOffset, const uint32_t yOffset, const char character)
@@ -66,3 +125,16 @@ void Renderer::SetCursor(const uint32_t xOffset, const uint32_t yOffset)
     Cursor.X = xOffset;
     Cursor.Y = yOffset;
 }
+
+void Renderer::ClearScreen()
+{
+    for(uint32_t y = 0; y < Buffer.Height; y++)
+    {
+        for(uint32_t x = 0; x < Buffer.Width; x++)
+        {
+            PutPixel(x, y, BackGroundColour);
+        }
+    }
+}
+
+Renderer MainRenderer(Framebuffer(0, (Framebuffer::FBType)0, 0, 0, 0, 0), 0, 0, 0);

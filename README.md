@@ -13,18 +13,18 @@
 - Bootloader
 - Paging
 - Screen Rendering
+- Formatted text display
 
 ---
 
 ### Features to be implemented:
-- Simple Standard Library
-- Formatted text display
-- Global Descriptor Table
-- Interrupts
+- Serial Port Logging
 - Memory Map
 - Physical Memory Manager (Page Frame Allocator)
 - Virtual Memory Manager (Page Table Manager)
 - Dynamic Memory Allocator (Heap)
+- Global Descriptor Table
+- Interrupts
 - PCI
 - Keyboard Driver
 - Mouse Driver

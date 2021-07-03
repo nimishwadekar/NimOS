@@ -7,7 +7,7 @@ ASSEMBLER = nasm
 LINK_SCRIPT = src/link.ld
 
 IGNORE_ERRORS = -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function -Wno-unused-but-set-variable
-CFLAGS = -ffreestanding -mno-red-zone -fpic -fno-stack-protector -fno-exceptions -fno-rtti -nostdinc -nostdlib -Werror -Wall -Wextra $(IGNORE_ERRORS)
+CFLAGS = -ffreestanding -mno-red-zone -fpic -fno-stack-protector -fno-exceptions -fno-rtti -nostdlib -Werror -Wall -Wextra $(IGNORE_ERRORS)
 ASMFLAGS = 
 LDFLAGS = -nostdlib -nostartfiles
 STRIPFLAGS = -s -K mmio -K fb -K bootboot -K environment -K initstack
