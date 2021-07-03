@@ -73,3 +73,6 @@ run:
 
 clean:
 	rm -rf $(OBJDIR)/*
+
+cleanp:
+	rm -rf $(OBJDIR)/* $(OS_IMG)
