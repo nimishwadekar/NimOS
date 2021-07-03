@@ -60,3 +60,9 @@ void Renderer::SetBackgroundColour(const uint32_t colour)
 {
     BackGroundColour = colour;
 }
+
+void Renderer::SetCursor(const uint32_t xOffset, const uint32_t yOffset)
+{
+    Cursor.X = xOffset;
+    Cursor.Y = yOffset;
+}
