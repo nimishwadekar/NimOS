@@ -32,6 +32,8 @@
 #ifndef _BOOTBOOT_H_
 #define _BOOTBOOT_H_
 
+#include "Common.hpp"
+
 #ifdef  __cplusplus
 extern "C" {
 #endif

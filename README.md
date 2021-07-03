@@ -12,13 +12,14 @@
 ### Features implemented:
 - Bootloader
 - Paging
+- Screen Rendering
 
 ---
 
 ### Features to be implemented:
-- Screen Rendering
+- Simple Standard Library
+- Formatted text display
 - Global Descriptor Table
-- Text display
 - Interrupts
 - Memory Map
 - Physical Memory Manager (Page Frame Allocator)
