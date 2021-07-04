@@ -32,7 +32,7 @@
 #ifndef _BOOTBOOT_H_
 #define _BOOTBOOT_H_
 
-#include "Common.hpp"
+#include <stdint.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -50,9 +50,9 @@ extern "C" {
 /* default virtual addresses for level 0 and 1 static loaders */
 #define BOOTBOOT_MMIO   0xfffffffff8000000  /* memory mapped IO virtual address */
 #define BOOTBOOT_FB     0xfffffffffc000000  /* frame buffer virtual address */
-#define BOOTBOOT_INFO   0xffffffffffe00000  /* bootboot struct virtual address */
-#define BOOTBOOT_ENV    0xffffffffffe01000  /* environment string virtual address */
-#define BOOTBOOT_CORE   0xffffffffffe02000  /* core loadable segment start */
+#define BOOTBOOT_INFO   0xfffffffffeffe000  /* bootboot struct virtual address */
+#define BOOTBOOT_ENV    0xfffffffffefff000  /* environment string virtual address */
+#define BOOTBOOT_CORE   0xffffffffff000000  /* core loadable segment start */
 
 /* minimum protocol level:
  *  hardcoded kernel name, static kernel memory addresses */

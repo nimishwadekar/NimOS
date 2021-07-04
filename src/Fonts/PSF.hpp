@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Common.hpp"
+#include <stdint.h>
 
 struct PSF1
 {

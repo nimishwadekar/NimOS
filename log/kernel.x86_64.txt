@@ -8,9 +8,9 @@ ELF Header:
   Type:                              EXEC (Executable file)
   Machine:                           Advanced Micro Devices X86-64
   Version:                           0x1
-  Entry point address:               0xffffffffff000000
+  Entry point address:               0xffffffffff00017d
   Start of program headers:          64 (bytes into file)
-  Start of section headers:          15400 (bytes into file)
+  Start of section headers:          17872 (bytes into file)
   Flags:                             0x0
   Size of this header:               64 (bytes)
   Size of program headers:           56 (bytes)
@@ -23,7 +23,7 @@ Program Headers:
   Type           Offset             VirtAddr           PhysAddr
                  FileSiz            MemSiz              Flags  Align
   LOAD           0x0000000000000080 0xffffffffff000000 0xffffffffff000000
-                 0x0000000000003a58 0x0000000000003b78  RWE    0x20
+                 0x0000000000004400 0x0000000000004538  RWE    0x20
 
  Section to Segment mapping:
   Segment Sections...
@@ -33,10 +33,10 @@ Symbol table '.symtab' contains 10 entries:
    Num:    Value          Size Type    Bind   Vis      Ndx Name
      0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND 
      1: ffffffffff000000     0 SECTION LOCAL  DEFAULT    1 
-     2: ffffffffff003a30     0 SECTION LOCAL  DEFAULT    2 
-     3: ffffffffff003a38     0 SECTION LOCAL  DEFAULT    3 
-     4: ffffffffff003a50     0 SECTION LOCAL  DEFAULT    4 
-     5: ffffffffff003a60     0 SECTION LOCAL  DEFAULT    5 
+     2: ffffffffff0043d0     0 SECTION LOCAL  DEFAULT    2 
+     3: ffffffffff0043e0     0 SECTION LOCAL  DEFAULT    3 
+     4: ffffffffff0043f8     0 SECTION LOCAL  DEFAULT    4 
+     5: ffffffffff004400     0 SECTION LOCAL  DEFAULT    5 
      6: fffffffffefff000     0 NOTYPE  GLOBAL DEFAULT  ABS environment
      7: fffffffffc000000     0 NOTYPE  GLOBAL DEFAULT  ABS fb
      8: fffffffffeffe000     0 NOTYPE  GLOBAL DEFAULT  ABS bootboot

@@ -1,25 +1,38 @@
-#include "Common.hpp"
+#include <stdint.h>
 #include "Display/Renderer.hpp"
 #include "String.hpp"
+#include "Memory/MemoryMap.hpp"
+#include "Memory/PageFrameAllocator.hpp"
 
-void KernelStart()
+// Kernel's main function.
+void KernelStart(MemoryMap memoryMap)
 {
     MainRenderer.ClearScreen();
-    MainRenderer.Printf("Started Kernel.\n");
+    MainRenderer.Printf("Started Kernel.\n\n");
 
-    unsigned a = 5;
-    char c = 'A';
-    MainRenderer.Printf("a = %u\t c = %u\thex = %x\n", a, c, 0xFF001C);
-    MainRenderer.Printf("hex\tfull = %h\n", 0xFF001C);
+    MainRenderer.Printf("Memory map:\nTotal memory = %u KB\n", memoryMap.MemorySizeKB);
+    for(unsigned int i = 0; i < memoryMap.EntryCount; i++)
+    {
+        MainRenderer.Printf("Begin = 0x%x    End = 0x%x    Size = 0x%x    Type = %s\n", memoryMap.Entries[i].Address, 
+            memoryMap.Entries[i].Address + MemoryMapEntry_Size(memoryMap.Entries[i]) - 1, 
+            MemoryMapEntry_Size(memoryMap.Entries[i]), MemoryMapEntry_TypeString(memoryMap.Entries[i]));
+    }
+    MainRenderer.Printf("\n");
 
-    MainRenderer.Printf("\n\n\n");
-    for(int i = 0; i < 50; i++) MainRenderer.Printf("Hellovo");
+    PageFrameAllocator pageFrameAllocator;
+    pageFrameAllocator.Initialize(memoryMap);
+    MainRenderer.Printf("Free memory = 0x%x\nUsed memory = 0x%x\nReserved memory = 0x%x\n\n", 
+        pageFrameAllocator.FreeMemory, pageFrameAllocator.UsedMemory, pageFrameAllocator.ReservedMemory);
 
-    MainRenderer.Printf("\n\n\n");
-
-    int *addr = (int*) 0xF00000EE00000000;
-    MainRenderer.PrintErrorf("WARNING: FATAL ERROR. FAULTY ADDRESS: 0x%h\n", addr);
-    MainRenderer.Printf("Never mind, it's nothing.\n");
+    MainRenderer.Printf("First page frame obtained = 0x%x\n", pageFrameAllocator.GetPage());
+    for(long i = 0; i < 158; i++) pageFrameAllocator.GetPage();
+    void *a, *b;
+    MainRenderer.Printf("Page frame obtained = 0x%x\n", a = pageFrameAllocator.GetPage());
+    MainRenderer.Printf("Page frame obtained = 0x%x\n", b = pageFrameAllocator.GetPage());
+    pageFrameAllocator.FreePage(a);
+    pageFrameAllocator.FreePage(b);
+    MainRenderer.Printf("Page frame obtained = 0x%x\n", a = pageFrameAllocator.GetPage());
+    MainRenderer.Printf("Page frame obtained = 0x%x\n", a = pageFrameAllocator.GetPage());
 
     while(true);
 }

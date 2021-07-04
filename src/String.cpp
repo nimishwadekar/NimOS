@@ -2,6 +2,13 @@
 
 char *ultoa(const unsigned long n, int radix, char *buffer)
 {
+    if(n == 0)
+    {
+        buffer[0] = '0';
+        buffer[1] = 0;
+        return buffer;
+    }
+
     unsigned long number = n;
     int digits = 0;
     for( ; number > 0; number /= radix, digits++);

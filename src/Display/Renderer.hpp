@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Common.hpp"
+#include <stdint.h>
 #include "Framebuffer.hpp"
 #include "../Fonts/PSF.hpp"
 
@@ -16,12 +16,13 @@ struct Point
 #define COLOUR_GREEN    0xFF00FF00
 #define COLOUR_BLUE     0xFF0000FF
 
+// A wrapper class over the Framebuffer.
 class Renderer
 {
     public:
     Framebuffer Buffer;
     Point Cursor;
-    PSF1 *Font;
+    PSF1 *Font; // The PSF1 font used to print strings.
     uint32_t ForegroundColour;
     uint32_t BackGroundColour;
 

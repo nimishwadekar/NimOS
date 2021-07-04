@@ -137,4 +137,5 @@ void Renderer::ClearScreen()
     }
 }
 
+// The main renderer for the kernel.
 Renderer MainRenderer(Framebuffer(0, (Framebuffer::FBType)0, 0, 0, 0, 0), 0, 0, 0);

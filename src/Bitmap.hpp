@@ -6,10 +6,10 @@ class Bitmap
 {
     public:
     uint8_t *Buffer; // The buffer to store the bits.
-    uint64_t BufferLength; // Length of the buffer in bytes.
-    uint64_t CurrentByte; // The first 0 bit.
+    uint64_t BufferSize; // Size of the buffer in bytes.
 
-    Bitmap(uint8_t *buffer, uint64_t bufferLength);
+    void Initialize(void *buffer, uint64_t bufferSize, bool fill);
     bool Get(const uint64_t index);
-    void Set(const uint64_t index, const bool value);
+    void Set(const uint64_t index);
+    void Clear(const uint64_t index);
 };

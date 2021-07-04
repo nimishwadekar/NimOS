@@ -14,13 +14,13 @@
 - Paging
 - Screen Rendering
 - Formatted text display
+- Memory Map
+- Physical Memory Manager (Page Frame Allocator)
 
 ---
 
 ### Features to be implemented:
 - Serial Port Logging
-- Memory Map
-- Physical Memory Manager (Page Frame Allocator)
 - Virtual Memory Manager (Page Table Manager)
 - Dynamic Memory Allocator (Heap)
 - Global Descriptor Table

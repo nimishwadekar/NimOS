@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../Common.hpp"
+#include <stdint.h>
 
+// The Framebuffer.
 class Framebuffer
 {
     public:
