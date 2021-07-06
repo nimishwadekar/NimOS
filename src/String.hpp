@@ -16,3 +16,6 @@ int strlen(const char *string);
 
 // Copy string.
 char *strcpy(const char *src, char *dst);
+
+// Replaces escape sequences with their literalized counterparts.
+char *LiteralizeString(const char *string, char *buffer);

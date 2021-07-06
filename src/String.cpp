@@ -125,3 +125,29 @@ char *strcpy(const char *src, char *dst)
     dst[i] = 0;
     return dst;
 }
+
+char *LiteralizeString(const char *string, char *buffer)
+{
+    for(int i = 0, bi = 0; string[i] != 0; i++, bi++)
+    {
+        switch(string[i])
+        {
+            case '\n':
+                buffer[bi] = '\\';
+                bi += 1;
+                buffer[bi] = 'n';
+                break;
+            
+            case '\t':
+                buffer[bi] = '\\';
+                bi += 1;
+                buffer[bi] = 't';
+                break;
+
+            default:
+                buffer[bi] = string[i];
+                break;
+        }
+    }
+    return buffer;
+}
