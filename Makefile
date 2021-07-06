@@ -69,7 +69,7 @@ link:
 	readelf -hls $(KERNEL_ELF) > $(LOGDIR)/kernel.x86_64.txt
 	
 run:
-	qemu-system-x86_64 -cpu qemu64 -bios $(OVMF) -m 64 -drive file=$(OS_IMG),format=raw -serial stdio
+	qemu-system-x86_64 -cpu qemu64 -bios $(OVMF) -m 64 -drive file=$(OS_IMG),format=raw -serial file:serial.log
 
 clean:
 	rm -rf $(OBJDIR)/*

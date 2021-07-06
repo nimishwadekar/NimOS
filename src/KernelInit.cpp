@@ -4,6 +4,8 @@
 #include "Display/Framebuffer.hpp"
 #include "Display/Renderer.hpp"
 #include "Memory/MemoryMap.hpp"
+#include "IO/Serial.hpp"
+#include "Logging.hpp"
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];
@@ -26,6 +28,16 @@ void main()
     memoryMap.EntryCount = (bootboot.size - sizeof(BOOTBOOT) + sizeof(MMapEnt)) / sizeof(MemoryMapEntry);
     memoryMap.MemorySizeKB = memoryMap.Entries[memoryMap.EntryCount - 1].Address + MemoryMapEntry_Size(memoryMap.Entries[memoryMap.EntryCount - 1]);
     memoryMap.MemorySizeKB /= 1024;
+
+    #ifdef LOGGING
+    if(InitializeSerialPort(SERIAL_COM1) == -1)
+    {
+        MainRenderer.PrintErrorf("SERIAL PORT COM 1 INITIALIZATION FAILURE.\n");
+        while(1);
+    }
+    Logf("Serial port COM1 initialized for logging.\n\n");
+    Logf("******************************************************************************************\n\n");
+    #endif
 
     KernelStart(memoryMap);
 }

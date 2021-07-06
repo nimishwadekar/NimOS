@@ -15,8 +15,10 @@ class PageFrameAllocator
     void Initialize(MemoryMap memoryMap);
 
     // Returns the physical address of a free page frame, and marks it as used.
-    void *GetPage();
+    void *GetPage(void);
 
     // Marks the page frame as free.
     void FreePage(void *physicalAddress);
 };
+
+extern PageFrameAllocator FrameAllocator;
