@@ -4,35 +4,30 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @2409000 8578 bytes
- * Initrd loaded @2403000 22016 bytes
- * Environment @240B000 31 bytes
+ * Gzip compressed initrd @2407000 8398 bytes
+ * Initrd loaded @23FF000 32768 bytes
+ * Environment @2505000 31 bytes
  * Screen 960 x 640, scanline 3840, fb @80000000 2457600 bytes, type 1 ARGB
  * System tables
- * System time 2021-07-06 20:01:22 GMT+0:00 
+ * System time 2021-07-07 18:57:25 GMT+0:00 
  * cpio sys/core
- * Parsing ELF64 @24030A5
+ * Parsing ELF64 @23FF0A5
  * fb          @FFFFFFFFFC000000
  * bootboot    @FFFFFFFFFEFFE000
  * environment @FFFFFFFFFEFFF000
- * Entry point @FFFFFFFFFF00017D, text @23FD000 20888 bytes
+ * Entry point @FFFFFFFFFF00017D, text @23F8000 27672 bytes
  * SMP numcores 1
- * Pagetables PML4 @23B3000
- * Memory Map @2409000 5568 bytes try #1
+ * Pagetables PML4 @23B1000
+ * Memory Map @2408000 5664 bytes try #1
 Serial port COM1 initialized for logging.
 
 ******************************************************************************************
 
-Kernel begin.
+GDT Loaded
 Initializing Page Frame Allocator.
 Page Frame Allocator Bitmap stored at 0x900000, size = 0x800 bytes
-Page Frame Allocated: Phys 0x0
-Page Frame Allocated: Phys 0x1000
-Page Frame Allocated: Phys 0x2000
-Page Frame Allocated: Phys 0x3000
-Page Frame Allocated: Phys 0x4000
-Page Frame Allocated: Phys 0x5000
-Virtual address 0x8000000000 mapped to physical address 0x2000
-Page Frame Allocated: Phys 0x6000
-Page Frame Allocated: Phys 0x7000
-Virtual address 0x8001000000 mapped to physical address 0x6000
+Free memory = 0x3AB8000
+Used memory = 0x2A1000
+Reserved memory = 0x2A7000
+Kernel begin.
+Kernel Page Table Level 4 initialized.

@@ -6,6 +6,8 @@
 #include "Memory/MemoryMap.hpp"
 #include "IO/Serial.hpp"
 #include "Logging.hpp"
+#include "GDT.hpp"
+#include "Memory/PageFrameAllocator.hpp"
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];
@@ -13,7 +15,7 @@ extern uint8_t fb;
 
 extern volatile unsigned char _binary_font_psf_start;
 
-extern void KernelStart(MemoryMap memoryMap);
+extern void KernelStart(void);
 
 // Entry point into kernel, called by Bootloader.
 void main()
@@ -39,5 +41,21 @@ void main()
     Logf("******************************************************************************************\n\n");
     #endif
 
-    KernelStart(memoryMap);
+    // Load GDT
+    GDTDescriptor gdtDescriptor;
+    gdtDescriptor.Size = sizeof(GDT) - 1;
+    gdtDescriptor.PhysicalAddress = (uint64_t) &GlobalDescriptorTable;
+    LoadGDT(&gdtDescriptor);
+    #ifdef LOGGING
+    Logf("GDT Loaded.\n");
+    #endif
+
+    // Initialize Page Frame Allocator.
+    FrameAllocator.Initialize(memoryMap);
+    #ifdef LOGGING
+    Logf("Free memory = 0x%x\nUsed memory = 0x%x\nReserved memory = 0x%x\n", 
+        FrameAllocator.FreeMemory, FrameAllocator.UsedMemory, FrameAllocator.ReservedMemory);
+    #endif
+
+    KernelStart();
 }
