@@ -15,6 +15,7 @@
 - Screen Rendering
 - Formatted text display
 - Serial Port Logging
+- Global Descriptor Table
 - Memory Map
 - Physical Memory Manager (Page Frame Allocator)
 - Virtual Memory Manager (Page Table Manager)
@@ -22,9 +23,8 @@
 ---
 
 ### Features to be implemented:
-- Dynamic Memory Allocator (Heap)
-- Global Descriptor Table
 - Interrupts
+- Dynamic Memory Allocator (Heap)
 - PCI
 - Keyboard Driver
 - Mouse Driver
