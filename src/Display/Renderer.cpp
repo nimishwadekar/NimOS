@@ -135,6 +135,7 @@ void Renderer::ClearScreen()
             PutPixel(x, y, BackGroundColour);
         }
     }
+    Cursor.X = Cursor.Y = 0;
 }
 
 // The main renderer for the kernel.

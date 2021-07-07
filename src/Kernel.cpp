@@ -7,7 +7,7 @@
 void KernelStart(void)
 {
     #ifdef LOGGING
-    Logf("Kernel begin.\n");
+    Logf("Kernel initialized.\n");
     #endif
 
     MainRenderer.ClearScreen();

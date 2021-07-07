@@ -64,12 +64,10 @@ void main()
 
     PageTable *pageTableL4;
     asm volatile("mov %%cr3, %%rax" : "=a"(pageTableL4) : );
-    MainRenderer.Printf("Level 4 table at 0x%x\n", pageTableL4);
+    PageTableManager pageTableManager(pageTableL4);
     #ifdef LOGGING
-    Logf("Kernel Page Table Level 4 initialized.\n");
+    Logf("Kernel Page Table Manager initialized.\n");
     #endif
-
-
 
     KernelStart();
 }
