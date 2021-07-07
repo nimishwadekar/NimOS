@@ -8,6 +8,9 @@
 #include "Logging.hpp"
 #include "GDT.hpp"
 #include "Memory/PageFrameAllocator.hpp"
+#include "Memory/Paging.hpp"
+#include "Memory/PageTableManager.hpp"
+#include "Interrupts/IDT.hpp"
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];
@@ -16,6 +19,8 @@ extern uint8_t fb;
 extern volatile unsigned char _binary_font_psf_start;
 
 extern void KernelStart(void);
+
+void InitializeInterrupts(void);
 
 // Entry point into kernel, called by Bootloader.
 void main()
@@ -42,10 +47,10 @@ void main()
     #endif
 
     // Load GDT
-    GDTDescriptor gdtDescriptor;
-    gdtDescriptor.Size = sizeof(GDT) - 1;
-    gdtDescriptor.PhysicalAddress = (uint64_t) &GlobalDescriptorTable;
-    LoadGDT(&gdtDescriptor);
+    GDTR gdtr;
+    gdtr.Size = sizeof(GDT) - 1;
+    gdtr.PhysicalAddress = (uint64_t) &GlobalDescriptorTable;
+    LoadGDT(&gdtr);
     #ifdef LOGGING
     Logf("GDT Loaded.\n");
     #endif
@@ -57,5 +62,21 @@ void main()
         FrameAllocator.FreeMemory, FrameAllocator.UsedMemory, FrameAllocator.ReservedMemory);
     #endif
 
+    PageTable *pageTableL4;
+    asm volatile("mov %%cr3, %%rax" : "=a"(pageTableL4) : );
+    MainRenderer.Printf("Level 4 table at 0x%x\n", pageTableL4);
+    #ifdef LOGGING
+    Logf("Kernel Page Table Level 4 initialized.\n");
+    #endif
+
+
+
     KernelStart();
+}
+
+// Put into Interrupts.hpp
+void InitializeInterrupts(void)
+{
+    IDTRegister.Limit = 0x0FFF;
+    IDTRegister.PhysicalAddress = (uint64_t) FrameAllocator.GetPage();
 }

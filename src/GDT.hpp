@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-struct GDTDescriptor
+struct GDTR
 {
     uint16_t Size;
     uint64_t PhysicalAddress;
@@ -30,4 +30,4 @@ __attribute__((aligned(0x1000)));
 
 extern GDT GlobalDescriptorTable;
 
-extern "C" void LoadGDT(GDTDescriptor *gdtDescriptor);
+extern "C" void LoadGDT(GDTR *gdtr);
