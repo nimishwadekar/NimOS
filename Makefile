@@ -1,8 +1,8 @@
 OS_NAME = TokyoOS
 
 OVMF = bin/OVMF.fd
-CC = ~/opt/cross/bin/x86_64-elf-gcc
-LD = ~/opt/cross/bin/x86_64-elf-ld
+CC = gcc#~/opt/cross/bin/x86_64-elf-gcc
+LD = ld#~/opt/cross/bin/x86_64-elf-ld
 ASSEMBLER = nasm
 LINK_SCRIPT = src/link.ld
 
@@ -44,6 +44,11 @@ disk: initdir $(BOOTJSON)
 	@rm -rf initrd
 
 kernel: $(OBJS) link
+
+$(OBJDIR)/Interrupts/Interrupts.o: $(SRCDIR)/Interrupts/Interrupts.cpp
+	@echo !==== COMPILING $^
+	mkdir -p $(@D)
+	$(CC) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo !==== COMPILING $^

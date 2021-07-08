@@ -1,6 +1,7 @@
 #include "IDT.hpp"
 
 IDTR IDTRegister;
+IDTEntry IDT[0x30];
 
 void IDTEntry::SetOffset(uint64_t offset)
 {

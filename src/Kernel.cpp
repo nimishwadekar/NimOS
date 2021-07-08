@@ -13,5 +13,10 @@ void KernelStart(void)
     MainRenderer.ClearScreen();
     MainRenderer.Printf("Kernel initialized.\n");
 
+    int *a = (int*) 0xFFFFFF0000000000;
+    *a = 5;
+
+    MainRenderer.Printf("Kernel ended.\n");
+
     while(true);
 }

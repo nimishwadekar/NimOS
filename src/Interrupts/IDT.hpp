@@ -20,10 +20,11 @@ struct IDTEntry
     uint8_t Type_Attribute;
     uint16_t Offset1;
     uint32_t Offset2;
-    const uint32_t ZERO;
+    uint32_t ZERO;
 
     void SetOffset(uint64_t offset);
     uint64_t GetOffset(void);
 } __attribute__((packed));
 
 extern IDTR IDTRegister;
+extern IDTEntry IDT[];

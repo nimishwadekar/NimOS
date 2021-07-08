@@ -10,7 +10,7 @@
 #include "Memory/PageFrameAllocator.hpp"
 #include "Memory/Paging.hpp"
 #include "Memory/PageTableManager.hpp"
-#include "Interrupts/IDT.hpp"
+#include "Interrupts/Interrupts.hpp"
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];
@@ -19,8 +19,6 @@ extern uint8_t fb;
 extern volatile unsigned char _binary_font_psf_start;
 
 extern void KernelStart(void);
-
-void InitializeInterrupts(void);
 
 // Entry point into kernel, called by Bootloader.
 void main()
@@ -69,12 +67,10 @@ void main()
     Logf("Kernel Page Table Manager initialized.\n");
     #endif
 
-    KernelStart();
-}
+    InitializeInterrupts();
+    #ifdef LOGGING
+    Logf("Interrupts initialized.\n");
+    #endif
 
-// Put into Interrupts.hpp
-void InitializeInterrupts(void)
-{
-    IDTRegister.Limit = 0x0FFF;
-    IDTRegister.PhysicalAddress = (uint64_t) FrameAllocator.GetPage();
+    KernelStart();
 }
