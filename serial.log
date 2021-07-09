@@ -4,21 +4,21 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @2409000 8643 bytes
- * Initrd loaded @2401000 32768 bytes
- * Environment @240B000 31 bytes
+ * Gzip compressed initrd @2407000 10384 bytes
+ * Initrd loaded @23FE000 36864 bytes
+ * Environment @2505000 31 bytes
  * Screen 960 x 640, scanline 3840, fb @80000000 2457600 bytes, type 1 ARGB
  * System tables
- * System time 2021-07-08 19:57:59 GMT+0:00 
+ * System time 2021-07-09 14:31:25 GMT+0:00 
  * cpio sys/core
- * Parsing ELF64 @24010A5
+ * Parsing ELF64 @23FE0A5
  * fb          @FFFFFFFFFC000000
  * bootboot    @FFFFFFFFFEFFE000
  * environment @FFFFFFFFFEFFF000
- * Entry point @FFFFFFFFFF000195, text @23FA000 28448 bytes
+ * Entry point @FFFFFFFFFF000195, text @23F5000 32928 bytes
  * SMP numcores 1
- * Pagetables PML4 @23B3000
- * Memory Map @2409000 5568 bytes try #1
+ * Pagetables PML4 @23B1000
+ * Memory Map @2408000 5616 bytes try #1
 Serial port COM1 initialized for logging.
 
 ******************************************************************************************
@@ -26,9 +26,9 @@ Serial port COM1 initialized for logging.
 GDT Loaded.
 Initializing Page Frame Allocator.
 Page Frame Allocator Bitmap stored at 0x900000, size = 0x800 bytes
-Free memory = 0x3AB6000
+Free memory = 0x3AB5000
 Used memory = 0x2A1000
-Reserved memory = 0x2A9000
+Reserved memory = 0x2AA000
 Kernel Page Table Manager initialized.
 Interrupts initialized.
 Kernel initialized.
