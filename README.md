@@ -19,11 +19,11 @@
 - Memory Map
 - Physical Memory Manager (Page Frame Allocator)
 - Virtual Memory Manager (Page Table Manager)
+- Interrupts
 
 ---
 
 ### Features to be implemented:
-- Interrupts
 - Dynamic Memory Allocator (Heap)
 - PCI
 - Keyboard Driver
