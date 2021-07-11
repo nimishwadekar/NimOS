@@ -11,6 +11,7 @@
 #include "Memory/Paging.hpp"
 #include "Memory/PageTableManager.hpp"
 #include "Interrupts/Interrupts.hpp"
+#include "Memory/Heap.hpp"
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];
@@ -19,6 +20,8 @@ extern uint8_t fb;
 extern volatile unsigned char _binary_font_psf_start;
 
 extern void KernelStart(void);
+
+#define HEAP_ADDRESS 0xFFFFFFFF00000000
 
 // Entry point into kernel, called by Bootloader.
 void main()
@@ -62,7 +65,7 @@ void main()
 
     PageTable *pageTableL4;
     asm volatile("mov %%cr3, %%rax" : "=a"(pageTableL4) : );
-    PageTableManager pageTableManager(pageTableL4);
+    PagingManager = PageTableManager(pageTableL4);
     #ifdef LOGGING
     Logf("Kernel Page Table Manager initialized.\n");
     #endif
@@ -70,6 +73,11 @@ void main()
     InitializeInterrupts();
     #ifdef LOGGING
     Logf("Interrupts initialized.\n");
+    #endif
+
+    KernelHeap.Initialize((void*) HEAP_ADDRESS, 16);
+    #ifdef LOGGING
+    Logf("Heap initialized.\n");
     #endif
 
     KernelStart();
