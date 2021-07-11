@@ -17,14 +17,14 @@
 - Serial Port Logging
 - Global Descriptor Table
 - Memory Map
+- Interrupts
 - Physical Memory Manager (Page Frame Allocator)
 - Virtual Memory Manager (Page Table Manager)
-- Interrupts
+- Dynamic Memory Allocator (Heap)
 
 ---
 
 ### Features to be implemented:
-- Dynamic Memory Allocator (Heap)
 - PCI
 - Keyboard Driver
 - Mouse Driver
