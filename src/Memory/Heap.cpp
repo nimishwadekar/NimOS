@@ -3,23 +3,27 @@
 #include "PageTableManager.hpp"
 #include "../Display/Renderer.hpp"
 
-Heap KernelHeap;
+//Heap KernelHeap;
+
+void *HeapStart;
+void *HeapEnd;
+HeapSegmentHeader *LastHeader;
 
 // HEAP FUNCTIONS
 
-void Heap::Initialize(void *heapAddress, uint64_t pageCount)
+void InitializeHeap(void *heapAddress, uint64_t pageCount)
 {
     void *position = heapAddress;
     for(uint64_t i = 0; i < pageCount; i++)
     {
-        PagingManager.MapPage(position, FrameAllocator.GetPage());
+        PagingManager.MapPage(position, FrameAllocator.RequestPageFrame());
         position = (void*) ((uint64_t) position + 0x1000);
     }
 
     uint64_t heapSize = pageCount * 0x1000;
 
-    Start = heapAddress;
-    End = (void*) ((uint64_t) heapAddress + heapSize);
+    HeapStart = heapAddress;
+    HeapEnd = (void*) ((uint64_t) heapAddress + heapSize);
     HeapSegmentHeader *startSegmentHeader = (HeapSegmentHeader*) heapAddress;
     startSegmentHeader->Size = heapSize - sizeof(HeapSegmentHeader);
     startSegmentHeader->Next = NULL;
@@ -28,7 +32,7 @@ void Heap::Initialize(void *heapAddress, uint64_t pageCount)
     LastHeader = startSegmentHeader;
 }
 
-void *Heap::Malloc(uint64_t size)
+void *Malloc(uint64_t size)
 {
     if((size & (BLOCK_SIZE - 1)) > 0) // size % BLOCK_SIZE
     {
@@ -38,7 +42,7 @@ void *Heap::Malloc(uint64_t size)
 
     if(size == 0) return NULL;
 
-    HeapSegmentHeader *currentSegment = (HeapSegmentHeader*) Start;
+    HeapSegmentHeader *currentSegment = (HeapSegmentHeader*) HeapStart;
     while(currentSegment != NULL)
     {
         if(currentSegment->Free)
@@ -59,18 +63,40 @@ void *Heap::Malloc(uint64_t size)
     }
 
     // If not enough memory in heap.
-    Extend(size);
+    ExtendHeap(size);
     return Malloc(size);
 }
 
-void Heap::Free(void *address)
+void Free(void *address)
 {
-
+    HeapSegmentHeader *segment = (HeapSegmentHeader*) ((uint64_t) address - sizeof(HeapSegmentHeader));
+    segment->Free = true;
+    segment->MergeNext();
+    segment->MergePrev();
 }
 
-void Heap::Extend(uint64_t size)
+void ExtendHeap(uint64_t size)
 {
+    if((size & (0x1000 - 1)) > 0) // size % 0x1000
+    {
+        size -= (size & (0x1000 - 1));
+        size += 0x1000;
+    }
 
+    uint64_t pageCount = size / 0x1000;
+    HeapSegmentHeader *newSegment = (HeapSegmentHeader*) HeapEnd;
+    for(uint64_t i = 0; i < pageCount; i++)
+    {
+        PagingManager.MapPage(HeapEnd, FrameAllocator.RequestPageFrame());
+        HeapEnd = (void*) ((uint64_t) HeapEnd + 0x1000);
+    }
+
+    newSegment->Free = true;
+    newSegment->Next = NULL;
+    newSegment->Prev = LastHeader;
+    LastHeader->Next = newSegment;
+    newSegment->Size = size - sizeof(HeapSegmentHeader);
+    newSegment->MergePrev();
 }
 
 
@@ -78,15 +104,33 @@ void Heap::Extend(uint64_t size)
 
 HeapSegmentHeader *HeapSegmentHeader::Split(uint64_t firstPartSize)
 {
-    return NULL;
+    //if(firstPartSize < BLOCK_SIZE) return NULL;
+    int64_t splitSegmentSize = Size - firstPartSize - sizeof(HeapSegmentHeader);
+    if(splitSegmentSize < BLOCK_SIZE) return NULL;
+
+    HeapSegmentHeader *secondSegment = (HeapSegmentHeader*) ((uint64_t) this + sizeof(HeapSegmentHeader) + firstPartSize);
+    Next->Prev = secondSegment;
+    secondSegment->Next = Next;
+    Next = secondSegment;
+    secondSegment->Prev = this;
+    secondSegment->Size = splitSegmentSize;
+    secondSegment->Free = true;
+
+    Size = firstPartSize;
+    if(LastHeader == this) LastHeader = Next;
+    return secondSegment;
 }
 
 void HeapSegmentHeader::MergeNext(void)
 {
+    if(Next == NULL || !Next->Free) return;
 
+    if(Next == LastHeader) LastHeader = this;
+    if(Next->Next != NULL) Next->Next->Prev = this;
+    Size = Size + sizeof(HeapSegmentHeader) + Next->Size;
 }
 
 void HeapSegmentHeader::MergePrev(void)
 {
-    
+    if(Prev != NULL && Prev->Free) Prev->MergeNext();
 }

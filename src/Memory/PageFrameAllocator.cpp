@@ -86,7 +86,7 @@ void PageFrameAllocator::Initialize(MemoryMap memoryMap)
     #endif
 }
 
-void *PageFrameAllocator::GetPage(void)
+void *PageFrameAllocator::RequestPageFrame(void)
 {
     while(FirstFreePageFrame < PageFrameBitmap.BufferSize - 1 && PageFrameBitmap.Buffer[FirstFreePageFrame] == 0xFF) FirstFreePageFrame++;
 
@@ -110,7 +110,7 @@ void *PageFrameAllocator::GetPage(void)
     return (void*) (index * 4096);
 }
 
-void PageFrameAllocator::FreePage(void *physicalAddress)
+void PageFrameAllocator::FreePageFrame(void *physicalAddress)
 {
     uint64_t index = (uint64_t) physicalAddress / 4096;
     if(PageFrameBitmap.Get(index) == false)

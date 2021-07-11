@@ -21,7 +21,7 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
     PageTable *level3Table;
     if(!entry.GetFlag(PageTableFlags::Present))
     {
-        level3Table = (PageTable*) FrameAllocator.GetPage();
+        level3Table = (PageTable*) FrameAllocator.RequestPageFrame();
         memset(level3Table, 0, 0x1000);
         entry.SetAddress((uint64_t) level3Table);
         entry.SetFlag(PageTableFlags::Present, true);
@@ -38,7 +38,7 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
     PageTable *level2Table;
     if(!entry.GetFlag(PageTableFlags::Present))
     {
-        level2Table = (PageTable*) FrameAllocator.GetPage();
+        level2Table = (PageTable*) FrameAllocator.RequestPageFrame();
         memset(level2Table, 0, 0x1000);
         entry.SetAddress((uint64_t) level2Table);
         entry.SetFlag(PageTableFlags::Present, true);
@@ -55,7 +55,7 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
     PageTable *level1Table;
     if(!entry.GetFlag(PageTableFlags::Present))
     {
-        level1Table = (PageTable*) FrameAllocator.GetPage();
+        level1Table = (PageTable*) FrameAllocator.RequestPageFrame();
         memset(level1Table, 0, 0x1000);
         entry.SetAddress((uint64_t) level1Table);
         entry.SetFlag(PageTableFlags::Present, true);

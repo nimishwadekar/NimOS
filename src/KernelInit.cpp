@@ -75,7 +75,7 @@ void main()
     Logf("Interrupts initialized.\n");
     #endif
 
-    KernelHeap.Initialize((void*) HEAP_ADDRESS, 16);
+    InitializeHeap((void*) HEAP_ADDRESS, 16);
     #ifdef LOGGING
     Logf("Heap initialized.\n");
     #endif

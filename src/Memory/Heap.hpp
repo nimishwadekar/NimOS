@@ -14,10 +14,11 @@ struct HeapSegmentHeader
     
     void MergeNext(void);
     void MergePrev(void);
+    // Splits a segment into 2 with first segment's size as specified. Returns a pointer to the header for the second segment.
     HeapSegmentHeader *Split(uint64_t firstPartSize);
 };
 
-class Heap
+/* class Heap
 {
     public:
     void *Start;
@@ -31,4 +32,10 @@ class Heap
     void Free(void *address);
 };
 
-extern Heap KernelHeap;
+extern Heap KernelHeap; */
+
+void InitializeHeap(void *heapAddress, uint64_t pageCount);
+// Extends the heap by the given size.
+void ExtendHeap(uint64_t size);
+void *Malloc(uint64_t size);
+void Free(void *address);

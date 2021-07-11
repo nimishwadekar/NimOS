@@ -4,21 +4,21 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @2409000 10673 bytes
- * Initrd loaded @2400000 36864 bytes
+ * Gzip compressed initrd @2409000 11038 bytes
+ * Initrd loaded @23FF000 40960 bytes
  * Environment @240B000 31 bytes
  * Screen 960 x 640, scanline 3840, fb @80000000 2457600 bytes, type 1 ARGB
  * System tables
- * System time 2021-07-11 17:30:23 GMT+0:00 
+ * System time 2021-07-11 18:24:32 GMT+0:00 
  * cpio sys/core
- * Parsing ELF64 @24000A5
+ * Parsing ELF64 @23FF0A5
  * fb          @FFFFFFFFFC000000
  * bootboot    @FFFFFFFFFEFFE000
  * environment @FFFFFFFFFEFFF000
- * Entry point @FFFFFFFFFF000195, text @23F7000 32960 bytes
+ * Entry point @FFFFFFFFFF000195, text @23CF000 37056 bytes
  * SMP numcores 1
- * Pagetables PML4 @23B3000
- * Memory Map @2409000 5520 bytes try #1
+ * Pagetables PML4 @23A9000
+ * Memory Map @2409000 5616 bytes try #1
 Serial port COM1 initialized for logging.
 
 ******************************************************************************************
@@ -26,9 +26,9 @@ Serial port COM1 initialized for logging.
 GDT Loaded.
 Initializing Page Frame Allocator.
 Page Frame Allocator Bitmap stored at 0x900000, size = 0x800 bytes
-Free memory = 0x3AB3000
+Free memory = 0x3AB1000
 Used memory = 0x2A1000
-Reserved memory = 0x2AC000
+Reserved memory = 0x2AE000
 Kernel Page Table Manager initialized.
 Interrupts initialized.
 Page Frame Allocated: Phys 0x0
@@ -67,3 +67,37 @@ Page Frame Allocated: Phys 0x11000
 Virtual address 0xFFFFFFFF0000F000 mapped to physical address 0x11000
 Heap initialized.
 Kernel initialized.
+Page Frame Allocated: Phys 0x12000
+Virtual address 0xFFFFFFFF00010000 mapped to physical address 0x12000
+Page Frame Allocated: Phys 0x13000
+Virtual address 0xFFFFFFFF00011000 mapped to physical address 0x13000
+Page Frame Allocated: Phys 0x14000
+Virtual address 0xFFFFFFFF00012000 mapped to physical address 0x14000
+Page Frame Allocated: Phys 0x15000
+Virtual address 0xFFFFFFFF00013000 mapped to physical address 0x15000
+Page Frame Allocated: Phys 0x16000
+Virtual address 0xFFFFFFFF00014000 mapped to physical address 0x16000
+Page Frame Allocated: Phys 0x17000
+Virtual address 0xFFFFFFFF00015000 mapped to physical address 0x17000
+Page Frame Allocated: Phys 0x18000
+Virtual address 0xFFFFFFFF00016000 mapped to physical address 0x18000
+Page Frame Allocated: Phys 0x19000
+Virtual address 0xFFFFFFFF00017000 mapped to physical address 0x19000
+Page Frame Allocated: Phys 0x1A000
+Virtual address 0xFFFFFFFF00018000 mapped to physical address 0x1A000
+Page Frame Allocated: Phys 0x1B000
+Virtual address 0xFFFFFFFF00019000 mapped to physical address 0x1B000
+Page Frame Allocated: Phys 0x1C000
+Virtual address 0xFFFFFFFF0001A000 mapped to physical address 0x1C000
+Page Frame Allocated: Phys 0x1D000
+Virtual address 0xFFFFFFFF0001B000 mapped to physical address 0x1D000
+Page Frame Allocated: Phys 0x1E000
+Virtual address 0xFFFFFFFF0001C000 mapped to physical address 0x1E000
+Page Frame Allocated: Phys 0x1F000
+Virtual address 0xFFFFFFFF0001D000 mapped to physical address 0x1F000
+Page Frame Allocated: Phys 0x20000
+Virtual address 0xFFFFFFFF0001E000 mapped to physical address 0x20000
+Page Frame Allocated: Phys 0x21000
+Virtual address 0xFFFFFFFF0001F000 mapped to physical address 0x21000
+Page Frame Allocated: Phys 0x22000
+Virtual address 0xFFFFFFFF00020000 mapped to physical address 0x22000
