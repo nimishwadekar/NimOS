@@ -9,3 +9,5 @@ class PageTableManager
     PageTable *TableLevel4;
     void MapPage(void *virtualAddress, void *physicalAddress);
 };
+
+extern PageTableManager PagingManager;

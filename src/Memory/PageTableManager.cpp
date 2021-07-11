@@ -5,6 +5,9 @@
 #include <stdint.h>
 #include "../Logging.hpp"
 
+// The global page table manager.
+PageTableManager PagingManager(nullptr);
+
 PageTableManager::PageTableManager(PageTable *tableLevel4) :
     TableLevel4(tableLevel4) { }
 
