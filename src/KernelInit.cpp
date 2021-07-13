@@ -59,7 +59,7 @@ void main()
     // Initialize Page Frame Allocator.
     FrameAllocator.Initialize(memoryMap);
     #ifdef LOGGING
-    Logf("Free memory = 0x%x\nUsed memory = 0x%x\nReserved memory = 0x%x\n", 
+    Logf("Page Frame Allocator initialized.\nFree memory = 0x%x\nUsed memory = 0x%x\nReserved memory = 0x%x\n", 
         FrameAllocator.FreeMemory, FrameAllocator.UsedMemory, FrameAllocator.ReservedMemory);
     #endif
 
@@ -72,12 +72,12 @@ void main()
 
     InitializeInterrupts();
     #ifdef LOGGING
-    Logf("Interrupts initialized.\n");
+    Logf("Interrupts initialized.\n\n");
     #endif
 
     InitializeHeap((void*) HEAP_ADDRESS, 16);
     #ifdef LOGGING
-    Logf("Heap initialized.\n");
+    Logf("Heap initialized.\n\n");
     #endif
 
     KernelStart();

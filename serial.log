@@ -4,66 +4,66 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @2407000 11040 bytes
- * Initrd loaded @23FD000 40960 bytes
- * Environment @2505000 31 bytes
+ * Gzip compressed initrd @2409000 11154 bytes
+ * Initrd loaded @23FF000 40960 bytes
+ * Environment @240B000 31 bytes
  * Screen 960 x 640, scanline 3840, fb @80000000 2457600 bytes, type 1 ARGB
  * System tables
- * System time 2021-07-12 14:32:19 GMT+0:00 
+ * System time 2021-07-13 15:59:19 GMT+0:00 
  * cpio sys/core
- * Parsing ELF64 @23FD0A5
+ * Parsing ELF64 @23FF0A5
  * fb          @FFFFFFFFFC000000
  * bootboot    @FFFFFFFFFEFFE000
  * environment @FFFFFFFFFEFFF000
- * Entry point @FFFFFFFFFF000195, text @23CD000 37056 bytes
+ * Entry point @FFFFFFFFFF000195, text @23CF000 37056 bytes
  * SMP numcores 1
- * Pagetables PML4 @23A7000
- * Memory Map @2408000 5712 bytes try #1
+ * Pagetables PML4 @23A9000
+ * Memory Map @2409000 5616 bytes try #1
 Serial port COM1 initialized for logging.
 
 ******************************************************************************************
 
 GDT Loaded.
-Initializing Page Frame Allocator.
 Page Frame Allocator Bitmap stored at 0x900000, size = 0x800 bytes
-Free memory = 0x3AB3000
+Page Frame Allocator initialized.
+Free memory = 0x3AB1000
 Used memory = 0x2A1000
-Reserved memory = 0x2AC000
+Reserved memory = 0x2AE000
 Kernel Page Table Manager initialized.
 Interrupts initialized.
-Page Frame Allocated: Phys 0x0
-Page Frame Allocated: Phys 0x1000
-Page Frame Allocated: Phys 0x2000
-Virtual address 0xFFFFFFFF00000000 mapped to physical address 0x0
-Page Frame Allocated: Phys 0x3000
-Virtual address 0xFFFFFFFF00001000 mapped to physical address 0x3000
-Page Frame Allocated: Phys 0x4000
-Virtual address 0xFFFFFFFF00002000 mapped to physical address 0x4000
-Page Frame Allocated: Phys 0x5000
-Virtual address 0xFFFFFFFF00003000 mapped to physical address 0x5000
-Page Frame Allocated: Phys 0x6000
-Virtual address 0xFFFFFFFF00004000 mapped to physical address 0x6000
-Page Frame Allocated: Phys 0x7000
-Virtual address 0xFFFFFFFF00005000 mapped to physical address 0x7000
-Page Frame Allocated: Phys 0x8000
-Virtual address 0xFFFFFFFF00006000 mapped to physical address 0x8000
-Page Frame Allocated: Phys 0x9000
-Virtual address 0xFFFFFFFF00007000 mapped to physical address 0x9000
-Page Frame Allocated: Phys 0xA000
-Virtual address 0xFFFFFFFF00008000 mapped to physical address 0xA000
-Page Frame Allocated: Phys 0xB000
-Virtual address 0xFFFFFFFF00009000 mapped to physical address 0xB000
-Page Frame Allocated: Phys 0xC000
-Virtual address 0xFFFFFFFF0000A000 mapped to physical address 0xC000
-Page Frame Allocated: Phys 0xD000
-Virtual address 0xFFFFFFFF0000B000 mapped to physical address 0xD000
-Page Frame Allocated: Phys 0xE000
-Virtual address 0xFFFFFFFF0000C000 mapped to physical address 0xE000
-Page Frame Allocated: Phys 0xF000
-Virtual address 0xFFFFFFFF0000D000 mapped to physical address 0xF000
-Page Frame Allocated: Phys 0x10000
-Virtual address 0xFFFFFFFF0000E000 mapped to physical address 0x10000
-Page Frame Allocated: Phys 0x11000
-Virtual address 0xFFFFFFFF0000F000 mapped to physical address 0x11000
+InitializeHeap(void*, uint64_t) : Page Frame at 0x0 allocated for heap.
+PageTableManager::MapPage(void*, void*) : Page Frame at 0x1000 allocated for Level 2 Table.
+PageTableManager::MapPage(void*, void*) : Page Frame at 0x2000 allocated for Level 1 Table.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00000000 mapped to phys 0x0 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x3000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00001000 mapped to phys 0x3000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x4000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00002000 mapped to phys 0x4000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x5000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00003000 mapped to phys 0x5000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x6000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00004000 mapped to phys 0x6000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x7000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00005000 mapped to phys 0x7000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x8000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00006000 mapped to phys 0x8000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x9000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00007000 mapped to phys 0x9000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0xA000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00008000 mapped to phys 0xA000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0xB000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00009000 mapped to phys 0xB000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0xC000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000A000 mapped to phys 0xC000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0xD000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000B000 mapped to phys 0xD000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0xE000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000C000 mapped to phys 0xE000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0xF000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000D000 mapped to phys 0xF000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x10000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000E000 mapped to phys 0x10000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x11000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000F000 mapped to phys 0x11000 for heap.
 Heap initialized.
 Kernel initialized.

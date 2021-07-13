@@ -14,9 +14,6 @@ void PageFrameAllocator::Initialize(MemoryMap memoryMap)
     if(Initialized) return;
 
     Initialized = true;
-    #ifdef LOGGING
-    Logf("Initializing Page Frame Allocator.\n");
-    #endif
 
     MemoryMapEntry *entries = memoryMap.Entries;
     uint64_t largestFreeMemoryChunk = 0, largestFreeMemoryChunkSize = 0;
@@ -70,20 +67,6 @@ void PageFrameAllocator::Initialize(MemoryMap memoryMap)
     }
     FreeMemory -= ((size + 4095) / 4096) * 4096;
     UsedMemory += ((size + 4095) / 4096) * 4096;
-
-    #ifdef LOGGING
-    /* Logf("\nBitmap state after initialization:\n");
-    uint8_t *bitmap = PageFrameBitmap.Buffer;
-    uint64_t i;
-    for(i = 0; i + 4 < PageFrameBitmap.BufferSize; i += 4)
-    {
-        if(i % 32 == 0) Logf("\n0x%h :  ", i * 32 * 8 * 0x1000);
-        uint32_t fourBytes = (bitmap[i] << 24) | (bitmap[i + 1] << 16) | (bitmap[i + 2] << 8) | (bitmap[i + 3]);
-        Logf("%h  ", fourBytes);
-    }
-    for( ; i < PageFrameBitmap.BufferSize; i++) Logf("%x ", bitmap[i]);
-    Logf("\n\n"); */
-    #endif
 }
 
 void *PageFrameAllocator::RequestPageFrame(void)
@@ -103,10 +86,6 @@ void *PageFrameAllocator::RequestPageFrame(void)
     UsedMemory += 4096;
     FreeMemory -= 4096;
 
-    #ifdef LOGGING
-    Logf("Page Frame Allocated: Phys 0x%x\n", index * 4096);
-    #endif
-
     return (void*) (index * 4096);
 }
 
@@ -125,8 +104,4 @@ void PageFrameAllocator::FreePageFrame(void *physicalAddress)
     FreeMemory += 4096;
 
     if(FirstFreePageFrame > index / 8) FirstFreePageFrame = index / 8;
-
-    #ifdef LOGGING
-    Logf("Page Frame Freed: Phys 0x%x\n", physicalAddress);
-    #endif
 }
