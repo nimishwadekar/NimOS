@@ -4,12 +4,12 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @2409000 11154 bytes
+ * Gzip compressed initrd @2409000 11155 bytes
  * Initrd loaded @23FF000 40960 bytes
  * Environment @240B000 31 bytes
  * Screen 960 x 640, scanline 3840, fb @80000000 2457600 bytes, type 1 ARGB
  * System tables
- * System time 2021-07-13 15:59:19 GMT+0:00 
+ * System time 2021-07-13 17:25:40 GMT+0:00 
  * cpio sys/core
  * Parsing ELF64 @23FF0A5
  * fb          @FFFFFFFFFC000000
@@ -31,6 +31,7 @@ Used memory = 0x2A1000
 Reserved memory = 0x2AE000
 Kernel Page Table Manager initialized.
 Interrupts initialized.
+
 InitializeHeap(void*, uint64_t) : Page Frame at 0x0 allocated for heap.
 PageTableManager::MapPage(void*, void*) : Page Frame at 0x1000 allocated for Level 2 Table.
 PageTableManager::MapPage(void*, void*) : Page Frame at 0x2000 allocated for Level 1 Table.
@@ -66,4 +67,5 @@ InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000E000 mapped to phys 0x10000 for 
 InitializeHeap(void*, uint64_t) : Page Frame at 0x11000 allocated for heap.
 InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000F000 mapped to phys 0x11000 for heap.
 Heap initialized.
+
 Kernel initialized.

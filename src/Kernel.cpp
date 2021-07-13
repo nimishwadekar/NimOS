@@ -11,7 +11,7 @@ void KernelStart(void)
     Logf("Kernel initialized.\n");
     #endif
 
-    MainRenderer.ClearScreen();
+    //MainRenderer.ClearScreen();
     MainRenderer.Printf("Kernel initialized.\n");
 
     MainRenderer.Printf("\nKernel ended.\n");

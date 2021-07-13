@@ -80,5 +80,10 @@ void main()
     Logf("Heap initialized.\n\n");
     #endif
 
+    uint64_t acpi = bootboot.arch.x86_64.acpi_ptr;
+    MainRenderer.Printf("ACPI = 0x%x\n", acpi);
+    char s[] = "Hello";
+    for(int i = 0; i < 5; i++) MainRenderer.PutChar(s[i]);
+
     KernelStart();
 }

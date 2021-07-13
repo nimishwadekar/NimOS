@@ -30,6 +30,7 @@ class Renderer
     void Printf(const char *format, ...);
     void PrintErrorf(const char *format, ...);
     void PutChar(const uint32_t xOffset, const uint32_t yOffset, const char character);
+    void PutChar(const char character);
     void PutPixel(const uint32_t xOffset, const uint32_t yOffset, const uint32_t colour);
     void SetForegroundColour(const uint32_t colour);
     void SetBackgroundColour(const uint32_t colour);
