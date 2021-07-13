@@ -21,11 +21,13 @@
 - Physical Memory Manager (Page Frame Allocator)
 - Virtual Memory Manager (Page Table Manager)
 - Dynamic Memory Allocator (Heap)
+- ACPI
+- PCI Device Enumeration
 
 ---
 
 ### Features to be implemented:
-- PCI
+- Programmable Interval Timer
 - Keyboard Driver
 - Mouse Driver
 - File System

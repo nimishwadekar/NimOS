@@ -7,11 +7,14 @@
 #include "IO/Serial.hpp"
 #include "Logging.hpp"
 #include "GDT.hpp"
+#include "Memory/Memory.hpp"
 #include "Memory/PageFrameAllocator.hpp"
 #include "Memory/Paging.hpp"
 #include "Memory/PageTableManager.hpp"
 #include "Interrupts/Interrupts.hpp"
 #include "Memory/Heap.hpp"
+#include "ACPI/ACPI.hpp"
+#include "PCI/PCI.hpp"
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];
@@ -22,6 +25,8 @@ extern volatile unsigned char _binary_font_psf_start;
 extern void KernelStart(void);
 
 #define HEAP_ADDRESS 0xFFFFFFFF00000000
+
+void SetupACPI(const uint64_t xsdtAddress);
 
 // Entry point into kernel, called by Bootloader.
 void main()
@@ -80,10 +85,37 @@ void main()
     Logf("Heap initialized.\n\n");
     #endif
 
-    uint64_t acpi = bootboot.arch.x86_64.acpi_ptr;
-    MainRenderer.Printf("ACPI = 0x%x\n", acpi);
-    char s[] = "Hello";
-    for(int i = 0; i < 5; i++) MainRenderer.PutChar(s[i]);
+    SetupACPI(bootboot.arch.x86_64.acpi_ptr);
+    #ifdef LOGGING
+    Logf("ACPI initialized.\n");
+    #endif
 
     KernelStart();
+}
+
+void SetupACPI(const uint64_t xsdtAddress)
+{
+    ACPI::SDTHeader *xsdtHeader = (ACPI::SDTHeader*) xsdtAddress;
+
+    int signatureValid = memcmp(xsdtHeader->Signature, "XSDT", 4);
+    if(signatureValid != 0)
+    {
+        MainRenderer.PrintErrorf("XSDT Table not found.");
+        while(true);
+    }
+
+    if(!ACPI::IsChecksumValid(xsdtHeader))
+    {
+        MainRenderer.PrintErrorf("XSDT Table checksum not valid.");
+        while(true);
+    }
+
+    ACPI::MCFGHeader *mcfgHeader = (ACPI::MCFGHeader*) ACPI::FindTable(xsdtHeader, "MCFG");
+    if(mcfgHeader == NULL)
+    {
+        MainRenderer.PrintErrorf("MCFG Table not found.");
+        while(true);
+    }
+    
+    PCI::EnumeratePCI(mcfgHeader);
 }
