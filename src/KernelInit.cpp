@@ -93,6 +93,7 @@ void main()
     #endif
 
     SetupACPI(bootboot.arch.x86_64.acpi_ptr);
+    MainRenderer.Printf("\n");
     #ifdef LOGGING
     Logf("ACPI initialized.\n");
     #endif

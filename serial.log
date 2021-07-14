@@ -4,21 +4,21 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @240A000 12014 bytes
- * Initrd loaded @22F9000 41472 bytes
- * Environment @254A000 31 bytes
+ * Gzip compressed initrd @2305000 13321 bytes
+ * Initrd loaded @22F9000 45568 bytes
+ * Environment @2308000 31 bytes
  * Screen 960 x 640, scanline 3840, fb @C0000000 2457600 bytes, type 1 ARGB
  * System tables
- * System time 2021-07-14 16:01:53 GMT+0:00 
+ * System time 2021-07-14 16:46:01 GMT+0:00 
  * cpio sys/core
  * Parsing ELF64 @22F90A5
  * fb          @FFFFFFFFFC000000
  * bootboot    @FFFFFFFFFEFFE000
  * environment @FFFFFFFFFEFFF000
- * Entry point @FFFFFFFFFF000195, text @22EF000 37216 bytes
+ * Entry point @FFFFFFFFFF000195, text @22CB000 41344 bytes
  * SMP numcores 1
- * Pagetables PML4 @22AB000
- * Memory Map @240B000 5760 bytes try #1
+ * Pagetables PML4 @22A5000
+ * Memory Map @2306000 5664 bytes try #1
 Serial port COM1 initialized for logging.
 
 ******************************************************************************************
@@ -28,46 +28,46 @@ Memory map prepared.
 GDT Loaded.
 Page Frame Allocator Bitmap stored at 0x900000, size = 0x18000 bytes
 Page Frame Allocator initialized.
-Free memory = 0x3A9B000
+Free memory = 0x39F7000
 Used memory = 0x102B8000
-Reserved memory = 0xAC2AD000
+Reserved memory = 0xAC351000
 Kernel Page Table Manager initialized.
 Interrupts initialized.
 
-InitializeHeap(void*, uint64_t) : Page Frame at 0x0 allocated for heap.
-PageTableManager::MapPage(void*, void*) : Page Frame at 0x1000 allocated for Level 2 Table.
-PageTableManager::MapPage(void*, void*) : Page Frame at 0x2000 allocated for Level 1 Table.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00000000 mapped to phys 0x0 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0x3000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00001000 mapped to phys 0x3000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0x4000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00002000 mapped to phys 0x4000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0x5000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00003000 mapped to phys 0x5000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0x6000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00004000 mapped to phys 0x6000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0x7000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00005000 mapped to phys 0x7000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0x8000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00006000 mapped to phys 0x8000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0x9000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00007000 mapped to phys 0x9000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0xA000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00008000 mapped to phys 0xA000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0xB000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00009000 mapped to phys 0xB000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0xC000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000A000 mapped to phys 0xC000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0xD000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000B000 mapped to phys 0xD000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0xE000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000C000 mapped to phys 0xE000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0xF000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000D000 mapped to phys 0xF000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0x10000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000E000 mapped to phys 0x10000 for heap.
-InitializeHeap(void*, uint64_t) : Page Frame at 0x11000 allocated for heap.
-InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000F000 mapped to phys 0x11000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x100000 allocated for heap.
+PageTableManager::MapPage(void*, void*) : Page Frame at 0x101000 allocated for Level 2 Table.
+PageTableManager::MapPage(void*, void*) : Page Frame at 0x102000 allocated for Level 1 Table.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00000000 mapped to phys 0x100000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x103000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00001000 mapped to phys 0x103000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x104000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00002000 mapped to phys 0x104000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x105000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00003000 mapped to phys 0x105000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x106000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00004000 mapped to phys 0x106000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x107000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00005000 mapped to phys 0x107000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x108000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00006000 mapped to phys 0x108000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x109000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00007000 mapped to phys 0x109000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x10A000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00008000 mapped to phys 0x10A000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x10B000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF00009000 mapped to phys 0x10B000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x10C000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000A000 mapped to phys 0x10C000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x10D000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000B000 mapped to phys 0x10D000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x10E000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000C000 mapped to phys 0x10E000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x10F000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000D000 mapped to phys 0x10F000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x110000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000E000 mapped to phys 0x110000 for heap.
+InitializeHeap(void*, uint64_t) : Page Frame at 0x111000 allocated for heap.
+InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000F000 mapped to phys 0x111000 for heap.
 Heap initialized.
 
 EnumerateBus(uint64_t, uint8_t) : 0xB0000000 mapped to phys 0xB0000000 for PCI.
