@@ -31,17 +31,6 @@ void SetupACPI(const uint64_t xsdtAddress);
 // Entry point into kernel, called by Bootloader.
 void main()
 {
-    Framebuffer framebuffer((uint32_t*) &fb, (Framebuffer::FBType) bootboot.fb_type, 
-        bootboot.fb_size, bootboot.fb_width, bootboot.fb_height, bootboot.fb_scanline / 4);
-    PSF1 *font = (PSF1*) &_binary_font_psf_start;
-    MainRenderer = Renderer(framebuffer, font, 0xFFFFFFFF, 0x00000000);
-
-    MemoryMap memoryMap;
-    memoryMap.Entries = (MemoryMapEntry*) (&bootboot.mmap);
-    memoryMap.EntryCount = (bootboot.size - sizeof(BOOTBOOT) + sizeof(MMapEnt)) / sizeof(MemoryMapEntry);
-    memoryMap.MemorySizeKB = memoryMap.Entries[memoryMap.EntryCount - 1].Address + MemoryMapEntry_Size(memoryMap.Entries[memoryMap.EntryCount - 1]);
-    memoryMap.MemorySizeKB /= 1024;
-
     #ifdef LOGGING
     if(InitializeSerialPort(SERIAL_COM1) == -1)
     {
@@ -50,6 +39,24 @@ void main()
     }
     Logf("Serial port COM1 initialized for logging.\n\n");
     Logf("******************************************************************************************\n\n");
+    #endif
+
+    Framebuffer framebuffer((uint32_t*) &fb, (Framebuffer::FBType) bootboot.fb_type, 
+        bootboot.fb_size, bootboot.fb_width, bootboot.fb_height, bootboot.fb_scanline / 4);
+    PSF1 *font = (PSF1*) &_binary_font_psf_start;
+    MainRenderer = Renderer(framebuffer, font, COLOUR_BLACK, COLOUR_WHITE);
+    MainRenderer.ClearScreen();
+    #ifdef LOGGING
+    Logf("Main Renderer initialized.\n");
+    #endif
+
+    MemoryMap memoryMap;
+    memoryMap.Entries = (MemoryMapEntry*) (&bootboot.mmap);
+    memoryMap.EntryCount = (bootboot.size - sizeof(BOOTBOOT) + sizeof(MMapEnt)) / sizeof(MemoryMapEntry);
+    memoryMap.MemorySizeKB = memoryMap.Entries[memoryMap.EntryCount - 1].Address + MemoryMapEntry_Size(memoryMap.Entries[memoryMap.EntryCount - 1]);
+    memoryMap.MemorySizeKB /= 1024;
+    #ifdef LOGGING
+    Logf("Memory map prepared.\n");
     #endif
 
     // Load GDT

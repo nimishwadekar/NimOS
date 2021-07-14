@@ -17,7 +17,7 @@ namespace PCI
         PCI::DeviceHeader *deviceHeader = (PCI::DeviceHeader*) functionAddress;
         if(deviceHeader->DeviceID == 0 || deviceHeader->DeviceID == 0xFFFF) return; // Not valid.
 
-        MainRenderer.Printf("Vendor: 0x%x, Device: 0x%x\n", deviceHeader->VendorID, deviceHeader->DeviceID);
+        MainRenderer.Printf("%x %x %s\n", deviceHeader->VendorID, deviceHeader->DeviceID, DeviceClasses[deviceHeader->Class]);
     }
 
     void EnumerateDevice(uint64_t busAddress, uint8_t device)

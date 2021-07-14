@@ -44,7 +44,8 @@ void Renderer::Printf(const char *format, ...)
 void Renderer::PrintErrorf(const char *format, ...)
 {
     uint32_t oldForegroundColour = ForegroundColour;
-    SetForegroundColour(0xFF616D); // Shade of red
+    //SetForegroundColour(0x00FF616D); // Shade of red
+    SetForegroundColour(COLOUR_RED);
 
     va_list args;
     va_start(args, format);

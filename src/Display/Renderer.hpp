@@ -10,11 +10,11 @@ struct Point
     uint32_t Y;
 };
 
-#define COLOUR_WHITE    0xFFFFFFFF
-#define COLOUR_BLACK    0xFF000000
-#define COLOUR_RED      0xFFFF0000
-#define COLOUR_GREEN    0xFF00FF00
-#define COLOUR_BLUE     0xFF0000FF
+#define COLOUR_WHITE    0x00FFFFFF
+#define COLOUR_BLACK    0x00000000
+#define COLOUR_RED      0x00FF0000
+#define COLOUR_GREEN    0x0000FF00
+#define COLOUR_BLUE     0x000000FF
 
 // A wrapper class over the Framebuffer.
 class Renderer
