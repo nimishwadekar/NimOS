@@ -147,6 +147,7 @@ void HeapSegmentHeader::MergeNext(void)
     if(Next == LastHeader) LastHeader = this;
     if(Next->Next != NULL) Next->Next->Prev = this;
     Size = Size + sizeof(HeapSegmentHeader) + Next->Size;
+    Next = Next->Next;
 }
 
 void HeapSegmentHeader::MergePrev(void)
