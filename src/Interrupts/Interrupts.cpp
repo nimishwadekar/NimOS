@@ -1,9 +1,10 @@
 #include "Interrupts.hpp"
 #include "../Display/Renderer.hpp"
+#include "../IO/Port.hpp"
 
 #define _intr_ __attribute__((interrupt))
 
-static const char *InterruptMessages[] = 
+static const char *InterruptMessages[]
 {
     // Exceptions
     "Divide by zero error", // 0
@@ -120,8 +121,12 @@ Interrupts =
 Exceptions = 0x8, 0xa, 0xb, 0xc, 0xd, 0x11, 0x1e
 */
 
+static void RemapPIC(void);
+
 void InitializeInterrupts(void)
 {
+    RemapPIC();
+
     #pragma region HandlerInitialization
     InitializeIDTEntry(0x0, (uint64_t) IntHandler0x0);
     InitializeIDTEntry(0x1, (uint64_t) IntHandler0x1);
@@ -176,6 +181,52 @@ void InitializeInterrupts(void)
     IDTRegister.Limit = 0x0FFF;
     IDTRegister.PhysicalAddress = (uint64_t) IDT;
     asm volatile("lidt %0" : : "m"(IDTRegister));
+}
+
+static void RemapPIC(void)
+{
+    // Saving masks
+    /* uint8_t mask1, mask2;
+    mask1 = inb(PIC1_DATA);
+    io_wait();
+    mask2 = inb(PIC2_DATA);
+    io_wait(); */
+
+    // ICW 1
+    outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);
+    io_wait();
+    outb(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
+    io_wait();
+
+    // ICW 2 - Interrupt numbers
+    outb(PIC1_DATA, 0x20);
+    io_wait();
+    outb(PIC2_DATA, 0x28);
+    io_wait();
+
+    // ICW 3 - Cascading PIC chips
+    outb(PIC1_DATA, 4);
+    io_wait();
+    outb(PIC2_DATA, 2);
+    io_wait();
+
+    // ICW 4 - 8086 mode
+    outb(PIC1_DATA, ICW4_8086);
+    io_wait();
+    outb(PIC2_DATA, ICW4_8086);
+    io_wait();
+
+    // Mask all PIC interrupts
+    outb(PIC1_DATA, 0xFF);
+    io_wait();
+    outb(PIC2_DATA, 0xFF);
+    io_wait();
+
+    // Reusing saved masks
+    /* outb(PIC1_DATA, mask1);
+    io_wait();
+    outb(PIC2_DATA, mask2);
+    io_wait(); */
 }
 
 static void InitializeIDTEntry(const uint8_t interrupt, const uint64_t handler)

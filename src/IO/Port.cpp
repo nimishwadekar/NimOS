@@ -24,7 +24,7 @@ uint16_t inw(uint16_t port)
     return value;
 }
 
-void io_delay(void)
+void io_wait(void)
 {
     asm volatile("out %0, $0x80" : : "r"(0));
 }
