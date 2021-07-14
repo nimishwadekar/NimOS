@@ -37,6 +37,9 @@ void PageFrameAllocator::Initialize(MemoryMap memoryMap)
     for(unsigned int i = 0; i < memoryMap.EntryCount; i++)
     {
         uint64_t address = entries[i].Address, size = MemoryMapEntry_Size(entries[i]), type = MemoryMapEntry_Type(entries[i]);
+
+        if(address < 0x100000) continue; // Let lower 1 MB of memory be reserved.
+
         switch(type)
         {
             case MMAP_USED:
