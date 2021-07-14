@@ -16,5 +16,8 @@ void KernelStart(void)
 
     MainRenderer.Printf("\nKernel ended.\n");
 
-    while(true);
+    while(true)
+    {
+        asm volatile("hlt");
+    }
 }
