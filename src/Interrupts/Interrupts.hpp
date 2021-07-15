@@ -12,6 +12,8 @@
 #define ICW1_ICW4 0x01
 #define ICW4_8086 0x01
 
+#define PIC_EOI 0x20
+
 struct InterruptFrame
 {
     uint64_t RIP;
@@ -30,3 +32,12 @@ struct ExceptionFrame
 };
 
 void InitializeInterrupts(void);
+
+// Interrupt values = 0-16.
+void PICUnmask(uint8_t interrupt);
+
+// Interrupt values = 0-16.
+void PICMask(uint8_t interrupt);
+
+// Interrupt values = 0-16.
+void PICEndOfInterrupt(const uint8_t interrupt);

@@ -12,9 +12,7 @@ void KernelStart(void)
     #endif
 
     //MainRenderer.ClearScreen();
-    MainRenderer.Printf("Kernel initialized.\n");
-
-    MainRenderer.Printf("\nKernel ended.\n");
+    MainRenderer.Printf("Kernel initialized.\n\n");
 
     while(true)
     {

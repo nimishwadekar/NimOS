@@ -126,6 +126,7 @@ static void RemapPIC(void);
 void InitializeInterrupts(void)
 {
     RemapPIC();
+    PICUnmask(1); // Unmask Keyboard interrupt.
 
     #pragma region HandlerInitialization
     InitializeIDTEntry(0x0, (uint64_t) IntHandler0x0);
@@ -181,6 +182,8 @@ void InitializeInterrupts(void)
     IDTRegister.Limit = 0x0FFF;
     IDTRegister.PhysicalAddress = (uint64_t) IDT;
     asm volatile("lidt %0" : : "m"(IDTRegister));
+
+    asm volatile("sti");
 }
 
 static void RemapPIC(void)
@@ -217,16 +220,54 @@ static void RemapPIC(void)
     io_wait();
 
     // Mask all PIC interrupts
-    outb(PIC1_DATA, 0xFF);
+    outb(PIC1_DATA, 0b11111111);
     io_wait();
-    outb(PIC2_DATA, 0xFF);
+    outb(PIC2_DATA, 0b11111111);
     io_wait();
+}
 
-    // Reusing saved masks
-    /* outb(PIC1_DATA, mask1);
-    io_wait();
-    outb(PIC2_DATA, mask2);
-    io_wait(); */
+void PICUnmask(uint8_t interrupt)
+{
+    uint8_t mask;
+    uint16_t port;
+    
+    if(interrupt < 8)
+    {
+        port = PIC1_DATA;
+    }
+    else
+    {
+        port = PIC2_DATA;
+        interrupt -= 8;
+    }
+    mask = inb(port);
+    mask &= ~(1 << interrupt);
+    outb(port, mask);
+}
+
+void PICMask(uint8_t interrupt)
+{
+    uint8_t mask;
+    uint16_t port;
+    
+    if(interrupt < 8)
+    {
+        port = PIC1_DATA;
+    }
+    else
+    {
+        port = PIC2_DATA;
+        interrupt -= 8;
+    }
+    mask = inb(port);
+    mask |= (1 << interrupt);
+    outb(port, mask);
+}
+
+void PICEndOfInterrupt(const uint8_t interrupt)
+{
+    if(interrupt >= 8) outb(PIC2_COMMAND, PIC_EOI);
+    outb(PIC1_COMMAND, PIC_EOI);
 }
 
 static void InitializeIDTEntry(const uint8_t interrupt, const uint64_t handler)
@@ -454,8 +495,9 @@ _intr_ static void IntHandler0x20(InterruptFrame *frame)
 
 _intr_ static void IntHandler0x21(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x21]);
-	while(true);
+    uint8_t scancode = inb(0x60);
+    MainRenderer.Printf("Scancode 0x%x\n", scancode);
+    PICEndOfInterrupt(1);
 }
 
 _intr_ static void IntHandler0x22(InterruptFrame *frame)
