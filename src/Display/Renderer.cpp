@@ -18,25 +18,6 @@ void Renderer::Printf(const char *format, ...)
 
     for(unsigned int i = 0; FormattedStringBuffer[i] != 0; i++)
     {
-        if(FormattedStringBuffer[i] == '\n')
-        {
-            Cursor.X = 0;
-            Cursor.Y += 16;
-            continue;
-        }
-        else if(FormattedStringBuffer[i] == '\t')
-        {
-            Cursor.X += 64;
-            Cursor.X /= 64;
-            Cursor.X *= 64;
-            if(Cursor.X + 8 > Buffer.Width)
-            {
-                Cursor.X = 0;
-                Cursor.Y += 16;
-            }
-            continue;
-        }
-
         PutChar(FormattedStringBuffer[i]);
     }
 }
@@ -44,7 +25,6 @@ void Renderer::Printf(const char *format, ...)
 void Renderer::PrintErrorf(const char *format, ...)
 {
     uint32_t oldForegroundColour = ForegroundColour;
-    //SetForegroundColour(0x00FF616D); // Shade of red
     SetForegroundColour(COLOUR_RED);
 
     va_list args;
@@ -54,25 +34,6 @@ void Renderer::PrintErrorf(const char *format, ...)
 
     for(unsigned int i = 0; FormattedStringBuffer[i] != 0; i++)
     {
-        if(FormattedStringBuffer[i] == '\n')
-        {
-            Cursor.X = 0;
-            Cursor.Y += 16;
-            continue;
-        }
-        else if(FormattedStringBuffer[i] == '\t')
-        {
-            Cursor.X += 64;
-            Cursor.X /= 64;
-            Cursor.X *= 64;
-            if(Cursor.X + 8 > Buffer.Width)
-            {
-                Cursor.X = 0;
-                Cursor.Y += 16;
-            }
-            continue;
-        }
-
         PutChar(FormattedStringBuffer[i]);
     }
     MainRenderer.SetForegroundColour(oldForegroundColour);
@@ -80,6 +41,24 @@ void Renderer::PrintErrorf(const char *format, ...)
 
 void Renderer::PutChar(const uint32_t xOffset, const uint32_t yOffset, const char character)
 {
+    // Special cases.
+    switch(character)
+    {
+        case '\n': // Line feed
+            Cursor.X = 0;
+            Cursor.Y += 16;
+            return;
+        
+        case ' ':
+            Cursor.X += 8;
+            if(Cursor.X + 8 > Buffer.Width)
+            {
+                Cursor.X = 0;
+                Cursor.Y += 16;
+            }
+            return;
+    }
+
     uint8_t *glyphPtr = &Font->Glyphs + character * Font->BytesPerGlyph;
     for(uint32_t y = yOffset; y < yOffset + 16; y++)
     {
@@ -103,24 +82,7 @@ void Renderer::PutChar(const uint32_t xOffset, const uint32_t yOffset, const cha
 
 void Renderer::PutChar(const char character)
 {
-    uint8_t *glyphPtr = &Font->Glyphs + character * Font->BytesPerGlyph;
-    for(uint32_t y = Cursor.Y; y < Cursor.Y + 16; y++)
-    {
-        for(uint32_t x = Cursor.X; x < Cursor.X + 8; x++)
-        {
-            if((*glyphPtr & (0b10000000 >> (x - Cursor.X))) > 0)
-            {
-                PutPixel(x, y, ForegroundColour);
-            }
-        }
-        glyphPtr += 1;
-    }
-    Cursor.X += 8;
-    if(Cursor.X + 8 > Buffer.Width)
-    {
-        Cursor.X = 0;
-        Cursor.Y += 16;
-    }
+    PutChar(Cursor.X, Cursor.Y, character);
 }
 
 void Renderer::PutPixel(const uint32_t xOffset, const uint32_t yOffset, const uint32_t colour)
