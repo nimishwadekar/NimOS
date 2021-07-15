@@ -39,6 +39,17 @@ char *ultoha(const unsigned long n, char *buffer)
     return buffer;
 }
 
+char *ultoba(const unsigned char n, char *buffer)
+{
+    unsigned char number = n;
+    buffer[8] = 0;
+    for(int i = 7; i >= 0; i--, number >>= 1)
+    {
+        buffer[i] = (number & 0x01) + '0';
+    }
+    return buffer;
+}
+
 char *FormatString(char *buffer, const char *format, va_list args)
 {
     int fIndex = 0, bIndex = 0;
@@ -102,6 +113,14 @@ char *FormatString(char *buffer, const char *format, va_list args)
             {
                 unsigned long u = va_arg(args, unsigned long);
                 bIndex += strlen(ultoa(u, 16, buffer + bIndex));
+                fIndex += 1;
+                break;
+            }
+
+            case 'y':
+            {
+                unsigned char u = (unsigned char) va_arg(args, int);
+                bIndex += strlen(ultoba(u, buffer + bIndex));
                 fIndex += 1;
                 break;
             }

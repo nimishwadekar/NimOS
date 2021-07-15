@@ -3,6 +3,8 @@
 #include "String.hpp"
 #include "Logging.hpp"
 #include "Memory/Heap.hpp"
+#include "IO/KeyboardScanCodes.hpp"
+#include "IO/Keyboard.hpp"
 
 // Kernel's main function.
 void KernelStart(void)
@@ -17,5 +19,10 @@ void KernelStart(void)
     while(true)
     {
         asm volatile("hlt");
+        while(!KBBuffer.IsEmpty())
+        {
+            uint8_t scan = KBBuffer.Dequeue();
+            if(scan < 0x58) MainRenderer.PutChar(QWERTYKeyboard::TranslateScanCode(scan));
+        }
     }
 }
