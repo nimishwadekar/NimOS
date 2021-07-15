@@ -1,25 +1,14 @@
 #include "Keyboard.hpp"
-#include "../Display/Renderer.hpp"
+#include "../Utility.hpp"
 
 KeyboardBuffer KBBuffer;
 
 void HandleKeyboard(const uint8_t scanCode)
 {
     KBBuffer.RegisterKeyPress(scanCode);
-
-    /* MainRenderer.Printf("%y  %u  %s  :  ", KBBuffer.Modifier, KBBuffer.Count, KBBuffer.Error ? "ERROR" : "NO-ERROR");
-    for(int i = 0; i < KB_BUFFER_CAPACITY; i++) MainRenderer.Printf("%x  ", KBBuffer.Buffer[i]);
-    MainRenderer.Printf("\n"); */
-
-    if(KBBuffer.Error) // Hang system if error
-    {
-        asm volatile("cli");
-        MainRenderer.PrintErrorf("KEYBOARD BUFFER OVERFLOW\n");
-        while(true) asm volatile("hlt");
-    }
 }
 
-KeyboardBuffer::KeyboardBuffer() : Modifier(0), Count(0)
+KeyboardBuffer::KeyboardBuffer() : Modifier(0), Left(0), Right(0)
 {
     for(int i = 0; i < KB_BUFFER_CAPACITY; i++) Buffer[i] = 0;
 }
@@ -125,33 +114,17 @@ void KeyboardBuffer::RegisterKeyPress(const uint8_t scanCode)
         }
     }
 
-    for(int i = 0; i < Count; i++)
-    {
-        if(Buffer[i] + 0x80 == scanCode) // Key release code
-        {
-            Remove(i);
-            return;
-        }
+    char input = QWERTYKeyboard::TranslateScanCode(scanCode);
+    if(input == 0) return;
 
-        if(Buffer[i] == scanCode) return; // Already pressed
+    if(IsModifierSet(SpecialKeys::LSHIFT) || IsModifierSet(SpecialKeys::RSHIFT)) // Add all other shift-keys
+    {
+        input = toUpper(input);
     }
 
-    if(Count >= KB_BUFFER_CAPACITY) // overflow
-    {
-        if(!Error) Error = true;
-        Count += 1;
-        return;
-    }
-
-    Buffer[Count] = scanCode;
-    Count += 1;
-}
-
-void KeyboardBuffer::Remove(const uint8_t index)
-{
-    for(int i = index; i < Count - 1; i++) Buffer[i] = Buffer[i + 1];
-    for(int i = Count - 1; i < KB_BUFFER_CAPACITY; i++) Buffer[i] = 0;
-    Count -= 1;
+    Buffer[Right] = input;
+    Right += 1;
+    if(Right == KB_BUFFER_CAPACITY) Right = 0;
 }
 
 bool KeyboardBuffer::IsModifierSet(const SpecialKeys key)
@@ -171,17 +144,13 @@ void KeyboardBuffer::ClearModifier(const SpecialKeys key)
 
 bool KeyboardBuffer::IsEmpty(void)
 {
-    return Count == 0;
+    return Left == Right;
 }
 
-uint8_t KeyboardBuffer::Front(void)
+char KeyboardBuffer::Dequeue(void)
 {
-    return Buffer[0];
-}
-
-uint8_t KeyboardBuffer::Dequeue(void)
-{
-    uint8_t front = Buffer[0];
-    Remove(0);
+    char front = Buffer[Left];
+    Left += 1;
+    if(Left == KB_BUFFER_CAPACITY) Left = 0;
     return front;
 }

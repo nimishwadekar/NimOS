@@ -15,25 +15,23 @@ enum class SpecialKeys
     RGUI = 7
 };
 
-#define KB_BUFFER_CAPACITY 4
+#define KB_BUFFER_CAPACITY 16
 
 class KeyboardBuffer
 {
     public:
     uint8_t Modifier;
-    uint8_t Count;
-    bool Error;
-    uint8_t Buffer[KB_BUFFER_CAPACITY];
+    uint8_t Left;
+    uint8_t Right;
+    char Buffer[KB_BUFFER_CAPACITY];
 
     KeyboardBuffer(void);
     void RegisterKeyPress(const uint8_t scanCode);
-    void Remove(const uint8_t index);
     bool IsModifierSet(const SpecialKeys key);
     void SetModifier(const SpecialKeys key);
     void ClearModifier(const SpecialKeys key);
     bool IsEmpty(void);
-    uint8_t Front(void);
-    uint8_t Dequeue(void);
+    char Dequeue(void);
 };
 
 // Lets kernel know about key-press.

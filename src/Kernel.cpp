@@ -21,8 +21,7 @@ void KernelStart(void)
         asm volatile("hlt");
         while(!KBBuffer.IsEmpty())
         {
-            uint8_t scan = KBBuffer.Dequeue();
-            if(scan < 0x58) MainRenderer.PutChar(QWERTYKeyboard::TranslateScanCode(scan));
+            MainRenderer.PutChar(KBBuffer.Dequeue());
         }
     }
 }

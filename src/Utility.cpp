@@ -30,7 +30,12 @@ bool isSpace(const char c)
     return c == ' ' || c == '\n' || c == '\t';
 }
 
-bool isSpecial(const char c)
+char toUpper(const char c)
 {
-    return !(isAlnum(c) || isSpace(c));
+    return (c >= 'a' && c <= 'z') ? c - 32 : c;
+}
+
+char toLower(const char c)
+{
+    return (c >= 'A' && c <= 'Z') ? c + 32 : c;
 }
