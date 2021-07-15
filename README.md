@@ -23,12 +23,12 @@
 - Dynamic Memory Allocator (Heap)
 - ACPI
 - PCI Device Enumeration
+- Keyboard Driver
 
 ---
 
 ### Features to be implemented:
 - Programmable Interval Timer
-- Keyboard Driver
 - Mouse Driver
 - File System
 - Hard Disk Driver
