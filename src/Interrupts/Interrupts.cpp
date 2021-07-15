@@ -493,10 +493,11 @@ _intr_ static void IntHandler0x20(InterruptFrame *frame)
 	while(true);
 }
 
+extern void KeyboardInterruptHandler(const uint8_t scanCode); // In "Keyboard.hpp"
 _intr_ static void IntHandler0x21(InterruptFrame *frame)
 {
-    uint8_t scancode = inb(0x60);
-    MainRenderer.Printf("Scancode 0x%x\n", scancode);
+    const uint8_t scanCode = inb(0x60);
+    KeyboardInterruptHandler(scanCode);
     PICEndOfInterrupt(1);
 }
 
