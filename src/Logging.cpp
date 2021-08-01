@@ -7,7 +7,7 @@
 #include "IO/Serial.hpp"
 
 char LogFormattedStringBuffer[200];
-void Logf(const char *format, ...)
+void logf(const char *format, ...)
 {
     va_list args;
     va_start(args, format);

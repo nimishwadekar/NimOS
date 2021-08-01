@@ -12,3 +12,10 @@ int memcmp(const void *a, const void *b, uint64_t bytes)
     for(uint64_t i = 0; i < bytes; i++) if(aptr[i] != bptr[i]) return aptr[i] - bptr[i];
     return 0;
 }
+
+void memcpy(const void *from, void *to, uint64_t bytes)
+{
+    const uint8_t *f = (const uint8_t*) from;
+    uint8_t *t = (uint8_t*) to;
+    for( ; bytes > 0; bytes--, f++, t++) *t = *f;
+}

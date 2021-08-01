@@ -39,3 +39,11 @@ void InitializeHeap(void *heapAddress, uint64_t pageCount);
 void ExtendHeap(uint64_t size);
 void *Malloc(uint64_t size);
 void Free(void *address);
+
+inline void *operator new(uint64_t size) { return Malloc(size); }
+inline void *operator new[](uint64_t size) { return Malloc(size); }
+
+inline void operator delete(void *ptr) { Free(ptr); }
+inline void operator delete(void *ptr, uint64_t size) { Free(ptr); }
+inline void operator delete[](void *ptr) { Free(ptr); }
+inline void operator delete[](void *ptr, uint64_t size) { Free(ptr); }

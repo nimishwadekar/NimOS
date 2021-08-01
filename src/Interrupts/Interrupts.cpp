@@ -1,6 +1,8 @@
 #include "Interrupts.hpp"
 #include "../Display/Renderer.hpp"
 #include "../IO/Port.hpp"
+#include "../IO/Keyboard.hpp"
+#include "../Scheduling/PIT/PIT.hpp"
 
 #define _intr_ __attribute__((interrupt))
 
@@ -127,6 +129,7 @@ void InitializeInterrupts(void)
 {
     RemapPIC();
     PICUnmask(1); // Unmask Keyboard interrupt.
+    PICUnmask(0); // Unmask PIT interrupt.
 
     #pragma region HandlerInitialization
     InitializeIDTEntry(0x0, (uint64_t) IntHandler0x0);
@@ -489,11 +492,10 @@ _intr_ static void IntHandler0x1f(InterruptFrame *frame)
 
 _intr_ static void IntHandler0x20(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x20]);
-	while(true);
+    PIT::Tick();
+    PICEndOfInterrupt(0);
 }
 
-extern void HandleKeyboard(const uint8_t scanCode); // In "Keyboard.hpp"
 _intr_ static void IntHandler0x21(InterruptFrame *frame)
 {
     const uint8_t scanCode = inb(0x60);

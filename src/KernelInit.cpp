@@ -15,6 +15,8 @@
 #include "Memory/Heap.hpp"
 #include "ACPI/ACPI.hpp"
 #include "PCI/PCI.hpp"
+#include "Scheduling/PIT/PIT.hpp"
+#include "Storage/DiskInfo.hpp"
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];
@@ -34,11 +36,11 @@ void main()
     #ifdef LOGGING
     if(InitializeSerialPort(SERIAL_COM1) == -1)
     {
-        MainRenderer.PrintErrorf("SERIAL PORT COM 1 INITIALIZATION FAILURE.\n");
+        errorf("SERIAL PORT COM 1 INITIALIZATION FAILURE.\n");
         while(1);
     }
-    Logf("Serial port COM1 initialized for logging.\n\n");
-    Logf("******************************************************************************************\n\n");
+    logf("Serial port COM1 initialized for logging.\n\n");
+    logf("******************************************************************************************\n\n");
     #endif
 
     Framebuffer framebuffer((uint32_t*) &fb, (Framebuffer::FBType) bootboot.fb_type, 
@@ -47,7 +49,7 @@ void main()
     MainRenderer = Renderer(framebuffer, font, COLOUR_BLACK, COLOUR_WHITE);
     MainRenderer.ClearScreen();
     #ifdef LOGGING
-    Logf("Main Renderer initialized.\n");
+    logf("Main Renderer initialized.\n");
     #endif
 
     MemoryMap memoryMap;
@@ -56,7 +58,7 @@ void main()
     memoryMap.MemorySizeKB = memoryMap.Entries[memoryMap.EntryCount - 1].Address + MemoryMapEntry_Size(memoryMap.Entries[memoryMap.EntryCount - 1]);
     memoryMap.MemorySizeKB /= 1024;
     #ifdef LOGGING
-    Logf("Memory map prepared.\n");
+    logf("Memory map prepared.\n");
     #endif
 
     // Load GDT
@@ -65,13 +67,13 @@ void main()
     gdtr.PhysicalAddress = (uint64_t) &GlobalDescriptorTable;
     LoadGDT(&gdtr);
     #ifdef LOGGING
-    Logf("GDT Loaded.\n");
+    logf("GDT Loaded.\n");
     #endif
 
     // Initialize Page Frame Allocator.
     FrameAllocator.Initialize(memoryMap);
     #ifdef LOGGING
-    Logf("Page Frame Allocator initialized.\nFree memory = 0x%x\nUsed memory = 0x%x\nReserved memory = 0x%x\n", 
+    logf("Page Frame Allocator initialized.\nFree memory = 0x%x\nUsed memory = 0x%x\nReserved memory = 0x%x\n", 
         FrameAllocator.FreeMemory, FrameAllocator.UsedMemory, FrameAllocator.ReservedMemory);
     #endif
 
@@ -79,22 +81,32 @@ void main()
     asm volatile("mov %%cr3, %%rax" : "=a"(pageTableL4) : );
     PagingManager = PageTableManager(pageTableL4);
     #ifdef LOGGING
-    Logf("Kernel Page Table Manager initialized.\n");
+    logf("Kernel Page Table Manager initialized.\n");
     #endif
 
     InitializeInterrupts();
     #ifdef LOGGING
-    Logf("Interrupts initialized.\n\n");
+    logf("Interrupts initialized.\n\n");
     #endif
 
     InitializeHeap((void*) HEAP_ADDRESS, 16);
     #ifdef LOGGING
-    Logf("Heap initialized.\n\n");
+    logf("Heap initialized.\n\n");
     #endif
 
     SetupACPI(bootboot.arch.x86_64.acpi_ptr);
     #ifdef LOGGING
-    Logf("ACPI initialized.\n");
+    logf("ACPI initialized.\n");
+    #endif
+
+    PIT::SetDivisor(20000);
+    #ifdef LOGGING
+    logf("PIT initialized.\n");
+    #endif
+
+    DiskInformation.Initialize();
+    #ifdef LOGGING
+    logf("Disk information initialized.\n");
     #endif
 
     KernelStart();
@@ -107,22 +119,22 @@ void SetupACPI(const uint64_t xsdtAddress)
     int signatureValid = memcmp(xsdtHeader->Signature, "XSDT", 4);
     if(signatureValid != 0)
     {
-        MainRenderer.PrintErrorf("XSDT Table not found.");
+        errorf("XSDT Table not found.");
         while(true);
     }
 
     if(!ACPI::IsChecksumValid(xsdtHeader))
     {
-        MainRenderer.PrintErrorf("XSDT Table checksum not valid.");
+        errorf("XSDT Table checksum not valid.");
         while(true);
     }
 
     ACPI::MCFGHeader *mcfgHeader = (ACPI::MCFGHeader*) ACPI::FindTable(xsdtHeader, "MCFG");
     if(mcfgHeader == NULL)
     {
-        MainRenderer.PrintErrorf("MCFG Table not found.");
+        errorf("MCFG Table not found.");
         while(true);
     }
     
-    //PCI::EnumeratePCI(mcfgHeader);
+    PCI::EnumeratePCI(mcfgHeader);
 }

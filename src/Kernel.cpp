@@ -3,25 +3,31 @@
 #include "String.hpp"
 #include "Logging.hpp"
 #include "Memory/Heap.hpp"
-#include "IO/KeyboardScanCodes.hpp"
 #include "IO/Keyboard.hpp"
+#include "Scheduling/PIT/PIT.hpp"
+
+#include "IO/Port.hpp"
 
 // Kernel's main function.
 void KernelStart(void)
 {
     #ifdef LOGGING
-    Logf("Kernel initialized.\n");
+    logf("Kernel initialized.\n");
     #endif
 
     //MainRenderer.ClearScreen();
-    MainRenderer.Printf("Kernel initialized.\n\n");
+    printf("Kernel initialized.\n\n");
 
     while(true)
     {
         asm volatile("hlt");
         while(!KBBuffer.IsEmpty())
         {
-            MainRenderer.PutChar(KBBuffer.Dequeue());
+            char c = KBBuffer.Dequeue();
+            if(c == 'q')
+            {
+                outw(0x604, 0x2000);
+            }
         }
     }
 }

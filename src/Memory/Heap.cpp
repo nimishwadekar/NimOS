@@ -19,12 +19,12 @@ void InitializeHeap(void *heapAddress, uint64_t pageCount)
     {
         void *positionPhys = FrameAllocator.RequestPageFrame();
         #ifdef LOGGING
-        Logf("InitializeHeap(void*, uint64_t) : Page Frame at 0x%x allocated for heap.\n", positionPhys);
+        logf("InitializeHeap(void*, uint64_t) : Page Frame at 0x%x allocated for heap.\n", positionPhys);
         #endif
 
         PagingManager.MapPage(position, positionPhys);
         #ifdef LOGGING
-        Logf("InitializeHeap(void*, uint64_t) : 0x%x mapped to phys 0x%x for heap.\n", position, positionPhys);
+        logf("InitializeHeap(void*, uint64_t) : 0x%x mapped to phys 0x%x for heap.\n", position, positionPhys);
         #endif
 
         position = (void*) ((uint64_t) position + 0x1000);
@@ -99,12 +99,12 @@ void ExtendHeap(uint64_t size)
     {
         void *heapExtensionPhysical = FrameAllocator.RequestPageFrame();
         #ifdef LOGGING
-        Logf("ExtendHeap(void*, uint64_t) : Page Frame at 0x%x allocated for heap extension.\n", heapExtensionPhysical);
+        logf("ExtendHeap(void*, uint64_t) : Page Frame at 0x%x allocated for heap extension.\n", heapExtensionPhysical);
         #endif
 
         PagingManager.MapPage(HeapEnd, heapExtensionPhysical);
         #ifdef LOGGING
-        Logf("ExtendHeap(void*, uint64_t) : 0x%x mapped to phys 0x%x for heap extension.\n", HeapEnd, heapExtensionPhysical);
+        logf("ExtendHeap(void*, uint64_t) : 0x%x mapped to phys 0x%x for heap extension.\n", HeapEnd, heapExtensionPhysical);
         #endif
 
         HeapEnd = (void*) ((uint64_t) HeapEnd + 0x1000);

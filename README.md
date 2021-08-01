@@ -24,19 +24,18 @@
 - ACPI
 - PCI Device Enumeration
 - Keyboard Driver
+- Programmable Interval Timer
+- Hard Disk Driver
 
 ---
 
 ### Features to be implemented:
-- Programmable Interval Timer
 - Mouse Driver
 - File System
-- Hard Disk Driver
 - USB Driver
 - User Space
 - System Calls
 - Shell
-- Program Loader
 - Time
 - Threads
 - GUI

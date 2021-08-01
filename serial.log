@@ -4,21 +4,21 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @2303000 14311 bytes
- * Initrd loaded @22F7000 45568 bytes
- * Environment @254A000 31 bytes
+ * Gzip compressed initrd @22F7000 16614 bytes
+ * Initrd loaded @22E9000 53760 bytes
+ * Environment @22FB000 31 bytes
  * Screen 960 x 640, scanline 3840, fb @C0000000 2457600 bytes, type 1 ARGB
  * System tables
- * System time 2021-07-15 17:38:14 GMT+0:00 
+ * System time 2021-08-01 18:00:59 GMT+0:00 
  * cpio sys/core
- * Parsing ELF64 @22F70A5
+ * Parsing ELF64 @22E90A5
  * fb          @FFFFFFFFFC000000
  * bootboot    @FFFFFFFFFEFFE000
  * environment @FFFFFFFFFEFFF000
- * Entry point @FFFFFFFFFF000195, text @22C9000 41408 bytes
+ * Entry point @FFFFFFFFFF000195, text @22BC000 49760 bytes
  * SMP numcores 1
- * Pagetables PML4 @22A3000
- * Memory Map @2305000 5808 bytes try #1
+ * Pagetables PML4 @2296000
+ * Memory Map @22F9000 5664 bytes try #1
 Serial port COM1 initialized for logging.
 
 ******************************************************************************************
@@ -28,9 +28,9 @@ Memory map prepared.
 GDT Loaded.
 Page Frame Allocator Bitmap stored at 0x900000, size = 0x18000 bytes
 Page Frame Allocator initialized.
-Free memory = 0x39F9000
+Free memory = 0x39F3000
 Used memory = 0x102B8000
-Reserved memory = 0xAC34F000
+Reserved memory = 0xAC355000
 Kernel Page Table Manager initialized.
 Interrupts initialized.
 
@@ -70,5 +70,24 @@ InitializeHeap(void*, uint64_t) : Page Frame at 0x111000 allocated for heap.
 InitializeHeap(void*, uint64_t) : 0xFFFFFFFF0000F000 mapped to phys 0x111000 for heap.
 Heap initialized.
 
+Port 0 IDENTIFY:
+Hard disk: 0x40
+LBA48 enable: 1
+LBA28 sectors: 98560
+LBA48 sectors: 98560
 ACPI initialized.
+PIT initialized.
+
+Disk Partition Count = 2
+Partition 0:
+LBA 0x80 - LBA 0x807F
+Attributes = 0x0
+Name: EFI System Partition
+
+Partition 1:
+LBA 0x8080 - LBA 0x1807F
+Attributes = 0x0
+Name: root
+
+Disk information initialized.
 Kernel initialized.

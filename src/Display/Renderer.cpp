@@ -36,7 +36,7 @@ void Renderer::PrintErrorf(const char *format, ...)
     {
         PutChar(FormattedStringBuffer[i]);
     }
-    MainRenderer.SetForegroundColour(oldForegroundColour);
+    SetForegroundColour(oldForegroundColour);
 }
 
 void Renderer::PutChar(const uint32_t xOffset, const uint32_t yOffset, const char character)
@@ -120,3 +120,33 @@ void Renderer::ClearScreen()
 
 // The main renderer for the kernel.
 Renderer MainRenderer(Framebuffer(0, (Framebuffer::FBType)0, 0, 0, 0, 0), 0, 0, 0);
+
+void printf(const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    FormatString(FormattedStringBuffer, format, args);
+    va_end(args);
+
+    for(unsigned int i = 0; FormattedStringBuffer[i] != 0; i++)
+    {
+        MainRenderer.PutChar(FormattedStringBuffer[i]);
+    }
+}
+
+void errorf(const char *format, ...)
+{
+    uint32_t oldForegroundColour = MainRenderer.ForegroundColour;
+    MainRenderer.SetForegroundColour(COLOUR_RED);
+
+    va_list args;
+    va_start(args, format);
+    FormatString(FormattedStringBuffer, format, args);
+    va_end(args);
+
+    for(unsigned int i = 0; FormattedStringBuffer[i] != 0; i++)
+    {
+        MainRenderer.PutChar(FormattedStringBuffer[i]);
+    }
+    MainRenderer.SetForegroundColour(oldForegroundColour);
+}

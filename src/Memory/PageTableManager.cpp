@@ -23,7 +23,7 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
     {
         level3Table = (PageTable*) FrameAllocator.RequestPageFrame();
         #ifdef LOGGING
-        Logf("PageTableManager::MapPage(void*, void*) : Page Frame at 0x%x allocated for Level 3 Table.\n", level3Table);
+        logf("PageTableManager::MapPage(void*, void*) : Page Frame at 0x%x allocated for Level 3 Table.\n", level3Table);
         #endif
 
         memset(level3Table, 0, 0x1000);
@@ -44,7 +44,7 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
     {
         level2Table = (PageTable*) FrameAllocator.RequestPageFrame();
         #ifdef LOGGING
-        Logf("PageTableManager::MapPage(void*, void*) : Page Frame at 0x%x allocated for Level 2 Table.\n", level2Table);
+        logf("PageTableManager::MapPage(void*, void*) : Page Frame at 0x%x allocated for Level 2 Table.\n", level2Table);
         #endif
 
         memset(level2Table, 0, 0x1000);
@@ -65,7 +65,7 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
     {
         level1Table = (PageTable*) FrameAllocator.RequestPageFrame();
         #ifdef LOGGING
-        Logf("PageTableManager::MapPage(void*, void*) : Page Frame at 0x%x allocated for Level 1 Table.\n", level1Table);
+        logf("PageTableManager::MapPage(void*, void*) : Page Frame at 0x%x allocated for Level 1 Table.\n", level1Table);
         #endif
 
         memset(level1Table, 0, 0x1000);

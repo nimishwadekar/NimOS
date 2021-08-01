@@ -5,6 +5,6 @@
 #ifdef LOGGING
 
 // Formatted serial log output.
-void Logf(const char *format, ...);
+void logf(const char *format, ...);
 
 #endif

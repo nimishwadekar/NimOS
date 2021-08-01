@@ -39,3 +39,9 @@ class Renderer
 };
 
 extern Renderer MainRenderer;
+
+// Wrapper around MainRenderer.Printf().
+void printf(const char *format, ...);
+
+// Wrapper around MainRenderer.PrintErrorf().
+void errorf(const char *format, ...);

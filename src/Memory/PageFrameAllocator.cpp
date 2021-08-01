@@ -29,7 +29,7 @@ void PageFrameAllocator::Initialize(MemoryMap memoryMap)
     uint64_t bitmapBufferSize = (memoryMap.MemorySizeKB + 31) / (4 * 8);
     PageFrameBitmap.Initialize((void*) largestFreeMemoryChunk, bitmapBufferSize, true); // Initialise all page frames as used initially.
     #ifdef LOGGING
-    Logf("Page Frame Allocator Bitmap stored at 0x%x, size = 0x%x bytes\n", largestFreeMemoryChunk, bitmapBufferSize);
+    logf("Page Frame Allocator Bitmap stored at 0x%x, size = 0x%x bytes\n", largestFreeMemoryChunk, bitmapBufferSize);
     #endif
 
     // Mark the page frames currently free according to the memory map as free.
