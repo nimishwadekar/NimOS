@@ -5,11 +5,8 @@
 // Unsigned long integer to string.
 char *ultoa(const unsigned long n, int radix, char *buffer);
 
-// Unsigned long integer to hex string, 64 bits long.
-char *ultoha(const unsigned long n, char *buffer);
-
-// Byte to bin string, 8 bits long.
-char *ultoba(const unsigned char n, char *buffer);
+// Unsigned long integer to string, length characters long.
+char *ultona(const unsigned long n, int radix, int length, char *buffer);
 
 // Formats the string.
 char *FormatString(char *buffer, const char *format, va_list args);

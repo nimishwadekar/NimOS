@@ -1,4 +1,5 @@
 #include "String.hpp"
+#include "Utility.hpp"
 
 char *ultoa(const unsigned long n, int radix, char *buffer)
 {
@@ -25,27 +26,23 @@ char *ultoa(const unsigned long n, int radix, char *buffer)
     return buffer;
 }
 
-char *ultoha(const unsigned long n, char *buffer)
+char *ultona(const unsigned long n, int radix, int length, char *buffer)
 {
-    unsigned long number = n;
-    buffer[16] = 0;
-    for(int i = 15; i >= 0; i--, number /= 16)
+    if(n == 0)
     {
-        char digit = number % 16;
+        for(int i = 0; i < length; i++) buffer[i] = '0';
+        buffer[length] = 0;
+        return buffer;
+    }
+
+    unsigned long number = n;
+    buffer[length] = 0;
+    for(int i = length - 1; i >= 0; i--, number /= radix)
+    {
+        char digit = number % radix;
         if(digit > 9) digit = digit - 10 + 'A';
         else digit = digit + '0';
         buffer[i] = digit;
-    }
-    return buffer;
-}
-
-char *ultoba(const unsigned char n, char *buffer)
-{
-    unsigned char number = n;
-    buffer[8] = 0;
-    for(int i = 7; i >= 0; i--, number >>= 1)
-    {
-        buffer[i] = (number & 0x01) + '0';
     }
     return buffer;
 }
@@ -64,6 +61,12 @@ char *FormatString(char *buffer, const char *format, va_list args)
         }
 
         fIndex += 1;
+        int digits = -1;
+        if(isDigit(format[fIndex])) 
+        {
+            digits = format[fIndex] - '0';
+            fIndex += 1;
+        }
         switch (format[fIndex])
         {
             case 'b':
@@ -79,14 +82,6 @@ char *FormatString(char *buffer, const char *format, va_list args)
                 char c = (char) va_arg(args, int);
                 buffer[bIndex] = c;
                 bIndex += 1;
-                fIndex += 1;
-                break;
-            }
-
-            case 'h':
-            {
-                unsigned long u = va_arg(args, unsigned long);
-                bIndex += strlen(ultoha(u, buffer + bIndex));
                 fIndex += 1;
                 break;
             }
@@ -112,15 +107,15 @@ char *FormatString(char *buffer, const char *format, va_list args)
             case 'x':
             {
                 unsigned long u = va_arg(args, unsigned long);
-                bIndex += strlen(ultoa(u, 16, buffer + bIndex));
-                fIndex += 1;
-                break;
-            }
-
-            case 'y':
-            {
-                unsigned char u = (unsigned char) va_arg(args, int);
-                bIndex += strlen(ultoba(u, buffer + bIndex));
+                if(digits == -1)
+                {
+                    bIndex += strlen(ultoa(u, 16, buffer + bIndex));
+                }
+                else
+                {
+                    ultona(u, 16, digits, buffer + bIndex);
+                    bIndex += digits;
+                }
                 fIndex += 1;
                 break;
             }

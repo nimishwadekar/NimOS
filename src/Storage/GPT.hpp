@@ -22,10 +22,18 @@ struct GPTHeader
     uint32_t CRC32Entries;
 } __attribute__((packed));
 
+struct GUID
+{
+    uint32_t Data0;
+    uint16_t Data1;
+    uint16_t Data2;
+    uint8_t Data3[8];
+} __attribute__((packed));
+
 struct GPTEntry
 {
-    uint64_t PartitionTypeGUID[2]; // Zero implies unused entry.
-    uint64_t UniquePartitionGUID[2];
+    GUID PartitionTypeGUID; // Zero implies unused entry.
+    GUID UniquePartitionGUID;
 
     uint64_t StartingLBA;
     uint64_t EndingLBA;
