@@ -7,7 +7,8 @@
 
 enum class PartitionType
 {
-    EFISystem,
+    None = -1,
+    EFISystem = 0,
     FAT,
     EXT2
 };
@@ -28,6 +29,7 @@ class DiskInfo
     uint32_t PartitionCount;
 
     bool Initialize(void);
+    PartitionType GetPartitionType(GUID *partitionTypeGUID);
 };
 
 extern DiskInfo DiskInformation;

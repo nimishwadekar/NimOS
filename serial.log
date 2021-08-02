@@ -4,18 +4,18 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @22F0000 16778 bytes
+ * Gzip compressed initrd @22F0000 16885 bytes
  * Initrd loaded @22E2000 53760 bytes
  * Environment @253C000 31 bytes
  * Screen 960 x 640, scanline 3840, fb @C0000000 2457600 bytes, type 1 ARGB
  * System tables
- * System time 2021-08-02 08:24:29 GMT+0:00 
+ * System time 2021-08-02 14:57:42 GMT+0:00 
  * cpio sys/core
  * Parsing ELF64 @22E20A5
  * fb          @FFFFFFFFFC000000
  * bootboot    @FFFFFFFFFEFFE000
  * environment @FFFFFFFFFEFFF000
- * Entry point @FFFFFFFFFF000195, text @22B5000 49760 bytes
+ * Entry point @FFFFFFFFFF000195, text @22B5000 49824 bytes
  * SMP numcores 1
  * Pagetables PML4 @228F000
  * Memory Map @22F3000 5808 bytes try #1
@@ -82,19 +82,19 @@ Disk Partition Count = 3
 Partition 0:
 LBA 0x80 - LBA 0x807F
 Attributes = 0x0
-Partition Type GUID: C12A7328-F81F-11D2-BA4B-00A0C93EC93B
+EFI System Partition
 Name: EFI System Partition
 
 Partition 1:
 LBA 0x8080 - LBA 0x2807F
 Attributes = 0x0
-Partition Type GUID: EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
+FAT Partition
 Name: fatPart
 
 Partition 2:
 LBA 0x28080 - LBA 0x3807F
 Attributes = 0x0
-Partition Type GUID: 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+Ext2 Partition
 Name: extPart
 
 Disk information initialized.
