@@ -26,12 +26,13 @@
 - Keyboard Driver
 - Programmable Interval Timer
 - Hard Disk Driver
+- Virtual File System
 
 ---
 
 ### Features to be implemented:
+- FAT File System
 - Mouse Driver
-- File System
 - USB Driver
 - User Space
 - System Calls
