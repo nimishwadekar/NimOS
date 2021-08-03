@@ -17,6 +17,7 @@
 #include "PCI/PCI.hpp"
 #include "Scheduling/PIT/PIT.hpp"
 #include "Storage/DiskInfo.hpp"
+#include "FS/VFS.hpp"
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];
@@ -107,6 +108,11 @@ void main()
     DiskInformation.Initialize();
     #ifdef LOGGING
     logf("Disk information initialized.\n");
+    #endif
+
+    VFSInitialize(&DiskInformation);
+    #ifdef LOGGING
+    logf("VFS initialized.\n");
     #endif
 
     KernelStart();

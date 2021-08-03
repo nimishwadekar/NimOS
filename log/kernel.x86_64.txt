@@ -23,7 +23,7 @@ Program Headers:
   Type           Offset             VirtAddr           PhysAddr
                  FileSiz            MemSiz              Flags  Align
   LOAD           0x0000000000001000 0xffffffffff000000 0xffffffffff000000
-                 0x000000000000bc48 0x000000000000c2a0  RWE    0x1000
+                 0x000000000000bc48 0x000000000000c370  RWE    0x1000
 
  Section to Segment mapping:
   Segment Sections...
