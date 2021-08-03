@@ -148,3 +148,11 @@ namespace FAT
     uint64_t Read(void *fat, FILE *file, void *buffer, const uint64_t length);
     uint64_t Write(void *fat, FILE *file, const void *buffer, const uint64_t length);
 }
+
+/*****************************************
+ * 
+ *  END OF CLUSTER CHAIN IS FFFFFF8 TO FFFFFFF.
+ * 
+ *  & WITH FFFFFF8 == FFFFFF8
+ * 
+ * ***************************************/
