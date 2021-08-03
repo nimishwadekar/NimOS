@@ -11,10 +11,6 @@
 // Kernel's main function.
 void KernelStart(void)
 {
-    #ifdef LOGGING
-    logf("Kernel initialized.\n");
-    #endif
-
     //MainRenderer.ClearScreen();
     printf("Kernel initialized.\n\n");
 

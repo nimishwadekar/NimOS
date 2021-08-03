@@ -53,25 +53,9 @@ namespace FAT
             case FATType::FAT32:
             {
                 GetMountInfo32(&mountInfo, (BootRecord32*) bpb);
-                printf("clusters = 0x%x\nsectors = 0x%x\nsec per fat = %u\nfirst fat = %u\nfirst data = %u\ndata sec count = 0x%x\n", mountInfo.ClusterCount
-                    , mountInfo.SectorCount, mountInfo.SectorsPerFAT, mountInfo.FirstFATSector, mountInfo.FirstDataSector, mountInfo.DataSectorCount);
-                
-                for(uint32_t t = 0; t < mountInfo.DataSectorCount; t++) {
-                DiskPort->Read(mountInfo.LogicalOffset + mountInfo.FirstDataSector + t, 1, Buffer);
-                uint8_t *fat = (uint8_t*) Buffer;
-                for(int i = 0; i < 512; i++)
-                {
-                    //for(int j = i; j < 8; j++) printf("%x ", fat[j]);
-                    if(fat[i] != 0) 
-                    logf("%u : %u   %x\n", t, i, fat[i]);
-                    //printf("\n");
-                } logf("\n\n"); }
-                printf("\n\n");
-
-                /* DiskPort->Read(mountInfo.LogicalOffset + mountInfo.FirstDataSector, 4, Buffer);
-                for(int i = 0; i < 2048; i++) printf("%u ", Buffer[i]);
-                printf("\n"); */
-
+                printf("clusters = 0x%x\nsectors = 0x%x\nsec per fat = %u\nfirst fat = %u\nfirst data = %u\ndata sec count = 0x%x\n",
+                    mountInfo.ClusterCount, mountInfo.SectorCount, mountInfo.SectorsPerFAT,
+                    mountInfo.FirstFATSector, mountInfo.FirstDataSector, mountInfo.DataSectorCount);
                 break;
             }
 
