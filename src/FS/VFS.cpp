@@ -18,9 +18,28 @@ void SetupFileSystem(Partition *partition, uint8_t device)
     const char *name = nullptr;
     switch(partition->Type)
     {
-        case PartitionType::EFISystem: name = "EFI SYS "; break;
-        case PartitionType::FAT: name = "FAT     "; break;
-        case PartitionType::EXT2: name = "EXT2    "; break;
+        case PartitionType::EFISystem:
+            name = "EFI SYS ";
+            break;
+
+        case PartitionType::FAT:
+        {
+            name = "FAT     ";
+            FAT::FATSystem *fat = new FAT::FATSystem(&partition->Entry);
+            newFS->FS = fat;
+            newFS->Open = FAT::Open;
+            newFS->Close = FAT::Close;
+            newFS->Read = FAT::Read;
+            newFS->Write = FAT::Write;
+            break;
+        }
+
+        case PartitionType::EXT2:
+        {
+            name = "EXT2    ";
+            break;
+        }
+
         default: return;
     }
     memcpy(name, newFS->Name, 8);
@@ -28,13 +47,13 @@ void SetupFileSystem(Partition *partition, uint8_t device)
     // Assign FS specific functions to function pointers.
     
     // TEMPORARY
-    if(device == 'C')
+    /* if(device == 'C')
     {
         newFS->Open = fatopen;
         newFS->Close = fatclose;
         newFS->Read = fatread;
         newFS->Write = fatwrite;
-    }
+    } */
 
     FILE_SYSTEMS[device - 'A'] = newFS;
 }
@@ -76,9 +95,10 @@ FILE VFSOpenFile(const char *fileName)
             fileName += 2; // Strip volume from file name.
         }
 
-        if(FILE_SYSTEMS[device - 'A']) // Call respective FS' open() function.
+        uint8_t index = device - 'A';
+        if(FILE_SYSTEMS[index]) // Call respective FS' open() function.
         {
-            FILE file = FILE_SYSTEMS[device - 'A']->Open(fileName);
+            FILE file = FILE_SYSTEMS[index]->Open(FILE_SYSTEMS[index]->FS, fileName);
             file.Device = device;
             return file;
         }
@@ -89,12 +109,13 @@ FILE VFSOpenFile(const char *fileName)
     return file;
 }
 
-void VFSCloseFile(FILE *file)
+int VFSCloseFile(FILE *file)
 {
-    if(!file) return; // No file.
-    if((file->Flags & VFS_VALID) == 0) return; // File not open.
+    if(!file) return -1; // No file.
+    if((file->Flags & VFS_VALID) == 0) return -1; // File not open.
 
-    file->Flags = VFS_INVALID;
+    uint8_t index = file->Device - 'A';
+    return FILE_SYSTEMS[index]->Close(FILE_SYSTEMS[index]->FS, file);
 }
 
 uint64_t VFSReadFile(FILE *file, void *buffer, const uint64_t length)
@@ -103,7 +124,8 @@ uint64_t VFSReadFile(FILE *file, void *buffer, const uint64_t length)
     if((file->Flags & VFS_VALID) == 0) return 0; // File not open.
     if((file->Flags & VFS_FILE) == 0) return 0; // Not a file.
     
-    return FILE_SYSTEMS[file->Device - 'A']->Read(file, buffer, length);
+    uint8_t index = file->Device - 'A';
+    return FILE_SYSTEMS[index]->Read(FILE_SYSTEMS[index]->FS, file, buffer, length);
 }
 
 uint64_t VFSWriteFile(FILE *file, const void *buffer, const uint64_t length)
@@ -113,7 +135,8 @@ uint64_t VFSWriteFile(FILE *file, const void *buffer, const uint64_t length)
     if((file->Flags & VFS_FILE) == 0) return 0; // Not a file.
     if((file->Flags & (VFS_WRITE | VFS_APPEND)) == 0) return 0; // Not a writable file.
     
-    return FILE_SYSTEMS[file->Device - 'A']->Write(file, buffer, length);
+    uint8_t index = file->Device - 'A';
+    return FILE_SYSTEMS[index]->Write(FILE_SYSTEMS[index]->FS, file, buffer, length);
 }
 
 void VFSRegisterFileSystem(FileSystem *fileSystem, const uint8_t deviceID)
