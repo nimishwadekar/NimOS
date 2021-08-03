@@ -2,6 +2,9 @@
 #include "../Display/Renderer.hpp"
 #include "../Memory/Memory.hpp"
 
+// Supported File Systems
+#include "FAT.hpp"
+
 #define DEVICE_MAX 26
 
 // 'A' - EFI System, Normal partitions from 'C'.
@@ -23,6 +26,15 @@ void SetupFileSystem(Partition *partition, uint8_t device)
     memcpy(name, newFS->Name, 8);
 
     // Assign FS specific functions to function pointers.
+    
+    // TEMPORARY
+    if(device == 'C')
+    {
+        newFS->Open = fatopen;
+        newFS->Close = fatclose;
+        newFS->Read = fatread;
+        newFS->Write = fatwrite;
+    }
 
     FILE_SYSTEMS[device - 'A'] = newFS;
 }
@@ -51,6 +63,59 @@ void VFSInitialize(const DiskInfo *diskInfo)
 
         SetupFileSystem(partitions + i, vol);
     }
-
-    
 }
+
+FILE VFSOpenFile(const char *fileName)
+{
+    if(fileName)
+    {
+        uint8_t device = 'C';
+        if(fileName[1] == ':')
+        {
+            device = fileName[0];
+            fileName += 2; // Strip volume from file name.
+        }
+
+        if(FILE_SYSTEMS[device - 'A']) // Call respective FS' open() function.
+        {
+            FILE file = FILE_SYSTEMS[device - 'A']->Open(fileName);
+            file.Device = device;
+            return file;
+        }
+    }
+
+    FILE file;
+    file.Flags = VFS_INVALID;
+    return file;
+}
+
+void VFSCloseFile(FILE *file)
+{
+    if(!file) return; // No file.
+    if((file->Flags & VFS_VALID) == 0) return; // File not open.
+
+    file->Flags = VFS_INVALID;
+}
+
+uint64_t VFSReadFile(FILE *file, void *buffer, const uint64_t length)
+{
+    if(!file) return 0; // No file.
+    if((file->Flags & VFS_VALID) == 0) return 0; // File not open.
+    if((file->Flags & VFS_FILE) == 0) return 0; // Not a file.
+    
+    return FILE_SYSTEMS[file->Device - 'A']->Read(file, buffer, length);
+}
+
+uint64_t VFSWriteFile(FILE *file, const void *buffer, const uint64_t length)
+{
+    if(!file) return 0; // No file.
+    if((file->Flags & VFS_VALID) == 0) return 0; // File not open.
+    if((file->Flags & VFS_FILE) == 0) return 0; // Not a file.
+    if((file->Flags & (VFS_WRITE | VFS_APPEND)) == 0) return 0; // Not a writable file.
+    
+    return FILE_SYSTEMS[file->Device - 'A']->Write(file, buffer, length);
+}
+
+void VFSRegisterFileSystem(FileSystem *fileSystem, const uint8_t deviceID);
+void VFSUnregisterFileSystem(FileSystem *fileSystem);
+void VFSUnregisterFileSystemByID(const uint8_t deviceID);
