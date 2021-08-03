@@ -116,6 +116,29 @@ uint64_t VFSWriteFile(FILE *file, const void *buffer, const uint64_t length)
     return FILE_SYSTEMS[file->Device - 'A']->Write(file, buffer, length);
 }
 
-void VFSRegisterFileSystem(FileSystem *fileSystem, const uint8_t deviceID);
-void VFSUnregisterFileSystem(FileSystem *fileSystem);
-void VFSUnregisterFileSystemByID(const uint8_t deviceID);
+void VFSRegisterFileSystem(FileSystem *fileSystem, const uint8_t deviceID)
+{
+    if(deviceID < DEVICE_MAX && fileSystem)
+    {
+        FILE_SYSTEMS[deviceID] = fileSystem;
+    }
+}
+
+void VFSUnregisterFileSystem(FileSystem *fileSystem)
+{
+    if(!fileSystem) return;
+    for(int i = 0; i < DEVICE_MAX; i++)
+    {
+        if(FILE_SYSTEMS[i] == fileSystem)
+        {
+            FILE_SYSTEMS[i] = 0;
+            return;
+        }
+    }
+}
+
+void VFSUnregisterFileSystemByID(const uint8_t deviceID)
+{
+    if(deviceID >= DEVICE_MAX) return;
+    FILE_SYSTEMS[deviceID] = 0;
+}
