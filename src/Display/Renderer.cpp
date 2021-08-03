@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include "../String.hpp"
 #include "Renderer.hpp"
+#include "../Logging.hpp"
 
 Renderer::Renderer(Framebuffer framebuffer, PSF1 *font, uint32_t foregroundColour, uint32_t backgroundColour) :
     Buffer(framebuffer), Font(font), ForegroundColour(foregroundColour), BackGroundColour(backgroundColour)
@@ -20,6 +21,10 @@ void Renderer::Printf(const char *format, ...)
     {
         PutChar(FormattedStringBuffer[i]);
     }
+
+    #ifdef LOGGING
+    logf(FormattedStringBuffer);
+    #endif
 }
 
 void Renderer::PrintErrorf(const char *format, ...)
@@ -37,6 +42,11 @@ void Renderer::PrintErrorf(const char *format, ...)
         PutChar(FormattedStringBuffer[i]);
     }
     SetForegroundColour(oldForegroundColour);
+
+    #ifdef LOGGING
+    logf("ERROR: ");
+    logf(FormattedStringBuffer);
+    #endif
 }
 
 void Renderer::PutChar(const uint32_t xOffset, const uint32_t yOffset, const char character)
@@ -132,6 +142,10 @@ void printf(const char *format, ...)
     {
         MainRenderer.PutChar(FormattedStringBuffer[i]);
     }
+
+    #ifdef LOGGING
+    logf(FormattedStringBuffer);
+    #endif
 }
 
 void errorf(const char *format, ...)
@@ -149,4 +163,9 @@ void errorf(const char *format, ...)
         MainRenderer.PutChar(FormattedStringBuffer[i]);
     }
     MainRenderer.SetForegroundColour(oldForegroundColour);
+
+    #ifdef LOGGING
+    logf("ERROR: ");
+    logf(FormattedStringBuffer);
+    #endif
 }
