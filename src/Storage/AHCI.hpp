@@ -26,6 +26,8 @@ namespace AHCI
         SATAPI = 4 // optical drives
     };
 
+    #define HBAPORT_IE 0b11111101'11000000'00000000'11111111
+
     struct HBAPort // Host Bus Adapter
     {
         uint32_t CommandListBase; // 1K-byte aligned.
@@ -48,6 +50,8 @@ namespace AHCI
         uint32_t Reserved1[11];
         uint32_t VendorSpecific[4];
     } __attribute__((packed));
+
+    #define HBAMEM_GHC_IE 0x2
 
     struct HBAMemory
     {
