@@ -4,12 +4,12 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @1E6E000 19174 bytes
+ * Gzip compressed initrd @1E6E000 19188 bytes
  * Initrd loaded @1E5F000 57856 bytes
  * Environment @20BA000 32 bytes
  * Screen 1600 x 900, scanline 6400, fb @C0000000 5763072 bytes, type 1 ARGB
  * System tables
- * System time 2021-08-04 14:08:58 GMT+0:00 
+ * System time 2021-08-04 15:03:22 GMT+0:00 
  * cpio sys/core
  * Parsing ELF64 @1E5F0A5
  * fb          @FFFFFFFFFC000000
@@ -115,13 +115,10 @@ first data = 2040
 data sec count = 0x1F808
 fsinfo sec = 1
 
-Directory
-next clus = 3
-
-
-LongNamedTextFile.txt
+abcd
+LongNamedTextFile
 next clus = 4
-0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 VFS initialized.
+23
+VFS initialized.
 Kernel initialized.
 

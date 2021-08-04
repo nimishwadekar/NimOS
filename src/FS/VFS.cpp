@@ -25,12 +25,12 @@ void SetupFileSystem(Partition *partition, uint8_t device)
         case PartitionType::FAT:
         {
             name = "FAT     ";
-            FAT::FATSystem *fat = new FAT::FATSystem(&partition->Entry);
+            /* FAT::FATSystem *fat = new FAT::FATSystem(&partition->Entry);
             newFS->FS = fat;
             newFS->Open = FAT::Open;
             newFS->Close = FAT::Close;
             newFS->Read = FAT::Read;
-            newFS->Write = FAT::Write;
+            newFS->Write = FAT::Write; */
             break;
         }
 
@@ -43,17 +43,6 @@ void SetupFileSystem(Partition *partition, uint8_t device)
         default: return;
     }
     memcpy(name, newFS->Name, 8);
-
-    // Assign FS specific functions to function pointers.
-    
-    // TEMPORARY
-    /* if(device == 'C')
-    {
-        newFS->Open = fatopen;
-        newFS->Close = fatclose;
-        newFS->Read = fatread;
-        newFS->Write = fatwrite;
-    } */
 
     FILE_SYSTEMS[device - 'A'] = newFS;
 }

@@ -1,7 +1,6 @@
 {
     "config": "src/config",
     "initrd": { "type": "cpio", "gzip": true, "directory": "initrd" },
-    "iso9660": true,
     "partitions": [
         { "type": "boot", "size": 16 },
         { "type": "fat", "size": 64, "name": "fatPart", "directory": "utils/fatdir"},

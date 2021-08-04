@@ -72,7 +72,7 @@ namespace FAT
         Info = mountInfo;
         printf("\n");
 
-        Open(this, "Directory/LongNamedTextFile.txt");
+        Open(this, "LongNamedTextFile");
     }
 
     // Only use when FATSystem *fat is present.
@@ -208,7 +208,11 @@ namespace FAT
                 diri += 1;
             } while(DirIndices[diri] != 0);
 
-            // Create a FILE object and return it.
+            printf("%u\n", dir->Size);
+
+            fat->DiskPort->Read(0x8080 + 8, 1, fat->Buffer);
+            for(int i = 0; i < 512; i++) MainRenderer.PutChar(fat->Buffer[i]);
+            return {};
         }
         return invalidFile;
     }
