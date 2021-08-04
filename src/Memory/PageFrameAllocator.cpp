@@ -108,3 +108,18 @@ void PageFrameAllocator::FreePageFrame(void *physicalAddress)
 
     if(FirstFreePageFrame > index / 8) FirstFreePageFrame = index / 8;
 }
+
+void *PageFrameAllocator::RequestPageFrameAboveAddress(const uint64_t address)
+{
+    return nullptr;
+}
+
+void *PageFrameAllocator::RequestPageFrames(const uint64_t frames)
+{
+    return nullptr;
+}
+
+void *PageFrameAllocator::RequestPageFramesAboveAddress(const uint64_t address, const uint64_t frames)
+{
+    return nullptr;
+}

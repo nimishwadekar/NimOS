@@ -19,6 +19,12 @@ class PageFrameAllocator
 
     // Marks the page frame as free.
     void FreePageFrame(void *physicalAddress);
+
+    void *RequestPageFrameAboveAddress(const uint64_t address);
+
+    void *RequestPageFrames(const uint64_t frames);
+
+    void *RequestPageFramesAboveAddress(const uint64_t address, const uint64_t frames);
 };
 
 extern PageFrameAllocator FrameAllocator;
