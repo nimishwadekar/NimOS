@@ -140,6 +140,16 @@ char *strcpy(const char *src, char *dst)
     return dst;
 }
 
+int strcmp(const char *a, const char *b)
+{
+    int i = 0;
+    for( ; a[i] && b[i]; i++)
+    {
+        if(a[i] != b[i]) break;
+    }
+    return a[i] - b[i];
+}
+
 char *LiteralizeString(const char *string, char *buffer)
 {
     for(int i = 0, bi = 0; string[i] != 0; i++, bi++)
