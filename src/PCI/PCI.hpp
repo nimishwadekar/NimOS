@@ -3,6 +3,8 @@
 
 namespace PCI
 {
+    #define PCI_COMMAND_INT_DISABLE (1 << 10)
+
     struct DeviceConfig
     {
         uint64_t BaseAddress;
