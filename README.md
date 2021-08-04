@@ -31,7 +31,7 @@
 ---
 
 ### Features to be implemented:
-- FAT File System
+- Ext2 File System
 - Mouse Driver
 - USB Driver
 - User Space
