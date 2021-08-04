@@ -3,13 +3,6 @@
 #include "File.hpp"
 #include "../Storage/DiskInfo.hpp"
 
-#define VFS_INVALID 0
-#define VFS_VALID 1
-#define VFS_FILE (1 << 1)
-#define VFS_DIRECTORY (1 << 2)
-#define VFS_WRITE (1 << 3)
-#define VFS_APPEND (1 << 4)
-
 struct FileSystem
 {
     char Name[8]; // Not null-terminated.

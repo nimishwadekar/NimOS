@@ -105,14 +105,14 @@ FILE VFSOpenFile(const char *fileName)
     }
 
     FILE file;
-    file.Flags = VFS_INVALID;
+    file.Flags = FS_INVALID;
     return file;
 }
 
 int VFSCloseFile(FILE *file)
 {
     if(!file) return -1; // No file.
-    if((file->Flags & VFS_VALID) == 0) return -1; // File not open.
+    if((file->Flags & FS_VALID) == 0) return -1; // File not open.
 
     uint8_t index = file->Device - 'A';
     return FILE_SYSTEMS[index]->Close(FILE_SYSTEMS[index]->FS, file);
@@ -121,8 +121,8 @@ int VFSCloseFile(FILE *file)
 uint64_t VFSReadFile(FILE *file, void *buffer, const uint64_t length)
 {
     if(!file) return 0; // No file.
-    if((file->Flags & VFS_VALID) == 0) return 0; // File not open.
-    if((file->Flags & VFS_FILE) == 0) return 0; // Not a file.
+    if((file->Flags & FS_VALID) == 0) return 0; // File not open.
+    if((file->Flags & FS_FILE) == 0) return 0; // Not a file.
     
     uint8_t index = file->Device - 'A';
     return FILE_SYSTEMS[index]->Read(FILE_SYSTEMS[index]->FS, file, buffer, length);
@@ -131,9 +131,9 @@ uint64_t VFSReadFile(FILE *file, void *buffer, const uint64_t length)
 uint64_t VFSWriteFile(FILE *file, const void *buffer, const uint64_t length)
 {
     if(!file) return 0; // No file.
-    if((file->Flags & VFS_VALID) == 0) return 0; // File not open.
-    if((file->Flags & VFS_FILE) == 0) return 0; // Not a file.
-    if((file->Flags & (VFS_WRITE | VFS_APPEND)) == 0) return 0; // Not a writable file.
+    if((file->Flags & FS_VALID) == 0) return 0; // File not open.
+    if((file->Flags & FS_FILE) == 0) return 0; // Not a file.
+    if((file->Flags & (FS_WRITE | FS_APPEND)) == 0) return 0; // Not a writable file.
     
     uint8_t index = file->Device - 'A';
     return FILE_SYSTEMS[index]->Write(FILE_SYSTEMS[index]->FS, file, buffer, length);
