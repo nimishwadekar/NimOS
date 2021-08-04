@@ -8,9 +8,13 @@
 #define FS_WRITE (1 << 3)
 #define FS_APPEND (1 << 4)
 
+// Including null terminator.
+#define FILENAME_MAX_NULL 66
+#define DIRECTORY_MAX_NEST (FILENAME_MAX_NULL >> 1)
+
 struct FILE
 {
-    char Name[64];
+    char Name[FILENAME_MAX_NULL];
     uint32_t Flags;
     uint8_t Device; // Volume, 'A' to 'Z'.
     uint64_t Length;

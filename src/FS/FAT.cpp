@@ -1,6 +1,6 @@
 #include "FAT.hpp"
-#include "../Memory/Memory.hpp"
 #include "../String.hpp"
+#include "../Memory/Memory.hpp"
 #include "../Storage/DiskInfo.hpp"
 #include "../Memory/PageFrameAllocator.hpp"
 #include "../Memory/PageTableManager.hpp"
@@ -21,11 +21,17 @@ namespace FAT
 
     FATSystem::FATSystem(GPTEntry *gpt)
     {
+        printf("\n");
+
         uint64_t lba = gpt->StartingLBA;
         DiskPort = DiskInformation.DiskPort;
         Buffer = (uint8_t*) FrameAllocator.RequestPageFrame();
         PagingManager.MapPage(Buffer, Buffer);
-        DiskPort->Read(lba, 1, Buffer);
+        if(!DiskPort->Read(lba, 1, Buffer))
+        {
+            errorf("Could not initialize FAT.\n");
+            return;
+        }
         
         MountInfo mountInfo;
         mountInfo.LogicalOffset = gpt->StartingLBA;
@@ -63,26 +69,161 @@ namespace FAT
             case FATType::exFAT:
                 break;
         }
+        Info = mountInfo;
+        printf("\n");
 
-        
+        Open(this, "Directory/LongNamedTextFile.txt");
     }
 
-    FILE Open(void *fat, const char *filename)
+    // Only use when FATSystem *fat is present.
+    #define ClusToSec(cluster) (cluster * fat->Info.SectorsPerCluster)
+    #define LogToPhys(sector) (sector + fat->Info.LogicalOffset)
+
+    #define FILE_NAME_ERR -1
+
+    char NameBuffer[FILENAME_MAX_NULL] = {};
+    char LFNBuffer[FILENAME_MAX_NULL] = {};
+    uint8_t DirIndices[DIRECTORY_MAX_NEST] = {};
+
+    // Replaces directory separators with null character and stores in NameBuffer.
+    static int ParseFileName(const char *fname)
     {
-        return {};
+        int len = strlen(fname);
+        if(len >= FILENAME_MAX_NULL) return FILE_NAME_ERR;
+
+        memcpy(fname, NameBuffer, len);
+        for(int i = 0, diri = 1; i < len; i++)
+        {
+            if(NameBuffer[i] == '/') 
+            {
+                NameBuffer[i] = 0;
+                DirIndices[diri] = i + 1;
+                diri += 1;
+            }
+        }
+        return len;
     }
 
-    int Close(void *fat, FILE *file)
+    static bool AppendLFN(LongFileName *lfn)
+    {
+        if(lfn->Attributes == LFN_DELETED) return true; // Deleted LFN entry.
+
+        uint8_t index = lfn->SequenceNumber & 0x1F; // 1-indexed.
+        if(index > 5) return false; // Name over 65 characters.
+
+        char lfnPart[13];
+        for(int i = 0; i < 5; i++) lfnPart[i] = (char) lfn->Chars0[i];
+        for(int i = 0; i < 6; i++) lfnPart[5 + i] = (char) lfn->Chars1[i];
+        for(int i = 0; i < 2; i++) lfnPart[11 + i] = (char) lfn->Chars2[i];
+        memcpy(lfnPart, LFNBuffer + 13 * (index - 1), 13);
+        return true;
+    }
+
+    #define IsClusterEOF(cluster) ((cluster & 0xFFFFFF8) == 0xFFFFFF8)
+
+    // Returns directory table entry.
+    Directory *FindDirectory(FATSystem *fat, const uint32_t cluster, const char *dirName)
+    {
+        uint32_t nextCluster = cluster;
+        uint8_t *fatBuf = fat->Buffer, *dataBuf = fat->Buffer + 2048;
+        uint32_t clusMin = 0, clusMax = 0; // The currently loaded range of cluster entries of the FAT.
+
+        do
+        {
+            if(nextCluster < clusMin || nextCluster > clusMax) // Out of loaded range.
+            {
+                uint32_t sector = nextCluster / 128;
+                if(!fat->DiskPort->Read(LogToPhys(fat->Info.FirstFATSector + sector), 1, fatBuf)) // Load correct part of FAT.
+                {
+                    errorf("FAT Table sector read failed.\n");
+                    return nullptr;
+                }
+                clusMin = sector * 128;
+                clusMax = clusMin + 128 - 1;
+            }
+            
+            // -2 because first 2 FAT entries are special entries.
+            if(!fat->DiskPort->Read(LogToPhys(fat->Info.FirstDataSector + ClusToSec(nextCluster - 2)), fat->Info.SectorsPerCluster, dataBuf))
+            {
+                errorf("FAT Data sector read failed.\n");
+                return nullptr;
+            }
+
+            Directory *dir = (Directory*) dataBuf;
+            for(int i = 0; i < 16; i++, dir++)
+            {
+                if(dir->Attributes == ATTR_LFN)
+                {
+                    if(!AppendLFN((LongFileName*) dir))
+                    {
+                        errorf("FAT LFN too long.\n");
+                        return nullptr;
+                    }
+                    continue;
+                }
+                printf("%s\n", LFNBuffer);
+                int cmp = strcmp(dirName, LFNBuffer);
+                memset(LFNBuffer, 0, FILENAME_MAX_NULL);
+
+                if(cmp == 0) return dir;
+            }
+
+            uint32_t *table = (uint32_t*) fatBuf;
+            uint32_t index = nextCluster % 128;
+            nextCluster = table[index];
+        } while(!IsClusterEOF(nextCluster));
+
+        return nullptr;
+    }
+
+    FILE Open(void *fs, const char *filename)
+    {
+        memset(NameBuffer, 0, FILENAME_MAX_NULL);
+        memset(LFNBuffer, 0, FILENAME_MAX_NULL);
+        memset(DirIndices, 0, DIRECTORY_MAX_NEST);
+
+        FILE invalidFile;
+        invalidFile.Flags = FS_INVALID;
+
+        int len = ParseFileName(filename);
+        if(len != FILE_NAME_ERR)
+        {
+            FATSystem *fat = (FATSystem*) fs;
+
+            int diri = 0;
+            uint32_t dirCluster = 2; // First 2 entries not valid.
+            Directory *dir;
+            do
+            {
+                char *dirName = NameBuffer + DirIndices[diri];
+                dir = FindDirectory(fat, dirCluster, dirName);
+                if(!dir)
+                {
+                    errorf("Could not find directory entry.\n");
+                    return invalidFile;
+                }
+
+                dirCluster = dir->FirstClusterLow | ((uint32_t) dir->FirstClusterHigh << 16);
+                printf("next clus = %u\n", dirCluster);
+                diri += 1;
+            } while(DirIndices[diri] != 0);
+
+            // Create a FILE object and return it.
+        }
+        return invalidFile;
+    }
+
+    int Close(void *fs, FILE *file)
     {
         return 0;
     }
 
-    uint64_t Read(void *fat, FILE *file, void *buffer, const uint64_t length)
+    uint64_t Read(void *fs, FILE *file, void *buffer, const uint64_t length)
     {
         return 0;
     }
 
-    uint64_t Write(void *fat, FILE *file, const void *buffer, const uint64_t length)
+    uint64_t Write(void *fs, FILE *file, const void *buffer, const uint64_t length)
     {
         return 0;
     }

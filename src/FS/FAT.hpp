@@ -93,7 +93,8 @@ namespace FAT
 
     struct Directory
     {
-        uint8_t Name[11];
+        uint8_t Name[8];
+        uint8_t Extension[3];
         uint8_t Attributes;
         uint8_t ReservedNT;
         uint8_t CreationTimeDeciseconds; // [0 - 199].
@@ -107,9 +108,12 @@ namespace FAT
         uint32_t Size;
     } __attribute__((packed));
 
+    #define LFN_SUFFIX 0x40
+    #define LFN_DELETED 0xE5
+
     struct LongFileName
     {
-        uint8_t Order; // 1-indexed.
+        uint8_t SequenceNumber;
         uint16_t Chars0[5];
         uint8_t Attributes; // 0x0F.
         uint8_t LongEntryType; // 0 for name entries.
@@ -139,15 +143,15 @@ namespace FAT
         //uint8_t BPBMemory[100]; // Cast to respective BPB.
         MountInfo Info;
         AHCI::Port *DiskPort;
-        uint8_t *Buffer;
+        uint8_t *Buffer; // 4096 bytes long.
 
         FATSystem(GPTEntry *gpt);
     };
 
-    FILE Open(void *fat, const char *filename);
-    int Close(void *fat, FILE *file);
-    uint64_t Read(void *fat, FILE *file, void *buffer, const uint64_t length);
-    uint64_t Write(void *fat, FILE *file, const void *buffer, const uint64_t length);
+    FILE Open(void *fs, const char *filename);
+    int Close(void *fs, FILE *file);
+    uint64_t Read(void *fs, FILE *file, void *buffer, const uint64_t length);
+    uint64_t Write(void *fs, FILE *file, const void *buffer, const uint64_t length);
 }
 
 /*****************************************
