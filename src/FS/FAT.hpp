@@ -124,18 +124,19 @@ namespace FAT
         FATType Type;
         uint64_t LogicalOffset;
         uint32_t SectorCount;
-        uint32_t ClusterCount;
+        uint32_t SectorsPerCluster;
         uint32_t SectorsPerFAT;
         uint32_t RootDirSize; // In bytes.
         uint32_t FirstDataSector;
         uint32_t DataSectorCount;
         uint32_t FirstFATSector;
+        uint16_t FSInfoSector;
     };
 
     class FATSystem
     {
         public:
-        uint8_t BPBMemory[100]; // Cast to respective BPB.
+        //uint8_t BPBMemory[100]; // Cast to respective BPB.
         MountInfo Info;
         AHCI::Port *DiskPort;
         uint8_t *Buffer;

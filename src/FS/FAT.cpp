@@ -16,6 +16,7 @@ namespace FAT
         mountInfo->FirstDataSector = boot->BPB.ReservedSectorCount + boot->BPB.FATCount * boot->SectorsPerFAT;
         mountInfo->DataSectorCount = boot->BPB.LargeSectorCount - mountInfo->FirstDataSector;
         mountInfo->FirstFATSector = boot->BPB.ReservedSectorCount;
+        mountInfo->FSInfoSector = boot->FSInfoSector;
     }
 
     FATSystem::FATSystem(GPTEntry *gpt)
@@ -31,13 +32,13 @@ namespace FAT
 
         BIOSParameterBlock *bpb = (BIOSParameterBlock*) Buffer;
         uint32_t sectorsPerCluster = bpb->SectorsPerCluster;
+        mountInfo.SectorsPerCluster = sectorsPerCluster;
 
         uint32_t sectorCount = bpb->SectorCount;
         if(sectorCount == 0) sectorCount = bpb->LargeSectorCount;
         mountInfo.SectorCount = sectorCount;
 
         uint32_t clusterCount = sectorCount / sectorsPerCluster;
-        mountInfo.ClusterCount = clusterCount;
 
         if(clusterCount < 4085) mountInfo.Type = FATType::FAT12;
         else if(clusterCount < 65525) mountInfo.Type = FATType::FAT16;
@@ -53,15 +54,17 @@ namespace FAT
             case FATType::FAT32:
             {
                 GetMountInfo32(&mountInfo, (BootRecord32*) bpb);
-                printf("clusters = 0x%x\nsectors = 0x%x\nsec per fat = %u\nfirst fat = %u\nfirst data = %u\ndata sec count = 0x%x\n",
-                    mountInfo.ClusterCount, mountInfo.SectorCount, mountInfo.SectorsPerFAT,
-                    mountInfo.FirstFATSector, mountInfo.FirstDataSector, mountInfo.DataSectorCount);
+                printf("FAT32:\nsec per clus = %u\nsectors = 0x%x\nsec per fat = %u\nfirst fat = %u\nfirst data = %u\ndata sec count = 0x%x\nfsinfo sec = %u\n",
+                    mountInfo.SectorsPerCluster, mountInfo.SectorCount, mountInfo.SectorsPerFAT,
+                    mountInfo.FirstFATSector, mountInfo.FirstDataSector, mountInfo.DataSectorCount, mountInfo.FSInfoSector);
                 break;
             }
 
             case FATType::exFAT:
                 break;
         }
+
+        
     }
 
     FILE Open(void *fat, const char *filename)
