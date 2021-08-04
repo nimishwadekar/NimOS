@@ -28,7 +28,12 @@ namespace AHCI
         PCIBaseAddress = pciBaseAddress;
         printf("AHCI Driver initialised.\n");
 
-        ABAR = (HBAMemory*) (uint64_t) (((PCI::DeviceHeader0*) pciBaseAddress)->BAR[5]);
+        PCI::DeviceHeader0 *pci0 = (PCI::DeviceHeader0*) pciBaseAddress;
+        pci0->Header.Command &= ~PCI_COMMAND_INT_DISABLE; // Enabling PCI interrupts.
+
+        ABAR = (HBAMemory*) (uint64_t) pci0->BAR[5];
+
+        ABAR->GlobalHostControl |= HBAMEM_GHC_IE; // Enabling HBAMemory interrupts.
 
         PagingManager.MapPage(ABAR, ABAR);
 
@@ -146,6 +151,8 @@ namespace AHCI
             cmdHeader[i].CTDBaseUpper = (uint32_t) (address >> 32);
             memset(cmdTableAddress, 0, 256);
         }
+
+        hbaPort->InterruptEnable = HBAPORT_IE;
 
         StartCommand();
     }
