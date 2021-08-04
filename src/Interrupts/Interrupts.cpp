@@ -52,13 +52,13 @@ static const char *InterruptMessages[]
     "Floppy disk interrupt", // 26        
     "LPT 1 interrupt", // 27        
     "Real time clock interrupt", // 28        
-    "General I/O interrupt", // 29        
-    "General I/O interrupt", // 2a        
-    "General I/O interrupt", // 2b        
-    "General I/O interrupt", // 2c        
+    "General I/O interrupt 0", // 29        
+    "General I/O interrupt 1", // 2a        
+    "General I/O interrupt 2", // 2b        
+    "General I/O interrupt 3", // 2c        
     "Coprocessor interrupt", // 2d        
-    "IDE Bus interrupt", // 2e        
-    "IDE Bus interrupt", // 2f
+    "IDE Bus interrupt 0", // 2e        
+    "IDE Bus interrupt 1", // 2f
 };
 
 static void InitializeIDTEntry(const uint8_t interrupt, const uint64_t handler);
