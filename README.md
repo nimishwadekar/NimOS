@@ -24,8 +24,8 @@
 - ACPI
 - PCI Device Enumeration
 - Keyboard Driver
-- Programmable Interval Timer
-- Hard Disk Driver
+- PIT Driver
+- AHCI Disk Driver
 - Virtual File System
 
 ---
@@ -33,7 +33,6 @@
 ### Features to be implemented:
 - Ext2 File System
 - Mouse Driver
-- USB Driver
 - User Space
 - System Calls
 - Shell
