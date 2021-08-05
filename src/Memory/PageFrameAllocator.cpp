@@ -74,12 +74,13 @@ void PageFrameAllocator::Initialize(MemoryMap memoryMap)
 
 void *PageFrameAllocator::RequestPageFrame(void)
 {
-    while(FirstFreePageFrame < PageFrameBitmap.BufferSize - 1 && PageFrameBitmap.Buffer[FirstFreePageFrame] == 0xFF) FirstFreePageFrame++;
+    while(FirstFreePageFrame < PageFrameBitmap.BufferSize - 1 && PageFrameBitmap.Buffer[FirstFreePageFrame] == 0xFF) 
+        FirstFreePageFrame++;
 
     if(FirstFreePageFrame >= PageFrameBitmap.BufferSize - 1) // Consider at most last 8 page frames of memory as non existent for now
     {
         // Replace with out of memory exception.
-        MainRenderer.PrintErrorf("PAGE FRAME ALLOCATOR :  OUT OF MEMORY\n");
+        errorf("PAGE FRAME ALLOCATOR :  OUT OF MEMORY\n");
         while(true);
     }
 
@@ -98,7 +99,7 @@ void PageFrameAllocator::FreePageFrame(void *physicalAddress)
     if(PageFrameBitmap.Get(index) == false)
     {
         // Replace with page frame freed twice exception.
-        MainRenderer.PrintErrorf("PAGE FRAME ALLOCATOR :  PAGE FRAME AT PHYSICAL ADDRESS 0x%x FREED TWICE.\n", physicalAddress);
+        errorf("PAGE FRAME ALLOCATOR :  PAGE FRAME AT PHYSICAL ADDRESS 0x%x FREED TWICE.\n", physicalAddress);
         while(true);
     }
 
