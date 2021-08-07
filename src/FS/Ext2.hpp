@@ -6,6 +6,8 @@
 
 namespace Ext2
 {
+    #define ROOT_DIR_INODE 2
+
     struct SuperblockExt
     {
         uint32_t FirstNonReservedInode;
