@@ -117,7 +117,36 @@ void *PageFrameAllocator::RequestPageFrameAboveAddress(const uint64_t address)
 
 void *PageFrameAllocator::RequestPageFrames(const uint64_t frames)
 {
-    return nullptr;
+    while(FirstFreePageFrame < PageFrameBitmap.BufferSize - 1 && PageFrameBitmap.Buffer[FirstFreePageFrame] == 0xFF) 
+        FirstFreePageFrame++;
+
+    if(FirstFreePageFrame >= PageFrameBitmap.BufferSize - 1) // Consider at most last 8 page frames of memory as non existent for now
+    {
+        // Replace with out of memory exception.
+        errorf("PAGE FRAME ALLOCATOR :  OUT OF MEMORY\n");
+        while(true);
+    }
+
+    uint64_t index = FirstFreePageFrame << 3; // FirstFreePageFrame * 8
+    uint64_t used = 0;
+    for(uint64_t i = 0; i < frames; i++)
+    {
+        if(PageFrameBitmap.Get(index + i)) used += 1;
+    }
+    while(used > 0)
+    {
+        if(PageFrameBitmap.Get(index)) used -= 1;
+        if(PageFrameBitmap.Get(index + frames)) used += 1;
+        index += 1;
+    }
+    for(uint64_t i = 0; i < frames; i++)
+    {
+        PageFrameBitmap.Set(index + i);
+    }
+    UsedMemory += 4096 * frames;
+    FreeMemory -= 4096 * frames;
+
+    return (void*) (index * 4096);
 }
 
 void *PageFrameAllocator::RequestPageFramesAboveAddress(const uint64_t address, const uint64_t frames)
