@@ -38,6 +38,12 @@ void SetupFileSystem(Partition *partition, uint8_t device)
         case PartitionType::EXT2:
         {
             name = "EXT2    ";
+            Ext2::Ext2System *ext2 = new Ext2::Ext2System(&partition->Entry);
+            newFS->FS = ext2;
+            newFS->Open = Ext2::Open;
+            newFS->Close = Ext2::Close;
+            newFS->Read = Ext2::Read;
+            newFS->Write = Ext2::Write;
             break;
         }
 
