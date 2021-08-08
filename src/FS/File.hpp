@@ -13,6 +13,8 @@
 //#define DIRECTORY_MAX_NEST (FILENAME_MAX_NULL >> 1)
 #define FILE_NAME_ERR -1
 
+#define EOF -1
+
 struct FILE
 {
     char Name[FILENAME_MAX_NULL + 1];
@@ -21,7 +23,7 @@ struct FILE
     uint8_t Device; // Volume, 'A' to 'Z'.
     uint64_t Length;
     uint64_t CurrentBlock;
-    uint64_t Position; // Offset in current block.
+    uint64_t Position; // Offset in file.
 };
 
 // Replaces directory separators with null character and stores in NameBuffer.

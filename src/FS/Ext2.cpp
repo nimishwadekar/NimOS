@@ -61,9 +61,9 @@ namespace Ext2
 
         FILE file = Open(this, "anotherDirectory/file");
         printf("File %s [%u] opened.\n", file.Name, file.Length);
-
-        LoadBlock(file.CurrentBlock, Buffer);
-        for(uint64_t i = 0; i < file.Length; i++) printf("%c", Buffer[i]);
+        char buf[100] = {};
+        Read(this, &file, buf, file.Length);
+        printf("Read = %s\n", buf);
 
         printf("\n");
         // 12 14
@@ -198,12 +198,69 @@ namespace Ext2
 
     int Close(void *fs, FILE *file)
     {
+        uint32_t id = file->ID;
+        Ext2System *ext2 = (Ext2System*) fs;
+        if(!ext2->OpenFiles[id]) return EOF;
+        delete ext2->OpenFiles[id];
+        ext2->OpenFiles[id] = nullptr;
         return 0;
     }
 
     uint64_t Read(void *fs, FILE *file, void *buffer, const uint64_t length)
     {
-        return 0;
+        if(length == 0) return 0;
+        if(file->Position == file->Length) 
+        {
+            *(char*) buffer = EOF;
+            return 0;
+        }
+        uint64_t len = (uint64_t) length;
+        uint64_t pos = file->Position;
+        if(len > file->Length - file->Position) len = file->Length - file->Position;
+        uint64_t len2 = len;
+
+        Ext2System *ext2 = (Ext2System*) fs;
+        uint32_t blockSize = ext2->BlockSizeBytes;
+        uint64_t part1 = pos % blockSize;
+        uint8_t *dataBuf = ext2->Buffer + DATA_BUF_OFFSET;
+        uint8_t *buf = (uint8_t*) buffer;
+        if(!ext2->LoadBlock(file->CurrentBlock, dataBuf)) return length - len;
+        if(pos % blockSize != 0)
+        {
+            if(len <= blockSize - part1)
+            {
+                memcpy(dataBuf + part1, buf, len);
+                return len;
+            }
+            memcpy(buf + part1, buf, blockSize - part1);
+            len -= blockSize - part1;
+            pos += blockSize - part1;
+            buf += blockSize - part1;
+        }
+
+        uint64_t fullBlocks = len / blockSize;
+        for(uint64_t i = 0; i < fullBlocks; i++)
+        {
+            if(!ext2->LoadBlock(file->CurrentBlock + 1 + i, dataBuf)) return length - len;
+            memcpy(dataBuf, buf, blockSize);
+            len -= blockSize;
+            pos += blockSize;
+            buf += blockSize;
+        }
+        file->CurrentBlock += fullBlocks;
+
+        uint64_t part3 = len % blockSize;
+        if(part3 > 0)
+        {
+            if(!ext2->LoadBlock(file->CurrentBlock + 1 + fullBlocks, dataBuf)) return length - len;
+            memcpy(dataBuf, buf, part3);
+            len -= part3;
+            pos += part3;
+            buf += part3;
+        }
+        file->Position = pos;
+        file->CurrentBlock += 1;
+        return len2;
     }
 
     uint64_t Write(void *fs, FILE *file, const void *buffer, const uint64_t length)
