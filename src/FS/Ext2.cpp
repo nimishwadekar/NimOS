@@ -4,13 +4,20 @@
 #include "../Storage/DiskInfo.hpp"
 #include "../Memory/PageFrameAllocator.hpp"
 #include "../Memory/PageTableManager.hpp"
+#include "../Memory/Heap.hpp"
 #include "../Display/Renderer.hpp"
 
 namespace Ext2
 {
+    #define INODE_TABLE_BUF_OFFSET 0x1000
+    #define DIR_TABLE_BUF_OFFSET 0x2000
+    #define DATA_BUF_OFFSET 0x3000
+
     Ext2System::Ext2System(GPTEntry *gpt)
     {
         printf("\n");
+
+        memset(OpenFiles, 0, 8 * sizeof(Inode*));
 
         LogicalOffset = gpt->StartingLBA;
         DiskPort = DiskInformation.DiskPort;
@@ -27,13 +34,17 @@ namespace Ext2
         }
         memcpy(Buffer, &superblock, sizeof(Superblock));
 
+        InodeSizeBytes = (superblock.VersionMajor >= 1) ? superblock.Ext.InodeSize : 128;
+        BlockSizeBytes = 1024 << superblock.BlockSize;
+
         printf("Signature = 0x%x\n", superblock.Signature);
         printf("Version = %u.%u\n", superblock.VersionMajor, superblock.VersionMinor);
         printf("blocks = %u\n", superblock.BlockCount);
         printf("inodes = %u\n", superblock.InodeCount);
-        printf("block size = %u\n", 1024 << superblock.BlockSize);
+        printf("block size = %u\n", BlockSizeBytes);
         printf("fragment size = %u\n", 1024 << superblock.FragmentSize);
         printf("group size = %u blocks, %u inodes\n", superblock.BlocksPerGroup, superblock.InodesPerGroup);
+
         BlockGroupCount = (superblock.BlockCount + superblock.BlocksPerGroup - 1) / superblock.BlocksPerGroup;
         if(BlockGroupCount != (superblock.InodeCount + superblock.InodesPerGroup - 1) / superblock.InodesPerGroup)
         {
@@ -41,14 +52,18 @@ namespace Ext2
             return;
         }
         BGTableBlock = superblock.SuperblockBlock + 1;
-        uint32_t bgEntriesPerBlock = (1024 << superblock.BlockSize) / sizeof(BlockGroupDescriptor);
+        uint32_t bgEntriesPerBlock = (BlockSizeBytes) / sizeof(BlockGroupDescriptor);
         uint32_t bgTableBlockCount = (BlockGroupCount + bgEntriesPerBlock - 1) / bgEntriesPerBlock;
-        uint32_t bgTablePages = bgTableBlockCount * (1024 << superblock.BlockSize) / 0x1000;
+        uint32_t bgTablePages = bgTableBlockCount * (BlockSizeBytes) / 0x1000;
         BGTable = (BlockGroupDescriptor*) FrameAllocator.RequestPageFrames(bgTablePages);
         for(uint32_t i = 0; i < bgTablePages; i++) PagingManager.MapPage(BGTable, BGTable);
         for(uint32_t i = 0; i < bgTableBlockCount; i++) LoadBlock(BGTableBlock + i, BGTable + i * bgEntriesPerBlock);
 
-        
+        FILE file = Open(this, "anotherDirectory/file");
+        printf("File %s [%u] opened.\n", file.Name, file.Length);
+
+        LoadBlock(file.CurrentBlock, Buffer);
+        for(uint64_t i = 0; i < file.Length; i++) printf("%c", Buffer[i]);
 
         printf("\n");
         // 12 14
@@ -56,7 +71,7 @@ namespace Ext2
 
     bool Ext2System::LoadBlock(const uint64_t block, void *buffer)
     {
-        uint64_t sectorsPerBlock = (1024 << superblock.BlockSize) / 512;
+        uint64_t sectorsPerBlock = (BlockSizeBytes) / 512;
         return DiskPort->Read(LogicalOffset + sectorsPerBlock * block, sectorsPerBlock, buffer);
     }
 
@@ -72,8 +87,53 @@ namespace Ext2
 
     uint32_t Ext2System::InodeBlock(const uint32_t inode)
     {
-        uint16_t inodeSize = (superblock.VersionMajor >= 1) ? superblock.Ext.InodeSize : 128;
-        return ((inode - 1) % superblock.InodesPerGroup) * inodeSize / superblock.BlockSize;
+        return ((inode - 1) % superblock.InodesPerGroup) * InodeSizeBytes / (BlockSizeBytes);
+    }
+
+    Inode *Ext2System::GetInode(const uint32_t inode)
+    {
+        uint32_t group = InodeGroup(inode);
+        BlockGroupDescriptor *bg = BGTable + group;
+        uint32_t block = InodeBlock(inode);
+        uint32_t index = InodeIndex(inode);
+        uint32_t inodesPerBlock = (BlockSizeBytes) / InodeSizeBytes;
+        Inode *table = (Inode*) (Buffer + INODE_TABLE_BUF_OFFSET);
+
+        if(!LoadBlock(bg->InodeTableBlock + block, table))
+        {
+            errorf("Ext2: GetInode(%u) block load failed.\n", inode);
+            return nullptr;
+        }
+        return table + (index % inodesPerBlock);
+    }
+
+    Directory *Ext2System::FindDirEntry(const char *dirName, const Inode *parent)
+    {
+        uint64_t size = parent->SizeLower; // No support yet for 4GB+ files.
+        uint64_t blocks = (size + BlockSizeBytes - 1) / BlockSizeBytes;
+        uint8_t *dirPtr = Buffer + DIR_TABLE_BUF_OFFSET;
+        uint32_t len = strlen(dirName);
+        for(int i = 0; blocks > 0; blocks--, i++)
+        {
+            if(!LoadBlock(parent->DirectBlocks[i], dirPtr))
+            {
+                errorf("Ext2System::FindDirEntry(%s, Inode*) block load failed.\n", dirName);
+                return nullptr;
+            }
+
+            uint32_t offset = 0;
+            while(offset < BlockSizeBytes)
+            {
+                Directory *dir = (Directory*) dirPtr;
+                if(dir->Inode == 0) return nullptr;
+                if(len == dir->NameLength && memcmp(dirName, dir->Name, len) == 0) return dir;
+                dirPtr += dir->EntrySize;
+            }
+        }
+
+        // Indirect pointers not yet implemented.
+
+        return nullptr;
     }
 
     char NameBuffer[FILENAME_MAX_NULL + 1];
@@ -81,7 +141,59 @@ namespace Ext2
 
     FILE Open(void *fs, const char *filename)
     {
-        return {};
+        memset(NameBuffer, 0, FILENAME_MAX_NULL + 1);
+        memset(DirIndices, 0, FILENAME_MAX_NULL + 1);
+
+        FILE invalidFile;
+        invalidFile.Flags = FS_INVALID;
+        int len = ParseFileName(filename, NameBuffer, DirIndices);
+        if(len != FILE_NAME_ERR)
+        {
+            Ext2System *ext2 = (Ext2System*) fs;
+            uint8_t dirEntryType = DIR_ENTRY_DIRECTORY;
+            int diri = 0;
+            Inode *inode = ext2->GetInode(ROOT_DIR_INODE);
+            Directory *dir;
+            do
+            {
+                char *dirName = NameBuffer + DirIndices[diri];
+                dir = ext2->FindDirEntry(dirName, inode);
+                if(!dir)
+                {
+                    errorf("Could not find directory entry for \"%s\"\n", dirName);
+                    return invalidFile;
+                }
+                inode = ext2->GetInode(dir->Inode);
+
+                diri += 1;
+            } while(DirIndices[diri] != 0);
+
+            // Temporary.
+            uint32_t id;
+            for(id = 0; id < 8; id++) if(!ext2->OpenFiles[id]) break;
+            if(id == 8)
+            {
+                errorf("Reached max capacity of open files.\n");
+                return invalidFile;
+            }
+
+            ext2->OpenFiles[id] = new Inode;
+            memcpy(inode, ext2->OpenFiles[id], sizeof(Inode));
+
+            FILE file;
+            file.CurrentBlock = inode->DirectBlocks[0];
+            file.ID = id;
+            memset(file.Name, 0, FILENAME_MAX_NULL + 1);
+            memcpy(filename, file.Name, len);
+            file.Length = inode->SizeLower;
+            file.Position = 0;
+            file.Flags = FS_VALID;
+            if(dir->Type == DIR_ENTRY_FILE) file.Flags |= FS_FILE | FS_WRITE;
+            else if(dir->Type == DIR_ENTRY_DIRECTORY) file.Flags |= FS_DIRECTORY;
+            
+            return file;
+        }
+        return invalidFile;
     }
 
     int Close(void *fs, FILE *file)

@@ -106,6 +106,15 @@ namespace Ext2
         uint8_t OSSpecific2[12];
     } __attribute__((packed));
 
+    #define DIR_ENTRY_UNKNOWN 0
+    #define DIR_ENTRY_FILE 1
+    #define DIR_ENTRY_DIRECTORY 2
+    #define DIR_ENTRY_CHAR_DEV 3
+    #define DIR_ENTRY_BLOCK_DEV 4
+    #define DIR_ENTRY_FIFO 5
+    #define DIR_ENTRY_SOCKET 6
+    #define DIR_ENTRY_SYMLINK 7
+
     struct Directory
     {
         uint32_t Inode;
@@ -119,13 +128,26 @@ namespace Ext2
     {
         public:
         uint64_t LogicalOffset;
+        uint32_t BlockGroupCount;
+        uint32_t BGTableBlock;
+        uint32_t InodeSizeBytes;
+        uint32_t BlockSizeBytes;
+
         Superblock superblock;
+        BlockGroupDescriptor *BGTable;
         AHCI::Port *DiskPort;
-        uint8_t *Buffer; // 4096 bytes long.
+        uint8_t *Buffer;
         uint32_t BufferPageCount;
+
+        Inode *OpenFiles[8]; // Temporary.
 
         Ext2System(GPTEntry *gpt);
         bool LoadBlock(const uint64_t block, void *buffer);
+        uint32_t InodeGroup(const uint32_t inode);
+        uint32_t InodeIndex(const uint32_t inode);
+        uint32_t InodeBlock(const uint32_t inode);
+        Inode *GetInode(const uint32_t inode);
+        Directory *FindDirEntry(const char *dirName, const Inode *parent);
     };
 
     FILE Open(void *fs, const char *filename);

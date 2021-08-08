@@ -16,6 +16,7 @@
 struct FILE
 {
     char Name[FILENAME_MAX_NULL + 1];
+    uint32_t ID;
     uint32_t Flags;
     uint8_t Device; // Volume, 'A' to 'Z'.
     uint64_t Length;
