@@ -3,7 +3,7 @@
     "initrd": { "type": "cpio", "gzip": true, "directory": "initrd" },
     "partitions": [
         { "type": "boot", "size": 16 },
-        { "type": "fat", "size": 16, "name": "fatPart", "directory": "utils/fatdir"},
-        { "type": "ext2", "size": 32, "name": "extPart", "directory": "utils/ext2dir" }
+        { "type": "ext2", "size": 32, "name": "extPart", "directory": "utils/ext2dir" },
+        { "type": "fat", "size": 16, "name": "fatPart", "directory": "utils/fatdir"}
     ]
 }

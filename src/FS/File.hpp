@@ -13,7 +13,11 @@
 //#define DIRECTORY_MAX_NEST (FILENAME_MAX_NULL >> 1)
 #define FILE_NAME_ERR -1
 
-#define EOF -1
+#define FILE_EOF -1
+
+#define FILE_SEEK_SET 0
+#define FILE_SEEK_CUR 1
+#define FILE_SEEK_END 2
 
 struct FILE
 {

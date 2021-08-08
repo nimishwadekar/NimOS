@@ -59,12 +59,14 @@ namespace Ext2
         for(uint32_t i = 0; i < bgTablePages; i++) PagingManager.MapPage(BGTable, BGTable);
         for(uint32_t i = 0; i < bgTableBlockCount; i++) LoadBlock(BGTableBlock + i, BGTable + i * bgEntriesPerBlock);
 
-        FILE file = Open(this, "anotherDirectory/file");
+        /* FILE file = Open(this, "anotherDirectory/file");
         printf("File %s [%u] opened.\n", file.Name, file.Length);
         char buf[100] = {};
         Read(this, &file, buf, file.Length);
         printf("Read = %s\n", buf);
-        printf("block %u\n", file.CurrentBlock);
+        printf("block %u\n", file.CurrentBlock); */
+        /* LoadBlock(file.CurrentBlock, Buffer);
+        for(int i = 0; i < 4096; i++) MainRenderer.PutChar(Buffer[i]); */
 
         printf("\n");
         // 12 14
@@ -202,7 +204,7 @@ namespace Ext2
     {
         uint32_t id = file->ID;
         Ext2System *ext2 = (Ext2System*) fs;
-        if(!ext2->OpenFiles[id]) return EOF;
+        if(!ext2->OpenFiles[id]) return FILE_EOF;
         delete ext2->OpenFiles[id];
         ext2->OpenFiles[id] = nullptr;
         return 0;
@@ -213,7 +215,7 @@ namespace Ext2
         if(length == 0) return 0;
         if(file->Position == file->Length) 
         {
-            *(char*) buffer = EOF;
+            *(char*) buffer = FILE_EOF;
             return 0;
         }
         uint64_t len = (uint64_t) length;
@@ -227,41 +229,46 @@ namespace Ext2
         uint8_t *dataBuf = ext2->Buffer + DATA_BUF_OFFSET;
         uint8_t *buf = (uint8_t*) buffer;
         if(!ext2->LoadBlock(file->CurrentBlock, dataBuf)) return length - len;
+
         if(pos % blockSize != 0)
         {
             if(len <= blockSize - part1)
             {
                 memcpy(dataBuf + part1, buf, len);
+                file->Position += len;
                 return len;
             }
             memcpy(buf + part1, buf, blockSize - part1);
             len -= blockSize - part1;
             pos += blockSize - part1;
             buf += blockSize - part1;
+            file->CurrentBlock += 1;
         }
 
         uint64_t fullBlocks = len / blockSize;
         for(uint64_t i = 0; i < fullBlocks; i++)
         {
-            if(!ext2->LoadBlock(file->CurrentBlock + 1 + i, dataBuf)) return length - len;
+            printf("here\n");
+            if(!ext2->LoadBlock(file->CurrentBlock + i, dataBuf)) return length - len;
+
             memcpy(dataBuf, buf, blockSize);
             len -= blockSize;
             pos += blockSize;
             buf += blockSize;
+            file->CurrentBlock += 1;
         }
-        file->CurrentBlock += fullBlocks;
 
         uint64_t part3 = len % blockSize;
         if(part3 > 0)
         {
-            if(!ext2->LoadBlock(file->CurrentBlock + 1 + fullBlocks, dataBuf)) return length - len;
+            if(!ext2->LoadBlock(file->CurrentBlock + fullBlocks, dataBuf)) return length - len;
+
             memcpy(dataBuf, buf, part3);
             len -= part3;
             pos += part3;
             buf += part3;
         }
         file->Position = pos;
-        file->CurrentBlock += 1;
         return len2;
     }
 

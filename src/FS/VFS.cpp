@@ -85,10 +85,10 @@ FILE VFSOpenFile(const char *fileName)
     if(fileName)
     {
         uint8_t device = 'C';
-        if(fileName[1] == ':')
+        if(fileName[1] == ':' && fileName[2] == '/')
         {
             device = fileName[0];
-            fileName += 2; // Strip volume from file name.
+            fileName += 3; // Strip volume from file name.
         }
 
         uint8_t index = device - 'A';
