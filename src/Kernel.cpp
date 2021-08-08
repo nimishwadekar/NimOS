@@ -26,7 +26,8 @@ void KernelStart(void)
     VFSCloseFile(&file);
 
     /**********
-     * 
+     *  
+     *  IMPLEMENT POINTER COUNTER.
      *  IMPLEMENT FSEEK(), FGETC().
      * 
      * *******/

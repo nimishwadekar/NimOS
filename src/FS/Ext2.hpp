@@ -124,6 +124,12 @@ namespace Ext2
         char Name[1];
     } __attribute__((packed));
 
+    class Ext2File
+    {
+        Inode inode;
+        uint32_t Current[4]; // 4-dimensional pointer for current block.
+    };
+
     class Ext2System
     {
         public:
@@ -139,6 +145,7 @@ namespace Ext2
         uint8_t *Buffer;
         uint32_t BufferPageCount;
 
+        // Replace with Ext2File array.
         Inode *OpenFiles[8]; // Temporary.
 
         Ext2System(GPTEntry *gpt);
