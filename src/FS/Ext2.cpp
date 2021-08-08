@@ -64,6 +64,7 @@ namespace Ext2
         char buf[100] = {};
         Read(this, &file, buf, file.Length);
         printf("Read = %s\n", buf);
+        printf("block %u\n", file.CurrentBlock);
 
         printf("\n");
         // 12 14
@@ -181,6 +182,7 @@ namespace Ext2
             memcpy(inode, ext2->OpenFiles[id], sizeof(Inode));
 
             FILE file;
+            memset(&file, 0, sizeof(FILE));
             file.CurrentBlock = inode->DirectBlocks[0];
             file.ID = id;
             memset(file.Name, 0, FILENAME_MAX_NULL + 1);
