@@ -11,6 +11,7 @@
 // Including null terminator.
 #define FILENAME_MAX_NULL 255
 //#define DIRECTORY_MAX_NEST (FILENAME_MAX_NULL >> 1)
+#define FILE_NAME_ERR -1
 
 struct FILE
 {
@@ -21,3 +22,6 @@ struct FILE
     uint64_t CurrentBlock;
     uint64_t Position; // Offset in current block.
 };
+
+// Replaces directory separators with null character and stores in NameBuffer.
+int ParseFileName(const char *fname, char *nameBuffer, uint8_t *dirIndices);

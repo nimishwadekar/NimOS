@@ -79,30 +79,9 @@ namespace FAT
     #define ClusToSec(cluster) (cluster * fat->Info.SectorsPerCluster)
     #define LogToPhys(sector) (sector + fat->Info.LogicalOffset)
 
-    #define FILE_NAME_ERR -1
-
     char NameBuffer[FILENAME_MAX_NULL] = {};
     char LFNBuffer[FILENAME_MAX_NULL] = {};
     uint8_t DirIndices[DIRECTORY_MAX_NEST] = {};
-
-    // Replaces directory separators with null character and stores in NameBuffer.
-    static int ParseFileName(const char *fname)
-    {
-        int len = strlen(fname);
-        if(len >= FILENAME_MAX_NULL) return FILE_NAME_ERR;
-
-        memcpy(fname, NameBuffer, len);
-        for(int i = 0, diri = 1; i < len; i++)
-        {
-            if(NameBuffer[i] == '/') 
-            {
-                NameBuffer[i] = 0;
-                DirIndices[diri] = i + 1;
-                diri += 1;
-            }
-        }
-        return len;
-    }
 
     static bool AppendLFN(LongFileName *lfn)
     {
