@@ -1,4 +1,5 @@
 #include "Ext2.hpp"
+#include "../Logging.hpp"
 #include "../Memory/Memory.hpp"
 #include "../String.hpp"
 #include "../Storage/DiskInfo.hpp"
@@ -59,17 +60,7 @@ namespace Ext2
         for(uint32_t i = 0; i < bgTablePages; i++) PagingManager.MapPage(BGTable, BGTable);
         for(uint32_t i = 0; i < bgTableBlockCount; i++) LoadBlock(BGTableBlock + i, BGTable + i * bgEntriesPerBlock);
 
-        /* FILE file = Open(this, "anotherDirectory/file");
-        printf("File %s [%u] opened.\n", file.Name, file.Length);
-        char buf[100] = {};
-        Read(this, &file, buf, file.Length);
-        printf("Read = %s\n", buf);
-        printf("block %u\n", file.CurrentBlock); */
-        /* LoadBlock(file.CurrentBlock, Buffer);
-        for(int i = 0; i < 4096; i++) MainRenderer.PutChar(Buffer[i]); */
-
         printf("\n");
-        // 12 14
     }
 
     bool Ext2System::LoadBlock(const uint64_t block, void *buffer)
@@ -180,8 +171,7 @@ namespace Ext2
                 return invalidFile;
             }
 
-            ext2->OpenFiles[id] = new Inode;
-            memcpy(inode, ext2->OpenFiles[id], sizeof(Inode));
+            Ext2File *newFile = new Ext2File(inode, ext2->BlockSizeBytes);
 
             FILE file;
             memset(&file, 0, sizeof(FILE));
@@ -230,6 +220,8 @@ namespace Ext2
         uint8_t *buf = (uint8_t*) buffer;
         if(!ext2->LoadBlock(file->CurrentBlock, dataBuf)) return length - len;
 
+        Ext2File *openFile = ext2->OpenFiles[file->ID];
+
         if(pos % blockSize != 0)
         {
             if(len <= blockSize - part1)
@@ -242,7 +234,7 @@ namespace Ext2
             len -= blockSize - part1;
             pos += blockSize - part1;
             buf += blockSize - part1;
-            file->CurrentBlock += 1;
+            file->CurrentBlock = ext2->GetNextBlock(openFile);
         }
 
         uint64_t fullBlocks = len / blockSize;
@@ -255,7 +247,7 @@ namespace Ext2
             len -= blockSize;
             pos += blockSize;
             buf += blockSize;
-            file->CurrentBlock += 1;
+            file->CurrentBlock = ext2->GetNextBlock(openFile);
         }
 
         uint64_t part3 = len % blockSize;
@@ -275,5 +267,122 @@ namespace Ext2
     uint64_t Write(void *fs, FILE *file, const void *buffer, const uint64_t length)
     {
         return 0;
+    }
+
+    char GetChar(void *fs, FILE *file)
+    {
+        /* if(file->Position == file->Length) return FILE_EOF;
+        uint64_t pos = file->Position;
+        Ext2System *ext2 = (Ext2System*) fs;
+        Ext2File *ext2File = ext2->OpenFiles[file->ID];
+
+        if(pos % ext2->BlockSizeBytes == 0 || ext2File->LoadedBlock1 != file->CurrentBlock)
+        {
+            *ext2File->Buf1 = 1;
+            printf("here\ncur=%u\n", file->CurrentBlock);
+            if(!ext2->LoadBlock(file->CurrentBlock, ext2File->Buf1))
+            {
+                errorf("Ext2 GetChar() block load failed.\n");
+                return FILE_EOF;
+            }
+            ext2File->LoadedBlock1 = file->CurrentBlock;
+        }
+        char c = ext2File->Buf1[pos % ext2->BlockSizeBytes];
+        for(int i = 0; i < 4096; i++) MainRenderer.PutChar(ext2File->Buf1[i]);
+        file->Position += 1;
+        if(file->Position % ext2->BlockSizeBytes == 0) file->CurrentBlock = ext2->GetNextBlock(ext2File);
+        return c; */
+
+        if(file->Position == file->Length) return FILE_EOF;
+        char c;
+        Read(fs, file, &c, 1);
+        return c;
+    }
+
+    uint32_t Ext2System::GetNextBlock(Ext2File *file)
+    {
+        if(!file->Increment()) return 0;
+        if(file->Current[3] == 1)
+        {
+            if(!LoadBlock(file->inode.IndirectBlock3, file->Buf0))
+            {
+                errorf("Ext2 GetNextBlock() level 3 load failed.\n");
+                return -1;
+            }
+            uint32_t lev2 = ((uint32_t*) file->Buf0)[file->Current[2]];
+            if(!LoadBlock(lev2, file->Buf0))
+            {
+                errorf("Ext2 GetNextBlock() level 2 load failed.\n");
+                return -1;
+            }
+            uint32_t lev1 = ((uint32_t*) file->Buf0)[file->Current[1]];
+            if(!LoadBlock(lev1, file->Buf0))
+            {
+                errorf("Ext2 GetNextBlock() level 1 load failed.\n");
+                return -1;
+            }
+            return ((uint32_t*) file->Buf0)[file->Current[0]];
+        }
+        else if(file->Current[2] == 1)
+        {
+            if(!LoadBlock(file->inode.IndirectBlock2, file->Buf0))
+            {
+                errorf("Ext2 GetNextBlock() level 2 load failed.\n");
+                return -1;
+            }
+            uint32_t lev1 = ((uint32_t*) file->Buf0)[file->Current[1]];
+            if(!LoadBlock(lev1, file->Buf0))
+            {
+                errorf("Ext2 GetNextBlock() level 1 load failed.\n");
+                return -1;
+            }
+            return ((uint32_t*) file->Buf0)[file->Current[0]];
+        }
+        else if(file->Current[1] == 1)
+        {
+            if(!LoadBlock(file->inode.IndirectBlock1, file->Buf0))
+            {
+                errorf("Ext2 GetNextBlock() level 1 load failed.\n");
+                return -1;
+            }
+            return ((uint32_t*) file->Buf0)[file->Current[0]];
+        }
+        else return file->inode.DirectBlocks[file->Current[0]];
+    }
+
+
+    // EXT2 File.
+
+    Ext2File::Ext2File(Inode *i, uint16_t blockSizeBytes)
+    {
+        EntryCount = blockSizeBytes / 4;
+        memcpy(i, &inode, sizeof(Inode));
+        memset(Current, 0, 4 * sizeof(uint16_t));
+        Buf0 = (uint8_t*) FrameAllocator.RequestPageFrame();
+        PagingManager.MapPage(Buf0, Buf0);
+        Buf1 = (uint8_t*) FrameAllocator.RequestPageFrame();
+        PagingManager.MapPage(Buf1, Buf1);
+    }
+
+    bool Ext2File::Increment(void)
+    {
+        /* if(Current[3] == 0xFFFF)
+        {
+            memset(Current, 0, 4 * sizeof(uint16_t));
+            return true;
+        } */
+
+        uint64_t cur = *(uint64_t*) Current;
+        if(cur == ((1UL << 48) | ((EntryCount - 1UL) << 32) | ((EntryCount - 1UL) << 16) | (EntryCount - 1UL))) return false;
+        cur += 1;
+        if(cur == 12) cur = 1 << 16;
+        *(uint64_t*) Current = cur;
+        for(int i = 0; i < 3; i++) 
+            if(Current[i] == EntryCount)
+            {
+                Current[i] = 0;
+                Current[i + 1] += 1;
+            }
+        return true;
     }
 }

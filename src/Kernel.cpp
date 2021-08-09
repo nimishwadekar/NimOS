@@ -8,7 +8,7 @@
 #include "IO/Port.hpp"
 #include "FS/VFS.hpp"
 
-char buf[1000] = {};
+char buf[10000] = {};
 // Kernel's main function.
 void KernelStart(void)
 {
@@ -17,13 +17,16 @@ void KernelStart(void)
 
     FILE file = VFSOpenFile("anotherDirectory/file");
     printf("File %s [%u] opened.\n", file.Name, file.Length);
-    VFSReadFile(&file, buf, 10);
-    printf("Read = %s\n", buf);
-    VFSReadFile(&file, buf + 15, 10);
-    printf("Read = %s\n", buf + 15);
-    VFSReadFile(&file, buf + 15, 10);
-    printf("Read = %s\n", buf + 15);
+    char c;
+    int i = 200;
+    printf("char = %u\n", VFSGetChar(&file));
+    /* while((c = VFSGetChar(&file)) != FILE_EOF)
+    {
+        logf("%c", c);
+        if(i-- == 0) break;
+    } */
     VFSCloseFile(&file);
+    printf("done");
 
     /**********
      *  

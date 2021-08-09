@@ -44,6 +44,7 @@ void SetupFileSystem(Partition *partition, uint8_t device)
             newFS->Close = Ext2::Close;
             newFS->Read = Ext2::Read;
             newFS->Write = Ext2::Write;
+            newFS->GetChar = Ext2::GetChar;
             break;
         }
 
@@ -133,6 +134,16 @@ uint64_t VFSWriteFile(FILE *file, const void *buffer, const uint64_t length)
     
     uint8_t index = file->Device - 'A';
     return FILE_SYSTEMS[index]->Write(FILE_SYSTEMS[index]->FS, file, buffer, length);
+}
+
+char VFSGetChar(FILE *file)
+{
+    if(!file) return 0; // No file.
+    if((file->Flags & FS_VALID) == 0) return 0; // File not open.
+    if((file->Flags & FS_FILE) == 0) return 0; // Not a file.
+    
+    uint8_t index = file->Device - 'A';
+    return FILE_SYSTEMS[index]->GetChar(FILE_SYSTEMS[index]->FS, file);
 }
 
 void VFSRegisterFileSystem(FileSystem *fileSystem, const uint8_t deviceID)

@@ -26,8 +26,8 @@ struct FILE
     uint32_t Flags;
     uint8_t Device; // Volume, 'A' to 'Z'.
     uint64_t Length;
-    uint64_t CurrentBlock;
-    uint64_t Position; // Offset in file.
+    uint32_t CurrentBlock;
+    uint32_t Position; // Offset in file.
 };
 
 // Replaces directory separators with null character and stores in NameBuffer.

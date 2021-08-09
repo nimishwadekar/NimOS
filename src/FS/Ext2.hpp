@@ -126,8 +126,17 @@ namespace Ext2
 
     class Ext2File
     {
+        public:
         Inode inode;
-        uint32_t Current[4]; // 4-dimensional pointer for current block.
+        uint16_t EntryCount;
+        uint16_t Current[4]; // 4-dimensional pointer for current block.
+        uint8_t *Buf0;
+        uint32_t LoadedBlock0;
+        uint8_t *Buf1;
+        uint32_t LoadedBlock1;
+
+        Ext2File(Inode *i, uint16_t blockSizeBytes);
+        bool Increment(void);
     };
 
     class Ext2System
@@ -136,8 +145,8 @@ namespace Ext2
         uint64_t LogicalOffset;
         uint32_t BlockGroupCount;
         uint32_t BGTableBlock;
-        uint32_t InodeSizeBytes;
-        uint32_t BlockSizeBytes;
+        uint16_t InodeSizeBytes;
+        uint16_t BlockSizeBytes;
 
         Superblock superblock;
         BlockGroupDescriptor *BGTable;
@@ -146,7 +155,8 @@ namespace Ext2
         uint32_t BufferPageCount;
 
         // Replace with Ext2File array.
-        Inode *OpenFiles[8]; // Temporary.
+        //Inode *OpenFiles[8]; // Temporary.
+        Ext2File *OpenFiles[8];
 
         Ext2System(GPTEntry *gpt);
         bool LoadBlock(const uint64_t block, void *buffer);
@@ -155,10 +165,14 @@ namespace Ext2
         uint32_t InodeBlock(const uint32_t inode);
         Inode *GetInode(const uint32_t inode);
         Directory *FindDirEntry(const char *dirName, const Inode *parent);
+
+        // Returns 0 if no next block. Returns unsigned -1 if error.
+        uint32_t GetNextBlock(Ext2File *file);
     };
 
     FILE Open(void *fs, const char *filename);
     int Close(void *fs, FILE *file);
     uint64_t Read(void *fs, FILE *file, void *buffer, const uint64_t length);
     uint64_t Write(void *fs, FILE *file, const void *buffer, const uint64_t length);
+    char GetChar(void *fs, FILE *file);
 }
