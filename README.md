@@ -27,11 +27,11 @@
 - PIT Driver
 - AHCI Disk Driver
 - Virtual File System
+- Ext2 File System (Read-only)
 
 ---
 
 ### Features to be implemented:
-- Ext2 File System
 - Mouse Driver
 - User Space
 - System Calls
