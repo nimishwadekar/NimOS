@@ -1,6 +1,16 @@
 #pragma once
-
 #include <stdint.h>
+
+struct TSS
+{
+    uint32_t Reserved0;
+    uint64_t RSP[3];
+    uint64_t Reserved1;
+    uint64_t IST[7];
+    uint64_t Reserved2;
+    uint16_t Reserved3;
+    uint16_t IOMapBaseAddress;
+} __attribute__((packed));
 
 struct GDTR
 {
@@ -25,9 +35,11 @@ struct GDT
     GDTEntry KernelData;
     GDTEntry UserCode;
     GDTEntry UserData;
+    GDTEntry TSSEntry;
 } __attribute__((packed)) 
 __attribute__((aligned(0x1000)));
 
+extern TSS TaskStateSegment;
 extern GDT GlobalDescriptorTable;
 
 extern "C" void LoadGDT(GDTR *gdtr);
