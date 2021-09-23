@@ -28,12 +28,12 @@
 - AHCI Disk Driver
 - Virtual File System
 - Ext2 File System (Read-only)
+- User Space
 
 ---
 
 ### Features to be implemented:
 - Mouse Driver
-- User Space
 - System Calls
 - Shell
 - Time
