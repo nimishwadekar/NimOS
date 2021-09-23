@@ -8,7 +8,6 @@
 #include "IO/Port.hpp"
 #include "FS/VFS.hpp"
 
-char buf[50000] = {};
 // Kernel's main function.
 void KernelStart(void)
 {
