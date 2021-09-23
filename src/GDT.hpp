@@ -35,6 +35,7 @@ struct GDT
     GDTEntry KernelData;
     GDTEntry UserCode;
     GDTEntry UserData;
+    GDTEntry UserCode2; // Duplicate of UserCode for Sysret.
     GDTEntry TSSEntry;
 } __attribute__((packed)) 
 __attribute__((aligned(0x1000)));
