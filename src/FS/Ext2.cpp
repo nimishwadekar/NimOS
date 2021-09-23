@@ -38,6 +38,7 @@ namespace Ext2
         InodeSizeBytes = (superblock.VersionMajor >= 1) ? superblock.Ext.InodeSize : 128;
         BlockSizeBytes = 1024 << superblock.BlockSize;
 
+        printf("EXT2 File System:\n");
         printf("Signature = 0x%x\n", superblock.Signature);
         printf("Version = %u.%u\n", superblock.VersionMajor, superblock.VersionMinor);
         printf("blocks = %u\n", superblock.BlockCount);
@@ -172,6 +173,7 @@ namespace Ext2
             }
 
             Ext2File *newFile = new Ext2File(inode, ext2->BlockSizeBytes);
+            ext2->OpenFiles[id] = newFile;
 
             FILE file;
             memset(&file, 0, sizeof(FILE));
@@ -230,7 +232,8 @@ namespace Ext2
                 file->Position += len;
                 return len;
             }
-            memcpy(buf + part1, buf, blockSize - part1);
+            memcpy(dataBuf + part1, buf, blockSize - part1);
+
             len -= blockSize - part1;
             pos += blockSize - part1;
             buf += blockSize - part1;
@@ -240,9 +243,7 @@ namespace Ext2
         uint64_t fullBlocks = len / blockSize;
         for(uint64_t i = 0; i < fullBlocks; i++)
         {
-            printf("here\n");
-            if(!ext2->LoadBlock(file->CurrentBlock + i, dataBuf)) return length - len;
-
+            if(!ext2->LoadBlock(file->CurrentBlock, dataBuf)) return length - len;
             memcpy(dataBuf, buf, blockSize);
             len -= blockSize;
             pos += blockSize;
@@ -253,8 +254,7 @@ namespace Ext2
         uint64_t part3 = len % blockSize;
         if(part3 > 0)
         {
-            if(!ext2->LoadBlock(file->CurrentBlock + fullBlocks, dataBuf)) return length - len;
-
+            if(!ext2->LoadBlock(file->CurrentBlock, dataBuf)) return length - len;
             memcpy(dataBuf, buf, part3);
             len -= part3;
             pos += part3;

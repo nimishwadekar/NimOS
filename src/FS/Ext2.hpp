@@ -174,5 +174,7 @@ namespace Ext2
     int Close(void *fs, FILE *file);
     uint64_t Read(void *fs, FILE *file, void *buffer, const uint64_t length);
     uint64_t Write(void *fs, FILE *file, const void *buffer, const uint64_t length);
+
+    // Not implemented properly.
     char GetChar(void *fs, FILE *file);
 }

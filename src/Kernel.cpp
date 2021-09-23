@@ -8,32 +8,12 @@
 #include "IO/Port.hpp"
 #include "FS/VFS.hpp"
 
-char buf[10000] = {};
+char buf[50000] = {};
 // Kernel's main function.
 void KernelStart(void)
 {
     //MainRenderer.ClearScreen();
     printf("Kernel initialized.\n\n");
-
-    FILE file = VFSOpenFile("anotherDirectory/file");
-    printf("File %s [%u] opened.\n", file.Name, file.Length);
-    char c;
-    int i = 200;
-    printf("char = %u\n", VFSGetChar(&file));
-    /* while((c = VFSGetChar(&file)) != FILE_EOF)
-    {
-        logf("%c", c);
-        if(i-- == 0) break;
-    } */
-    VFSCloseFile(&file);
-    printf("done");
-
-    /**********
-     *  
-     *  IMPLEMENT POINTER COUNTER.
-     *  IMPLEMENT FSEEK(), FGETC().
-     * 
-     * *******/
 
     while(true)
     {
