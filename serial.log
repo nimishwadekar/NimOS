@@ -4,21 +4,21 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @1E6D000 20622 bytes
- * Initrd loaded @1E30000 61952 bytes
- * Environment @20BA000 32 bytes
+ * Gzip compressed initrd @1EA4000 20421 bytes
+ * Initrd loaded @1E94000 61952 bytes
+ * Environment @1EA8000 32 bytes
  * Screen 1600 x 900, scanline 6400, fb @C0000000 5763072 bytes, type 1 ARGB
  * System tables
- * System time 2021-08-09 11:32:24 GMT+0:00 
+ * System time 2021-09-23 07:38:43 GMT+0:00 
  * cpio sys/core
- * Parsing ELF64 @1E300A5
+ * Parsing ELF64 @1E9414A
  * fb          @FFFFFFFFFC000000
  * bootboot    @FFFFFFFFFEFFE000
  * environment @FFFFFFFFFEFFF000
- * Entry point @FFFFFFFFFF000195, text @1E60000 68768 bytes
+ * Entry point @FFFFFFFFFF000195, text @1E65000 68768 bytes
  * SMP numcores 1
- * Pagetables PML4 @1E0A000
- * Memory Map @1E5E000 5856 bytes try #1
+ * Pagetables PML4 @1E3F000
+ * Memory Map @1EA4000 5760 bytes try #1
 Serial port COM1 initialized for logging.
 
 ******************************************************************************************
@@ -26,7 +26,7 @@ Serial port COM1 initialized for logging.
 Main Renderer initialized.
 Memory map prepared.
 GDT Loaded.
-Page Frame Allocator Bitmap stored at 0x20C3000, size = 0x18000 bytes
+Page Frame Allocator Bitmap stored at 0x20F4000, size = 0x18000 bytes
 Page Frame Allocator initialized.
 Free memory = 0x39ED000
 Used memory = 0x102B8000
@@ -102,7 +102,7 @@ Partition 2:
 LBA 0x18080 - LBA 0x2007F
 Attributes = 0x0
 FAT Partition
-Name: fatPart
+Name: otherPart
 
 Disk information initialized.
 
@@ -118,5 +118,5 @@ VFS initialized.
 Kernel initialized.
 
 File anotherDirectory/file [40407] opened.
-here
-cur=266
+char = 48
+done
