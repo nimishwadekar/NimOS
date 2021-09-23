@@ -1,7 +1,7 @@
 OS_NAME = TokyoOS
 
 OVMF = bin/OVMF.fd
-CC = gcc#~/opt/cross/bin/x86_64-elf-gcc
+CC = g++#~/opt/cross/bin/x86_64-elf-gcc
 LD = ld#~/opt/cross/bin/x86_64-elf-ld
 ASSEMBLER = nasm
 LINK_SCRIPT = src/link.ld

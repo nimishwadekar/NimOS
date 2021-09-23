@@ -4,6 +4,6 @@
     "partitions": [
         { "type": "boot", "size": 16 },
         { "type": "ext2", "size": 32, "name": "extPart", "directory": "utils/ext2dir" },
-        { "type": "fat", "size": 16, "name": "fatPart", "directory": "utils/fatdir"}
+        { "type": "other", "size": 16, "name": "otherPart", "directory": "utils/fatdir"}
     ]
 }
