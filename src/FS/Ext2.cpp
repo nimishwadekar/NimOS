@@ -25,7 +25,7 @@ namespace Ext2
         BufferPageCount = 4;
         Buffer = (uint8_t*) FrameAllocator.RequestPageFrames(BufferPageCount);
         for(uint32_t i = 0; i < BufferPageCount; i++) 
-            PagingManager.MapPage(Buffer + i * 0x1000, Buffer + i * 0x1000);
+            PagingManager.MapPage(Buffer + i * 0x1000, Buffer + i * 0x1000, true);
         memset(Buffer, 0, BufferPageCount * 0x1000);
 
         if(!DiskPort->Read(LogicalOffset + 2, 2, Buffer)) // Read superblock.
@@ -58,7 +58,7 @@ namespace Ext2
         uint32_t bgTableBlockCount = (BlockGroupCount + bgEntriesPerBlock - 1) / bgEntriesPerBlock;
         uint32_t bgTablePages = bgTableBlockCount * (BlockSizeBytes) / 0x1000;
         BGTable = (BlockGroupDescriptor*) FrameAllocator.RequestPageFrames(bgTablePages);
-        for(uint32_t i = 0; i < bgTablePages; i++) PagingManager.MapPage(BGTable, BGTable);
+        for(uint32_t i = 0; i < bgTablePages; i++) PagingManager.MapPage(BGTable, BGTable, true);
         for(uint32_t i = 0; i < bgTableBlockCount; i++) LoadBlock(BGTableBlock + i, BGTable + i * bgEntriesPerBlock);
 
         printf("\n");
@@ -359,9 +359,9 @@ namespace Ext2
         memcpy(i, &inode, sizeof(Inode));
         memset(Current, 0, 4 * sizeof(uint16_t));
         Buf0 = (uint8_t*) FrameAllocator.RequestPageFrame();
-        PagingManager.MapPage(Buf0, Buf0);
+        PagingManager.MapPage(Buf0, Buf0, true);
         Buf1 = (uint8_t*) FrameAllocator.RequestPageFrame();
-        PagingManager.MapPage(Buf1, Buf1);
+        PagingManager.MapPage(Buf1, Buf1, true);
     }
 
     bool Ext2File::Increment(void)

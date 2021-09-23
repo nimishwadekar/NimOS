@@ -6,7 +6,7 @@ enum PageTableFlags
 {
     Present = 0,
     ReadWrite = 1,
-    UserSuper = 2,
+    UserAccess = 2,
     WriteThrough = 3,
     CacheDisabled = 4,
     Accessed = 5,

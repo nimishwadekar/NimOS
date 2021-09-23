@@ -8,9 +8,9 @@ ELF Header:
   Type:                              EXEC (Executable file)
   Machine:                           Advanced Micro Devices X86-64
   Version:                           0x1
-  Entry point address:               0xffffffffff000195
+  Entry point address:               0xffffffffff0001c6
   Start of program headers:          64 (bytes into file)
-  Start of section headers:          60728 (bytes into file)
+  Start of section headers:          60736 (bytes into file)
   Flags:                             0x0
   Size of this header:               64 (bytes)
   Size of program headers:           56 (bytes)
@@ -23,7 +23,7 @@ Program Headers:
   Type           Offset             VirtAddr           PhysAddr
                  FileSiz            MemSiz              Flags  Align
   LOAD           0x0000000000001000 0xffffffffff000000 0xffffffffff000000
-                 0x000000000000dc28 0x000000000001a8e0  RWE    0x1000
+                 0x000000000000dc30 0x000000000000e600  RWE    0x1000
 
  Section to Segment mapping:
   Segment Sections...

@@ -35,7 +35,7 @@ namespace AHCI
 
         ABAR->GlobalHostControl |= HBAMEM_GHC_IE; // Enabling HBAMemory interrupts.
 
-        PagingManager.MapPage(ABAR, ABAR);
+        PagingManager.MapPage(ABAR, ABAR, true);
 
         ProbePorts();
 

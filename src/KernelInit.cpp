@@ -119,7 +119,7 @@ void main()
     uint64_t kernelRSP;
     asm volatile("movq %%rsp, %0" : "=r"(kernelRSP));
     TaskStateSegment.RSP[0] = kernelRSP;
-    asm volatile("ltr %%ax" : : "r"((5 * 8) | 0)); // Load TSS entry offset in GDT.
+    asm volatile("ltr %%ax" : : "r"((6 * 8) | 0)); // Load TSS entry offset in GDT.
 
     KernelStart();
 }

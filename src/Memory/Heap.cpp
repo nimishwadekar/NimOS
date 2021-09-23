@@ -22,7 +22,7 @@ void InitializeHeap(void *heapAddress, uint64_t pageCount)
         logf("InitializeHeap(void*, uint64_t) : Page Frame at 0x%x allocated for heap.\n", positionPhys);
         #endif
 
-        PagingManager.MapPage(position, positionPhys);
+        PagingManager.MapPage(position, positionPhys, true);
         #ifdef LOGGING
         logf("InitializeHeap(void*, uint64_t) : 0x%x mapped to phys 0x%x for heap.\n", position, positionPhys);
         #endif
@@ -102,7 +102,7 @@ void ExtendHeap(uint64_t size)
         logf("ExtendHeap(void*, uint64_t) : Page Frame at 0x%x allocated for heap extension.\n", heapExtensionPhysical);
         #endif
 
-        PagingManager.MapPage(HeapEnd, heapExtensionPhysical);
+        PagingManager.MapPage(HeapEnd, heapExtensionPhysical, true);
         #ifdef LOGGING
         logf("ExtendHeap(void*, uint64_t) : 0x%x mapped to phys 0x%x for heap extension.\n", HeapEnd, heapExtensionPhysical);
         #endif

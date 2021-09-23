@@ -11,12 +11,15 @@ PageTableManager PagingManager(nullptr);
 PageTableManager::PageTableManager(PageTable *tableLevel4) :
     TableLevel4(tableLevel4) { }
 
-void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
+void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress, bool supervisor)
 {
     PageMapIndexer indexer((uint64_t) virtualAddress);
     PageTableEntry entry;
 
+    void *ptr = (void*) 0x15E000;
+
     // Level 4 Table entry.
+    TableLevel4->Entries[indexer.TableLevel4Index].SetFlag(PageTableFlags::UserAccess, true);
     entry = TableLevel4->Entries[indexer.TableLevel4Index];
     PageTable *level3Table;
     if(!entry.GetFlag(PageTableFlags::Present))
@@ -38,6 +41,7 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
     }
 
     // Level 3 table entry.
+    level3Table->Entries[indexer.TableLevel3Index].SetFlag(PageTableFlags::UserAccess, true);
     entry = level3Table->Entries[indexer.TableLevel3Index];
     PageTable *level2Table;
     if(!entry.GetFlag(PageTableFlags::Present))
@@ -59,6 +63,7 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
     }
 
     // Level 2 table entry.
+    level2Table->Entries[indexer.TableLevel2Index].SetFlag(PageTableFlags::UserAccess, true);
     entry = level2Table->Entries[indexer.TableLevel2Index];
     PageTable *level1Table;
     if(!entry.GetFlag(PageTableFlags::Present))
@@ -84,5 +89,6 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress)
     entry.SetAddress((uint64_t) physicalAddress);
     entry.SetFlag(PageTableFlags::Present, true);
     entry.SetFlag(PageTableFlags::ReadWrite, true);
+    entry.SetFlag(PageTableFlags::UserAccess, !supervisor);
     level1Table->Entries[indexer.TableLevel1Index] = entry;
 }

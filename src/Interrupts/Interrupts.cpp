@@ -385,6 +385,7 @@ _intr_ static void IntHandler0xe(ExceptionFrame *frame)
     MainRenderer.PrintErrorf("PAGE FAULT at virtual address 0x%x : %s %s %s %s %s\n", cr2,
         flags[0], flags[1], flags[2], flags[3], flags[4]);
     MainRenderer.PrintErrorf("CS : RIP = 0x%x : 0x%x\n", frame->CS, frame->RIP);
+    errorf("err: %x, cs: %x, ip: %x, rsp: %x, flags: %x\n", frame->ErrorCode, frame->CS, frame->RIP, frame->RSP, frame->RFlags);
     while(true);
 }
 

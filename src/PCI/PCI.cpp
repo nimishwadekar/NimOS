@@ -11,7 +11,7 @@ namespace PCI
     {
         uint64_t offset = (uint64_t) function << 12;
         uint64_t functionAddress = deviceAddress + offset;
-        PagingManager.MapPage((void*) functionAddress, (void*) functionAddress);
+        PagingManager.MapPage((void*) functionAddress, (void*) functionAddress, true);
         /* #ifdef LOGGING
         logf("EnumerateFunction(uint64_t, uint8_t) : 0x%x mapped to phys 0x%x for PCI.\n", functionAddress, functionAddress);
         #endif */
@@ -54,7 +54,7 @@ namespace PCI
     {
         uint64_t offset = (uint64_t) device << 15;
         uint64_t deviceAddress = busAddress + offset;
-        PagingManager.MapPage((void*) deviceAddress, (void*) deviceAddress);
+        PagingManager.MapPage((void*) deviceAddress, (void*) deviceAddress, true);
         /* #ifdef LOGGING
         logf("EnumerateDevice(uint64_t, uint8_t) : 0x%x mapped to phys 0x%x for PCI.\n", deviceAddress, deviceAddress);
         #endif */
@@ -71,7 +71,7 @@ namespace PCI
     {
         uint64_t offset = (uint64_t) bus << 20;
         uint64_t busAddress = baseAddress + offset;
-        PagingManager.MapPage((void*) busAddress, (void*) busAddress);
+        PagingManager.MapPage((void*) busAddress, (void*) busAddress, true);
         /* #ifdef LOGGING
         logf("EnumerateBus(uint64_t, uint8_t) : 0x%x mapped to phys 0x%x for PCI.\n", busAddress, busAddress);
         #endif */
