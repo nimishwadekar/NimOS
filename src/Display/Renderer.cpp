@@ -54,6 +54,10 @@ void Renderer::PutChar(const uint32_t xOffset, const uint32_t yOffset, const cha
     // Special cases.
     switch(character)
     {
+        case '\r':
+            Cursor.X = 0;
+            return;
+
         case '\n': // Line feed
             Cursor.X = 0;
             Cursor.Y += 16;
@@ -74,6 +78,7 @@ void Renderer::PutChar(const uint32_t xOffset, const uint32_t yOffset, const cha
     {
         for(uint32_t x = xOffset; x < xOffset + 8; x++)
         {
+            PutPixel(x, y, BackGroundColour); // To erase an earlier pixel.
             if((*glyphPtr & (0b10000000 >> (x - xOffset))) > 0)
             {
                 PutPixel(x, y, ForegroundColour);
