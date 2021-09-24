@@ -1,3 +1,6 @@
 #pragma once
 
-void Syscall(void);
+#define SYS_PRINT       1
+// print(string, count)
+
+extern "C" void SyscallEntry(void);
