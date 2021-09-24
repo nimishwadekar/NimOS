@@ -33,7 +33,6 @@
 ---
 
 ### Features to be implemented:
-- Mouse Driver
 - System Calls
 - Shell
 - Time
