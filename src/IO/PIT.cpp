@@ -1,5 +1,5 @@
-#include "PIT.hpp"
-#include "../../IO/Port.hpp"
+#include <IO/PIT.hpp>
+#include <IO/Port.hpp>
 
 namespace PIT
 {

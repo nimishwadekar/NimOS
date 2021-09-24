@@ -6,14 +6,9 @@ LD = ld#~/opt/cross/bin/x86_64-elf-ld
 ASSEMBLER = nasm
 LINK_SCRIPT = src/link.ld
 
-IGNORE_ERRORS = -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function -Wno-unused-but-set-variable
-CFLAGS = -ffreestanding -mno-red-zone -fpic -fno-stack-protector -fno-exceptions -fno-rtti -nostdlib -Werror -Wall -Wextra $(IGNORE_ERRORS)
-ASMFLAGS = 
-LDFLAGS = -nostdlib -nostartfiles
-STRIPFLAGS = -s -K mmio -K fb -K bootboot -K environment -K initstack
-
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
+INCDIR = include
 SRCDIR = src
 OBJDIR = lib
 BUILDDIR = bin
@@ -33,6 +28,12 @@ DIRS = $(wildcard $(SRCDIR)/*)
 MKBOOTIMG = $(UTILSDIR)/mkbootimg
 BOOTJSON = $(UTILSDIR)/mkbootimg.json
 
+IGNORE_ERRORS = -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function -Wno-unused-but-set-variable
+CFLAGS = -I$(INCDIR) -ffreestanding -mno-red-zone -fpic -fno-stack-protector -fno-exceptions -fno-rtti -nostdlib -Werror -Wall -Wextra $(IGNORE_ERRORS)
+ASMFLAGS = 
+LDFLAGS = -nostdlib -nostartfiles
+STRIPFLAGS = -s -K mmio -K fb -K bootboot -K environment -K initstack
+
 all: initdir disk
 
 initdir: kernel
@@ -48,7 +49,7 @@ kernel: $(OBJS) link
 $(OBJDIR)/Interrupts/Interrupts.o: $(SRCDIR)/Interrupts/Interrupts.cpp
 	@echo !==== COMPILING $^
 	mkdir -p $(@D)
-	$(CC) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
+	$(CC) -I$(INCDIR) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo !==== COMPILING $^

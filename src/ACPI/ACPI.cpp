@@ -1,6 +1,6 @@
 #include <stddef.h>
-#include "ACPI.hpp"
-#include "../Memory/Memory.hpp"
+#include <ACPI/ACPI.hpp>
+#include <Memory/Memory.hpp>
 
 namespace ACPI
 {

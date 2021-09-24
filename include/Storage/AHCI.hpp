@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include "../PCI/PCI.hpp"
+#include <PCI/PCI.hpp>
 
 namespace AHCI
 {

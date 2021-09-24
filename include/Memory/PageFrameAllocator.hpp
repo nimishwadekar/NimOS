@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include "MemoryMap.hpp"
-#include "../Bitmap.hpp"
+#include <Bitmap.hpp>
+#include <Memory/MemoryMap.hpp>
 
 class PageFrameAllocator
 {

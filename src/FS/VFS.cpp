@@ -1,10 +1,9 @@
-#include "VFS.hpp"
-#include "../Display/Renderer.hpp"
-#include "../Memory/Memory.hpp"
+#include <Display/Renderer.hpp>
+#include <FS/VFS.hpp>
+#include <Memory/Memory.hpp>
 
 // Supported File Systems
-//#include "FAT.hpp"
-#include "Ext2.hpp"
+#include <FS/Ext2.hpp>
 
 #define DEVICE_MAX 26
 

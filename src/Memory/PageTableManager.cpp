@@ -1,9 +1,9 @@
-#include "PageTableManager.hpp"
-#include "PageMapIndexer.hpp"
-#include "PageFrameAllocator.hpp"
-#include "Memory.hpp"
 #include <stdint.h>
-#include "../Logging.hpp"
+#include <Logging.hpp>
+#include <Memory/Memory.hpp>
+#include <Memory/PageFrameAllocator.hpp>
+#include <Memory/PageMapIndexer.hpp>
+#include <Memory/PageTableManager.hpp>
 
 // The global page table manager.
 PageTableManager PagingManager(nullptr);

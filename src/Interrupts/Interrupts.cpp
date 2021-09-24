@@ -1,8 +1,8 @@
-#include "Interrupts.hpp"
-#include "../Display/Renderer.hpp"
-#include "../IO/Port.hpp"
-#include "../IO/Keyboard.hpp"
-#include "../Scheduling/PIT/PIT.hpp"
+#include <Display/Renderer.hpp>
+#include <IO/Keyboard.hpp>
+#include <IO/PIT.hpp>
+#include <IO/Port.hpp>
+#include <Interrupts/Interrupts.hpp>
 
 #define _intr_ __attribute__((interrupt))
 

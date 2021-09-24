@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Paging.hpp"
+#include <Memory/Paging.hpp>
 
 class PageTableManager
 {

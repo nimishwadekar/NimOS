@@ -1,11 +1,8 @@
-#include "Syscall.hpp"
-#include "../Display/Renderer.hpp"
+#include <stdint.h>
+#include <Display/Renderer.hpp>
+#include <Syscalls/Syscall.hpp>
 
-void Syscall(void)
+extern "C" void SyscallHandler()
 {
-    uint64_t rcx;
-    asm volatile("movq %%rcx, %0" : "=r"(rcx));
-    printf("System Call successful.\n");
-    asm volatile("movq %%rax, %%rcx" : : "a"(rcx));
-    asm volatile("sysretq");
+    printf("Here syscall %u\n", SYS_PRINT);
 }

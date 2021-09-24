@@ -1,7 +1,8 @@
 #pragma once
+
 #include <stdint.h>
-#include "GPT.hpp"
-#include "AHCI.hpp"
+#include <Storage/AHCI.hpp>
+#include <Storage/GPT.hpp>
 
 #define MAX_PARTITIONS 10
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <stdint.h>
 
 #define FS_INVALID 0

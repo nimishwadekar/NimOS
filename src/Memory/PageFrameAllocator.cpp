@@ -1,6 +1,6 @@
-#include "PageFrameAllocator.hpp"
-#include "../Display/Renderer.hpp"
-#include "../Logging.hpp"
+#include <Display/Renderer.hpp>
+#include <Logging.hpp>
+#include <Memory/PageFrameAllocator.hpp>
 
 // The page frame allocator.
 PageFrameAllocator FrameAllocator;

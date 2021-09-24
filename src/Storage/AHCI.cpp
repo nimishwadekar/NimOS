@@ -1,10 +1,10 @@
-#include "AHCI.hpp"
-#include "../Logging.hpp"
-#include "../Display/Renderer.hpp"
-#include "../Memory/Memory.hpp"
-#include "../Memory/PageFrameAllocator.hpp"
-#include "../Memory/PageTableManager.hpp"
-#include "../Memory/Heap.hpp"
+#include <Display/Renderer.hpp>
+#include <Logging.hpp>
+#include <Memory/Heap.hpp>
+#include <Memory/Memory.hpp>
+#include <Memory/PageFrameAllocator.hpp>
+#include <Memory/PageTableManager.hpp>
+#include <Storage/AHCI.hpp>
 
 namespace AHCI
 {

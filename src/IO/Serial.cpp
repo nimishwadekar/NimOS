@@ -1,5 +1,5 @@
-#include "Serial.hpp"
-#include "Port.hpp"
+#include <IO/Port.hpp>
+#include <IO/Serial.hpp>
 
 int InitializeSerialPort(uint16_t port)
 {

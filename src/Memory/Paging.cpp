@@ -1,4 +1,4 @@
-#include "Paging.hpp"
+#include <Memory/Paging.hpp>
 
 void PageTableEntry::SetFlag(PageTableFlags flag, bool enabled)
 {

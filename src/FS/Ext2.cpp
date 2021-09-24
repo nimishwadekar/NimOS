@@ -1,12 +1,12 @@
-#include "Ext2.hpp"
-#include "../Logging.hpp"
-#include "../Memory/Memory.hpp"
-#include "../String.hpp"
-#include "../Storage/DiskInfo.hpp"
-#include "../Memory/PageFrameAllocator.hpp"
-#include "../Memory/PageTableManager.hpp"
-#include "../Memory/Heap.hpp"
-#include "../Display/Renderer.hpp"
+#include <Display/Renderer.hpp>
+#include <FS/Ext2.hpp>
+#include <Logging.hpp>
+#include <Memory/Heap.hpp>
+#include <Memory/Memory.hpp>
+#include <Memory/PageFrameAllocator.hpp>
+#include <Memory/PageTableManager.hpp>
+#include <Storage/DiskInfo.hpp>
+#include <String.hpp>
 
 namespace Ext2
 {

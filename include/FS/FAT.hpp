@@ -1,8 +1,9 @@
 /* #pragma once
+
 #include <stdint.h>
-#include "File.hpp"
-#include "../Storage/GPT.hpp"
-#include "../Storage/AHCI.hpp"
+#include <FS/File.hpp>
+#include <Storage/AHCI.hpp>
+#include <Storage/GPT.hpp>
 
 namespace FAT
 {

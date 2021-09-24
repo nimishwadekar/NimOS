@@ -1,5 +1,9 @@
 [bits 64]
 
-syscall
-syscall
-jmp $
+somedata dw 0xFACE
+
+beginUser:
+    mov ax, [somedata]
+    syscall
+    syscall
+    jmp $

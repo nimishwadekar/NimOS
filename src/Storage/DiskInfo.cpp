@@ -1,8 +1,8 @@
-#include "DiskInfo.hpp"
-#include "../Logging.hpp"
-#include "../Display/Renderer.hpp"
-#include "../Memory/Memory.hpp"
-#include "../Memory/Heap.hpp"
+#include <Display/Renderer.hpp>
+#include <Logging.hpp>
+#include <Memory/Heap.hpp>
+#include <Memory/Memory.hpp>
+#include <Storage/DiskInfo.hpp>
 
 DiskInfo DiskInformation;
 

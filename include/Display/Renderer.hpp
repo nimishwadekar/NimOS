@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include "Framebuffer.hpp"
-#include "../Fonts/PSF.hpp"
+#include <Display/Framebuffer.hpp>
+#include <Fonts/PSF.hpp>
 
 struct Point
 {

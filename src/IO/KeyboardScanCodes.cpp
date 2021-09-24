@@ -1,4 +1,4 @@
-#include "KeyboardScanCodes.hpp"
+#include <IO/KeyboardScanCodes.hpp>
 
 namespace QWERTYKeyboard
 {

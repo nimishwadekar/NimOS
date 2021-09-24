@@ -1,8 +1,9 @@
 #pragma once
+
 #include <stdint.h>
-#include "../Storage/AHCI.hpp"
-#include "../Storage/GPT.hpp"
-#include "File.hpp"
+#include <FS/File.hpp>
+#include <Storage/AHCI.hpp>
+#include <Storage/GPT.hpp>
 
 namespace Ext2
 {

@@ -1,10 +1,10 @@
-#include "Logging.hpp"
+#include <Logging.hpp>
 
 #ifdef LOGGING
 
 #include <stddef.h>
-#include "String.hpp"
-#include "IO/Serial.hpp"
+#include <IO/Serial.hpp>
+#include <String.hpp>
 
 char LogFormattedStringBuffer[200];
 void logf(const char *format, ...)

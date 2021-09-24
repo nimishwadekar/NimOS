@@ -1,9 +1,9 @@
-#include "PCI.hpp"
-#include "../Memory/PageTableManager.hpp"
-#include "../Logging.hpp"
-#include "../Display/Renderer.hpp"
-#include "../Memory/Heap.hpp"
-#include "../Storage/AHCI.hpp"
+#include <Display/Renderer.hpp>
+#include <Logging.hpp>
+#include <Memory/Heap.hpp>
+#include <Memory/PageTableManager.hpp>
+#include <PCI/PCI.hpp>
+#include <Storage/AHCI.hpp>
 
 namespace PCI
 {

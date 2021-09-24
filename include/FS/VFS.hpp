@@ -1,7 +1,8 @@
 #pragma once
+
 #include <stdint.h>
-#include "File.hpp"
-#include "../Storage/DiskInfo.hpp"
+#include <FS/File.hpp>
+#include <Storage/DiskInfo.hpp>
 
 struct FileSystem
 {

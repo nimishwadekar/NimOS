@@ -1,6 +1,6 @@
-#include "File.hpp"
-#include "../String.hpp"
-#include "../Memory/Memory.hpp"
+#include <FS/File.hpp>
+#include <Memory/Memory.hpp>
+#include <String.hpp>
 
 int ParseFileName(const char *fname, char *nameBuffer, uint8_t *dirIndices)
 {

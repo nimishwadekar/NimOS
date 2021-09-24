@@ -1,23 +1,23 @@
 #include <stdint.h>
-#include "bootboot.h"
-#include "Fonts/PSF.hpp"
-#include "Display/Framebuffer.hpp"
-#include "Display/Renderer.hpp"
-#include "Memory/MemoryMap.hpp"
-#include "IO/Serial.hpp"
-#include "Logging.hpp"
-#include "GDT.hpp"
-#include "Memory/Memory.hpp"
-#include "Memory/PageFrameAllocator.hpp"
-#include "Memory/Paging.hpp"
-#include "Memory/PageTableManager.hpp"
-#include "Interrupts/Interrupts.hpp"
-#include "Memory/Heap.hpp"
-#include "ACPI/ACPI.hpp"
-#include "PCI/PCI.hpp"
-#include "Scheduling/PIT/PIT.hpp"
-#include "Storage/DiskInfo.hpp"
-#include "FS/VFS.hpp"
+#include <bootboot.h>
+#include <ACPI/ACPI.hpp>
+#include <Display/Framebuffer.hpp>
+#include <Display/Renderer.hpp>
+#include <FS/VFS.hpp>
+#include <Fonts/PSF.hpp>
+#include <GDT.hpp>
+#include <IO/PIT.hpp>
+#include <IO/Serial.hpp>
+#include <Interrupts/Interrupts.hpp>
+#include <Logging.hpp>
+#include <Memory/Heap.hpp>
+#include <Memory/Memory.hpp>
+#include <Memory/MemoryMap.hpp>
+#include <Memory/PageFrameAllocator.hpp>
+#include <Memory/PageTableManager.hpp>
+#include <Memory/Paging.hpp>
+#include <PCI/PCI.hpp>
+#include <Storage/DiskInfo.hpp>
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];

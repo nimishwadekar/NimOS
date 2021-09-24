@@ -1,7 +1,7 @@
 #include <stdarg.h>
-#include "../String.hpp"
-#include "Renderer.hpp"
-#include "../Logging.hpp"
+#include <Display/Renderer.hpp>
+#include <Logging.hpp>
+#include <String.hpp>
 
 Renderer::Renderer(Framebuffer framebuffer, PSF1 *font, uint32_t foregroundColour, uint32_t backgroundColour) :
     Buffer(framebuffer), Font(font), ForegroundColour(foregroundColour), BackGroundColour(backgroundColour)

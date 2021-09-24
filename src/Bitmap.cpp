@@ -1,4 +1,4 @@
-#include "Bitmap.hpp"
+#include <Bitmap.hpp>
 
 void Bitmap::Initialize(void *buffer, uint64_t bufferSize, bool fill)
 {

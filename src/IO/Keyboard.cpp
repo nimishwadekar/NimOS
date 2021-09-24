@@ -1,5 +1,5 @@
-#include "Keyboard.hpp"
-#include "../Utility.hpp"
+#include <IO/Keyboard.hpp>
+#include <Utility.hpp>
 
 KeyboardBuffer KBBuffer;
 

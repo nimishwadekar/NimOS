@@ -1,16 +1,16 @@
 #include <stdint.h>
-#include "Display/Renderer.hpp"
-#include "String.hpp"
-#include "Logging.hpp"
-#include "Memory/Heap.hpp"
-#include "IO/Keyboard.hpp"
-#include "Scheduling/PIT/PIT.hpp"
-#include "IO/Port.hpp"
-#include "FS/VFS.hpp"
-#include "Usermode/Usermode.hpp"
-#include "Syscalls/Syscall.hpp"
-#include "Memory/PageFrameAllocator.hpp"
-#include "Memory/PageTableManager.hpp"
+#include <Display/Renderer.hpp>
+#include <FS/VFS.hpp>
+#include <IO/Keyboard.hpp>
+#include <IO/PIT.hpp>
+#include <IO/Port.hpp>
+#include <Logging.hpp>
+#include <Memory/Heap.hpp>
+#include <Memory/PageFrameAllocator.hpp>
+#include <Memory/PageTableManager.hpp>
+#include <String.hpp>
+#include <Syscalls/Syscall.hpp>
+#include <Usermode/Usermode.hpp>
 
 extern "C" void BeginUserMode(uint32_t *fb);
 
@@ -28,7 +28,7 @@ void KernelStart(void)
     FILE program = VFSOpenFile("programs/program.bin");
     VFSReadFile(&program, programAddress, program.Length);
 
-    JumpToUserMode((void*) &Syscall, (uint8_t*) userStack + 0x1000, programAddress); // Does not return here.
+    JumpToUserMode((void*) &SyscallEntry, (uint8_t*) userStack + 0x1000, programAddress); // Does not return here.
 
     /* while(true)
     {

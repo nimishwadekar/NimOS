@@ -1,4 +1,4 @@
-#include "IDT.hpp"
+#include <Interrupts/IDT.hpp>
 
 IDTR IDTRegister;
 IDTEntry IDT[0x30];

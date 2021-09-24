@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include "KeyboardScanCodes.hpp"
+#include <IO/KeyboardScanCodes.hpp>
 
 enum class SpecialKeys
 {

@@ -1,5 +1,7 @@
 #pragma once
-#include "../ACPI/ACPI.hpp"
+
+#include <stdint.h>
+#include <ACPI/ACPI.hpp>
 
 namespace PCI
 {

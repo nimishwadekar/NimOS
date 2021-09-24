@@ -1,8 +1,8 @@
-#include "Heap.hpp"
-#include "PageFrameAllocator.hpp"
-#include "PageTableManager.hpp"
-#include "../Display/Renderer.hpp"
-#include "../Logging.hpp"
+#include <Display/Renderer.hpp>
+#include <Logging.hpp>
+#include <Memory/Heap.hpp>
+#include <Memory/PageFrameAllocator.hpp>
+#include <Memory/PageTableManager.hpp>
 
 //Heap KernelHeap;
 

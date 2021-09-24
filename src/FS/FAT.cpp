@@ -1,11 +1,12 @@
-/* #include "FAT.hpp"
-#include "../String.hpp"
-#include "../Memory/Memory.hpp"
-#include "../Storage/DiskInfo.hpp"
-#include "../Memory/PageFrameAllocator.hpp"
-#include "../Memory/PageTableManager.hpp"
-#include "../Display/Renderer.hpp"
-#include "../Logging.hpp"
+/* 
+#include <Display/Renderer.hpp>
+#include <FS/FAT.hpp>
+#include <Logging.hpp>
+#include <Memory/Memory.hpp>
+#include <Memory/PageFrameAllocator.hpp>
+#include <Memory/PageTableManager.hpp>
+#include <Storage/DiskInfo.hpp>
+#include <String.hpp>
 
 namespace FAT
 {
