@@ -1,9 +1,8 @@
 {
-    "config": "src/config",
+    "config": "./config",
     "initrd": { "type": "cpio", "gzip": true, "directory": "initrd" },
     "partitions": [
         { "type": "boot", "size": 16 },
-        { "type": "ext2", "size": 32, "name": "extPart", "directory": "utils/ext2dir" },
-        { "type": "fat", "size": 16, "name": "otherPart", "directory": "utils/fatdir"}
+        { "type": "ext2", "size": 32, "name": "extPart", "directory": "disk/ext2dir" }
     ]
 }
