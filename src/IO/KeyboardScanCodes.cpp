@@ -14,7 +14,7 @@ namespace QWERTYKeyboard
         'q', 'w', 'e', 'r',
         't', 'y', 'u', 'i',
         'o', 'p', '[', ']',
-         0 ,  0 , 'a', 's', // Enter, Left Ctrl
+        '\n', 0 , 'a', 's', // Enter, Left Ctrl
 
         'd', 'f', 'g', 'h',
         'j', 'k', 'l', ';',
