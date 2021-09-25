@@ -1,9 +1,13 @@
 [bits 64]
+[org 0x500000000]
 
-somedata dw 0xFACE
+jmp beginUser
+
+msg: db "Hello World!!", 0
 
 beginUser:
-    mov ax, [somedata]
+    mov rsi, msg
+    mov rax, 0x02
     syscall
-    syscall
+
     jmp $
