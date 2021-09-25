@@ -1,8 +1,8 @@
 OS_NAME = TokyoOS
 
 OVMF = bin/OVMF.fd
-CC = g++#~/opt/cross/bin/x86_64-elf-gcc
-LD = ld#~/opt/cross/bin/x86_64-elf-ld
+CC = g++
+LD = ld
 ASSEMBLER = nasm
 LINK_SCRIPT = ./link.ld
 
@@ -17,6 +17,9 @@ UTILSDIR = utils
 KERNEL_ELF = $(BUILDDIR)/kernel.elf
 OS_IMG = $(BUILDDIR)/$(OS_NAME).img
 
+USRDIR = usr
+USRBINDIR = disk/ext2dir/usr
+
 SRC = $(call rwildcard,$(SRCDIR),*.cpp)
 ASMSRC = $(call rwildcard,$(SRCDIR),*.asm)
 PSFSRC = $(call rwildcard,$(SRCDIR),*.psf)
@@ -24,6 +27,9 @@ OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
 OBJS += $(patsubst $(SRCDIR)/%.psf, $(OBJDIR)/%_font.o, $(PSFSRC))
 DIRS = $(wildcard $(SRCDIR)/*)
+
+USRSRC = $(call rwildcard,$(USRDIR),*.asm)
+USRBIN = $(patsubst $(USRDIR)/%.asm, $(USRBINDIR)/%.bin, $(USRSRC))
 
 MKBOOTIMG = $(UTILSDIR)/mkbootimg
 BOOTJSON = $(UTILSDIR)/mkbootimg.json
@@ -34,7 +40,7 @@ ASMFLAGS =
 LDFLAGS = -nostdlib -nostartfiles
 STRIPFLAGS = -s -K mmio -K fb -K bootboot -K environment -K initstack
 
-all: initdir disk
+all: initdir user disk
 
 initdir: kernel
 	@mkdir initrd initrd/sys 2>/dev/null | true
@@ -76,6 +82,12 @@ link:
 	
 run:
 	qemu-system-x86_64 -machine q35 -cpu qemu64 -bios $(OVMF) -m 64 -drive file=$(OS_IMG),format=raw -serial file:serial.log
+
+user: $(USRBIN)
+
+$(USRBINDIR)/%.bin: $(USRDIR)/%.asm
+	@echo !==== ASSEMBLING $^
+	$(ASSEMBLER) $^ -f bin -o $@
 
 clean:
 	rm -rf $(OBJDIR)/*
