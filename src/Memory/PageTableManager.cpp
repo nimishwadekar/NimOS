@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <Display/Renderer.hpp>
 #include <Logging.hpp>
 #include <Memory/Memory.hpp>
 #include <Memory/PageFrameAllocator.hpp>
@@ -15,8 +16,6 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress, bool
 {
     PageMapIndexer indexer((uint64_t) virtualAddress);
     PageTableEntry entry;
-
-    void *ptr = (void*) 0x15E000;
 
     // Level 4 Table entry.
     TableLevel4->Entries[indexer.TableLevel4Index].SetFlag(PageTableFlags::UserAccess, true);
