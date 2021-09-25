@@ -36,9 +36,11 @@ SyscallEntry:
 
     mov rcx, r10
     mov rsp, [TaskStateSegment + 4]
+    push rax
 
     call SyscallHandler
 
+    pop rax
     mov rbx, [STATE_RBX]
     mov rdx, [STATE_RDX]
     mov rsi, [STATE_RSI]
