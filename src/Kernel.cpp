@@ -17,18 +17,23 @@ extern "C" void BeginUserMode(uint32_t *fb);
 // Kernel's main function.
 void KernelStart(void)
 {
-    //MainRenderer.ClearScreen();
     printf("Kernel initialized.\n\n");
 
     void *userStack = FrameAllocator.RequestPageFrame();
-    PagingManager.MapPage(userStack, userStack);
+    PagingManager.MapPage((void*) USER_STACK_TOP, userStack);
 
     uint8_t *programAddress = (uint8_t*) FrameAllocator.RequestPageFrame();
-    PagingManager.MapPage(programAddress, programAddress);
-    FILE program = VFSOpenFile("programs/program.bin");
-    VFSReadFile(&program, programAddress, program.Length);
+    PagingManager.MapPage((void*) USER_CODE_BASE, programAddress);
+    FILE program = VFSOpenFile("usr/test.bin");
+    VFSReadFile(&program, (void*) USER_CODE_BASE, program.Length);
 
-    JumpToUserMode((void*) &SyscallEntry, (uint8_t*) userStack + 0x1000, programAddress); // Does not return here.
+    MainRenderer.SetBackgroundColour(USER_COLOUR_BACK);
+    MainRenderer.SetForegroundColour(USER_COLOUR_FRONT);
+    MainRenderer.ClearScreen();
+    
+    JumpToUserMode((void*) &SyscallEntry, (uint8_t*) USER_STACK_TOP + 0x1000, (void*) USER_CODE_BASE); // Does not return here.
+
+    while(true);
 
     /* while(true)
     {

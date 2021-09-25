@@ -16,6 +16,9 @@ struct Point
 #define COLOUR_GREEN    0x0000FF00
 #define COLOUR_BLUE     0x000000FF
 
+#define USER_COLOUR_BACK    0x0C1021
+#define USER_COLOUR_FRONT   0xF8F8F8
+
 // A wrapper class over the Framebuffer.
 class Renderer
 {
