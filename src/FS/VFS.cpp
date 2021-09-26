@@ -114,7 +114,7 @@ int VFSCloseFile(FILE *file)
     return FILE_SYSTEMS[index]->Close(FILE_SYSTEMS[index]->FS, file);
 }
 
-uint64_t VFSReadFile(FILE *file, void *buffer, const uint64_t length)
+int64_t VFSReadFile(FILE *file, void *buffer, const int64_t length)
 {
     if(!file) return 0; // No file.
     if((file->Flags & FS_VALID) == 0) return 0; // File not open.
@@ -124,7 +124,7 @@ uint64_t VFSReadFile(FILE *file, void *buffer, const uint64_t length)
     return FILE_SYSTEMS[index]->Read(FILE_SYSTEMS[index]->FS, file, buffer, length);
 }
 
-uint64_t VFSWriteFile(FILE *file, const void *buffer, const uint64_t length)
+int64_t VFSWriteFile(FILE *file, const void *buffer, const int64_t length)
 {
     if(!file) return 0; // No file.
     if((file->Flags & FS_VALID) == 0) return 0; // File not open.
@@ -133,6 +133,41 @@ uint64_t VFSWriteFile(FILE *file, const void *buffer, const uint64_t length)
     
     uint8_t index = file->Device - 'A';
     return FILE_SYSTEMS[index]->Write(FILE_SYSTEMS[index]->FS, file, buffer, length);
+}
+
+int VFSSeekFile(FILE *file, const int64_t offset, const int whence)
+{
+    if(!file) return 0; // No file.
+    if((file->Flags & FS_VALID) == 0) return 0; // File not open.
+    if((file->Flags & FS_FILE) == 0) return 0; // Not a file.
+
+    switch(whence)
+    {
+        case FILE_SEEK_SET:
+        file->Position = offset;
+        break;
+
+        case FILE_SEEK_CUR:
+        file->Position += offset;
+        break;
+
+        case FILE_SEEK_END:
+        file->Position = file->Length + offset;
+        break;
+
+        default:
+        return 1;
+    }
+    return 0;
+}
+
+int64_t VFSTellFile(FILE *file)
+{
+    if(!file) return 0; // No file.
+    if((file->Flags & FS_VALID) == 0) return 0; // File not open.
+    if((file->Flags & FS_FILE) == 0) return 0; // Not a file.
+
+    return file->Position;
 }
 
 char VFSGetChar(FILE *file)

@@ -202,7 +202,7 @@ namespace Ext2
         return 0;
     }
 
-    uint64_t Read(void *fs, FILE *file, void *buffer, const uint64_t length)
+    int64_t Read(void *fs, FILE *file, void *buffer, const int64_t length)
     {
         if(length == 0) return 0;
         if(file->Position == file->Length) 
@@ -210,14 +210,14 @@ namespace Ext2
             *(char*) buffer = FILE_EOF;
             return 0;
         }
-        uint64_t len = (uint64_t) length;
-        uint64_t pos = file->Position;
+        int64_t len = (int64_t) length;
+        int64_t pos = file->Position;
         if(len > file->Length - file->Position) len = file->Length - file->Position;
-        uint64_t len2 = len;
+        int64_t len2 = len;
 
         Ext2System *ext2 = (Ext2System*) fs;
         uint32_t blockSize = ext2->BlockSizeBytes;
-        uint64_t part1 = pos % blockSize;
+        int64_t part1 = pos % blockSize;
         uint8_t *dataBuf = ext2->Buffer + DATA_BUF_OFFSET;
         uint8_t *buf = (uint8_t*) buffer;
         if(!ext2->LoadBlock(file->CurrentBlock, dataBuf)) return length - len;
@@ -240,8 +240,8 @@ namespace Ext2
             file->CurrentBlock = ext2->GetNextBlock(openFile);
         }
 
-        uint64_t fullBlocks = len / blockSize;
-        for(uint64_t i = 0; i < fullBlocks; i++)
+        int64_t fullBlocks = len / blockSize;
+        for(int64_t i = 0; i < fullBlocks; i++)
         {
             if(!ext2->LoadBlock(file->CurrentBlock, dataBuf)) return length - len;
             memcpy(dataBuf, buf, blockSize);
@@ -251,7 +251,7 @@ namespace Ext2
             file->CurrentBlock = ext2->GetNextBlock(openFile);
         }
 
-        uint64_t part3 = len % blockSize;
+        int64_t part3 = len % blockSize;
         if(part3 > 0)
         {
             if(!ext2->LoadBlock(file->CurrentBlock, dataBuf)) return length - len;
@@ -264,7 +264,7 @@ namespace Ext2
         return len2;
     }
 
-    uint64_t Write(void *fs, FILE *file, const void *buffer, const uint64_t length)
+    int64_t Write(void *fs, FILE *file, const void *buffer, const int64_t length)
     {
         return 0;
     }
