@@ -37,7 +37,7 @@ void KernelStart(void)
     
     JumpToUserMode((void*) &SyscallEntry, (uint8_t*) USER_STACK_TOP + 0x1000, programEntry); // Does not return here.
 
-    while(true);
+    errorf("CAME BACK TO THE KERNEL!!!\n");
 
     /* while(true)
     {
@@ -45,6 +45,7 @@ void KernelStart(void)
         while(!KBBuffer.IsEmpty())
         {
             char c = KBBuffer.Dequeue();
+            printf("%c", c);
             if(c == 'q')
             {
                 outw(0x604, 0x2000);

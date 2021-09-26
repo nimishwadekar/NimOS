@@ -15,9 +15,9 @@ class Framebuffer
         BGRA = 3
     } Type;
     uint32_t Size;
-    uint32_t Width;
-    uint32_t Height;
+    int32_t Width;
+    int32_t Height;
     uint32_t PixelsPerScanLine;
 
-    Framebuffer(uint32_t *baseAddress, FBType type, uint32_t size, uint32_t width, uint32_t height, uint32_t pixelsPerScanLine);
+    Framebuffer(uint32_t *baseAddress, FBType type, uint32_t size, int32_t width, int32_t height, uint32_t pixelsPerScanLine);
 };

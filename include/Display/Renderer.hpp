@@ -6,8 +6,8 @@
 
 struct Point
 {
-    uint32_t X;
-    uint32_t Y;
+    int32_t X;
+    int32_t Y;
 };
 
 #define COLOUR_WHITE    0x00FFFFFF
@@ -32,12 +32,12 @@ class Renderer
     Renderer(Framebuffer framebuffer, PSF1 *font, uint32_t foregroundColour, uint32_t backgroundColour);
     void Printf(const char *format, ...);
     void PrintErrorf(const char *format, ...);
-    void PutChar(const uint32_t xOffset, const uint32_t yOffset, const char character);
+    void PutChar(const int32_t xOffset, const int32_t yOffset, const char character);
     void PutChar(const char character);
-    void PutPixel(const uint32_t xOffset, const uint32_t yOffset, const uint32_t colour);
+    void PutPixel(const int32_t xOffset, const int32_t yOffset, const uint32_t colour);
     void SetForegroundColour(const uint32_t colour);
     void SetBackgroundColour(const uint32_t colour);
-    void SetCursor(const uint32_t xOffset, const uint32_t yOffset);
+    void SetCursor(const int32_t xOffset, const int32_t yOffset);
     void ClearScreen();
 };
 

@@ -49,18 +49,29 @@ void Renderer::PrintErrorf(const char *format, ...)
     #endif
 }
 
-void Renderer::PutChar(const uint32_t xOffset, const uint32_t yOffset, const char character)
+void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char character)
 {
     // Special cases.
     switch(character)
     {
-        case '\r':
+        case '\r': // Carriage Return
             Cursor.X = 0;
             return;
 
         case '\n': // Line feed
             Cursor.X = 0;
             Cursor.Y += 16;
+            return;
+
+        case '\b': // Backspace
+            if(Cursor.X == 0 && Cursor.Y == 0) return;
+            Cursor.X -= 8;
+            if(Cursor.X < 0)
+            {
+                Cursor.Y -= 16;
+                Cursor.X = Buffer.Width - 8;
+            }
+            for(int32_t y = Cursor.Y; y < Cursor.Y + 16; y++) for(int32_t x = Cursor.X; x < Cursor.X + 8; x++) PutPixel(x, y, BackGroundColour);
             return;
         
         case ' ':
@@ -74,9 +85,9 @@ void Renderer::PutChar(const uint32_t xOffset, const uint32_t yOffset, const cha
     }
 
     uint8_t *glyphPtr = &Font->Glyphs + character * Font->BytesPerGlyph;
-    for(uint32_t y = yOffset; y < yOffset + 16; y++)
+    for(int32_t y = yOffset; y < yOffset + 16; y++)
     {
-        for(uint32_t x = xOffset; x < xOffset + 8; x++)
+        for(int32_t x = xOffset; x < xOffset + 8; x++)
         {
             PutPixel(x, y, BackGroundColour); // To erase an earlier pixel.
             if((*glyphPtr & (0b10000000 >> (x - xOffset))) > 0)
@@ -100,7 +111,7 @@ void Renderer::PutChar(const char character)
     PutChar(Cursor.X, Cursor.Y, character);
 }
 
-void Renderer::PutPixel(const uint32_t xOffset, const uint32_t yOffset, const uint32_t colour)
+void Renderer::PutPixel(const int32_t xOffset, const int32_t yOffset, const uint32_t colour)
 {
     *(Buffer.BaseAddress + (yOffset * Buffer.PixelsPerScanLine) + xOffset) = colour;
 }
@@ -115,7 +126,7 @@ void Renderer::SetBackgroundColour(const uint32_t colour)
     BackGroundColour = colour;
 }
 
-void Renderer::SetCursor(const uint32_t xOffset, const uint32_t yOffset)
+void Renderer::SetCursor(const int32_t xOffset, const int32_t yOffset)
 {
     Cursor.X = xOffset;
     Cursor.Y = yOffset;
@@ -123,9 +134,9 @@ void Renderer::SetCursor(const uint32_t xOffset, const uint32_t yOffset)
 
 void Renderer::ClearScreen()
 {
-    for(uint32_t y = 0; y < Buffer.Height; y++)
+    for(int32_t y = 0; y < Buffer.Height; y++)
     {
-        for(uint32_t x = 0; x < Buffer.Width; x++)
+        for(int32_t x = 0; x < Buffer.Width; x++)
         {
             PutPixel(x, y, BackGroundColour);
         }

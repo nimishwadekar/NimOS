@@ -9,7 +9,7 @@ namespace QWERTYKeyboard
          0 ,  0 , '1', '2', // Null, Esc
         '3', '4', '5', '6',
         '7', '8', '9', '0',
-        '-', '=',  0 ,  0 , // Backspace, Tab
+        '-', '=','\b',  0 , // Backspace, Tab
 
         'q', 'w', 'e', 'r',
         't', 'y', 'u', 'i',

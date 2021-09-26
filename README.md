@@ -22,19 +22,19 @@
 - Virtual Memory Manager (Page Table Manager)
 - Dynamic Memory Allocator (Heap)
 - ACPI
-- PCI Device Enumeration
+- PCI
 - Keyboard Driver
 - PIT Driver
 - AHCI Disk Driver
 - Virtual File System
 - Ext2 File System (Read-only)
 - User Space
+- System Calls
+- ELF Executable Loader
 
 ---
 
 ### Features to be implemented:
-- System Calls
-- Shell
+- Minimal C Library
 - Time
-- Threads
-- GUI
+- Shell
