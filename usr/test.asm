@@ -1,12 +1,12 @@
 [bits 64]
-[org 0x500000000]
 
-jmp beginUser
-
+section .data
 msg: db "Hello World!!", 0xA, 0
 inp: times 10 db 0
 
-beginUser:
+section .text
+global _start
+_start:
     mov rsi, msg
     mov rax, 0x02
     syscall

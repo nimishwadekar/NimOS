@@ -10,6 +10,7 @@
 #include <Memory/PageTableManager.hpp>
 #include <String.hpp>
 #include <Syscalls/Syscall.hpp>
+#include <Usermode/ELF.hpp>
 #include <Usermode/Usermode.hpp>
 
 extern "C" void BeginUserMode(uint32_t *fb);
@@ -22,16 +23,19 @@ void KernelStart(void)
     void *userStack = FrameAllocator.RequestPageFrame();
     PagingManager.MapPage((void*) USER_STACK_TOP, userStack);
 
-    uint8_t *programAddress = (uint8_t*) FrameAllocator.RequestPageFrame();
-    PagingManager.MapPage((void*) USER_CODE_BASE, programAddress);
-    FILE program = VFSOpenFile("usr/test.bin");
-    VFSReadFile(&program, (void*) USER_CODE_BASE, program.Length);
+    FILE program = VFSOpenFile("usr/test.elf");
+    int64_t pages = (program.Length / 0x1000) + 1;
+    uint8_t *programAddress = (uint8_t*) FrameAllocator.RequestPageFrames(pages);
+    for(int64_t i = 0; i < pages; i++) PagingManager.MapPage(programAddress + i * 0x1000, programAddress + i * 0x1000);
+    VFSReadFile(&program, programAddress, program.Length);
+
+    void *programEntry = ELF::LoadELF(programAddress);
 
     MainRenderer.SetBackgroundColour(USER_COLOUR_BACK);
     MainRenderer.SetForegroundColour(USER_COLOUR_FRONT);
     MainRenderer.ClearScreen();
     
-    JumpToUserMode((void*) &SyscallEntry, (uint8_t*) USER_STACK_TOP + 0x1000, (void*) USER_CODE_BASE); // Does not return here.
+    JumpToUserMode((void*) &SyscallEntry, (uint8_t*) USER_STACK_TOP + 0x1000, programEntry); // Does not return here.
 
     while(true);
 
