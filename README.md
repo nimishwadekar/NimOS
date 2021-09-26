@@ -29,8 +29,12 @@
 - Virtual File System
 - Ext2 File System (Read-only)
 - User Space
-- System Calls
 - ELF Executable Loader
+
+---
+
+### Features currently being implemented:
+- System Calls
 
 ---
 
