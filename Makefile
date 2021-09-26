@@ -18,7 +18,9 @@ KERNEL_ELF = $(BUILDDIR)/kernel.elf
 OS_IMG = $(BUILDDIR)/$(OS_NAME).img
 
 USRDIR = usr
-USRBINDIR = disk/ext2dir/usr
+USROBJDIR = lib/usr
+USRELFDIR = disk/ext2dir/usr
+USER_ELF = $(USRELFDIR)/test.elf
 
 SRC = $(call rwildcard,$(SRCDIR),*.cpp)
 ASMSRC = $(call rwildcard,$(SRCDIR),*.asm)
@@ -29,7 +31,8 @@ OBJS += $(patsubst $(SRCDIR)/%.psf, $(OBJDIR)/%_font.o, $(PSFSRC))
 DIRS = $(wildcard $(SRCDIR)/*)
 
 USRSRC = $(call rwildcard,$(USRDIR),*.asm)
-USRBIN = $(patsubst $(USRDIR)/%.asm, $(USRBINDIR)/%.bin, $(USRSRC))
+USRELF = $(patsubst $(USRDIR)/%.asm, $(USRELFDIR)/%.elf, $(USRSRC))
+USROBJS = $(patsubst $(USRDIR)/%.asm, $(USROBJDIR)/%.o, $(USRSRC))
 
 MKBOOTIMG = $(UTILSDIR)/mkbootimg
 BOOTJSON = $(UTILSDIR)/mkbootimg.json
@@ -83,11 +86,16 @@ link:
 run:
 	qemu-system-x86_64 -machine q35 -cpu qemu64 -bios $(OVMF) -m 64 -drive file=$(OS_IMG),format=raw -serial file:serial.log
 
-user: $(USRBIN)
+user: $(USROBJS) linkUser
 
-$(USRBINDIR)/%.bin: $(USRDIR)/%.asm
-	@echo !==== ASSEMBLING $^
-	$(ASSEMBLER) $^ -f bin -o $@
+$(USROBJDIR)/%.o: $(USRDIR)/%.asm
+	@echo !==== ASSEMBLING USER $^
+	$(ASSEMBLER) $^ -f elf64 -o $@
+
+linkUser:
+	@echo !==== LINKING USER
+	$(LD) $(LDFLAGS) $(USROBJS) -o $(USER_ELF)
 
 clean:
 	rm -rf $(OBJDIR)/*
+	mkdir $(OBJDIR)/usr
