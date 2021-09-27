@@ -2,4 +2,4 @@
 
 #include <Syscalls/Syscall.hpp>
 
-void SysMMap(Registe *regs);
+void SysMMap(Registers *regs);

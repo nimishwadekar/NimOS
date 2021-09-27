@@ -5,7 +5,8 @@ msg: db "Hello World!!", 0xA, 0xA, 0
 fname: db "anotherDirectory/src/hello.c", 0
 handle: dq 0
 size: dq 0
-buf: times 200 db 0
+
+buf equ 0x500000000
 
 section .text
 global _start
@@ -30,6 +31,12 @@ _start:
     mov [size], rax
     mov r8, 0
     mov rax, 0x15
+    syscall
+
+    mov rsi, buf
+    mov r10, 1
+    mov r8, 1
+    mov rax, 0x41
     syscall
 
     mov rdi, buf

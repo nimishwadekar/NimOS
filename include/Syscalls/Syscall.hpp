@@ -95,6 +95,7 @@ struct Registers
 // Allocates pages dynamically.
 // rsi - Virtual address
 // r10 - Number of pages
+// r8 - 0 (non-contiguous), 1 (contiguous)
 
 
 // Time System Calls
