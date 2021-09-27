@@ -39,6 +39,7 @@ class Renderer
     void SetBackgroundColour(const uint32_t colour);
     void SetCursor(const int32_t xOffset, const int32_t yOffset);
     void ClearScreen();
+    void ScrollUp(const int32_t pixels);
 };
 
 extern Renderer MainRenderer;

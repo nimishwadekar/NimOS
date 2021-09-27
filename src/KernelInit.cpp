@@ -45,7 +45,7 @@ void main()
     #endif
 
     Framebuffer framebuffer((uint32_t*) &fb, (Framebuffer::FBType) bootboot.fb_type, 
-        bootboot.fb_size, bootboot.fb_width, bootboot.fb_height, bootboot.fb_scanline / 4);
+        bootboot.fb_size, (int32_t) bootboot.fb_width, (int32_t) bootboot.fb_height, (int32_t) bootboot.fb_scanline / 4);
     PSF1 *font = (PSF1*) &_binary_font_psf_start;
     MainRenderer = Renderer(framebuffer, font, COLOUR_BLACK, COLOUR_WHITE);
     MainRenderer.ClearScreen();

@@ -6,6 +6,12 @@ void memset(void *ptr, uint8_t value, uint64_t bytes)
     for(uint64_t i = 0; i < bytes; i++) bytePtr[i] = value;
 }
 
+void memset32(void *ptr, uint32_t value, uint64_t dwords)
+{
+    uint32_t *wptr = (uint32_t*) ptr;
+    for(uint64_t i = 0; i < dwords; i++, wptr++) *wptr = value;
+}
+
 int memcmp(const void *a, const void *b, uint64_t bytes)
 {
     const uint8_t *aptr = (const uint8_t*) a, *bptr = (const uint8_t*) b;

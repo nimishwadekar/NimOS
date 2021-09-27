@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <Display/Renderer.hpp>
 #include <Logging.hpp>
+#include <Memory/Memory.hpp>
 #include <String.hpp>
 
 Renderer::Renderer(Framebuffer framebuffer, PSF1 *font, uint32_t foregroundColour, uint32_t backgroundColour) :
@@ -51,17 +52,18 @@ void Renderer::PrintErrorf(const char *format, ...)
 
 void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char character)
 {
+    bool specialChar = true;
     // Special cases.
     switch(character)
     {
         case '\r': // Carriage Return
             Cursor.X = 0;
-            return;
+            break;
 
         case '\n': // Line feed
             Cursor.X = 0;
             Cursor.Y += 16;
-            return;
+            break;
 
         case '\b': // Backspace
             if(Cursor.X == 0 && Cursor.Y == 0) return;
@@ -72,7 +74,7 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
                 Cursor.X = Buffer.Width - 8;
             }
             for(int32_t y = Cursor.Y; y < Cursor.Y + 16; y++) for(int32_t x = Cursor.X; x < Cursor.X + 8; x++) PutPixel(x, y, BackGroundColour);
-            return;
+            break;
         
         case ' ':
             Cursor.X += 8;
@@ -81,28 +83,40 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
                 Cursor.X = 0;
                 Cursor.Y += 16;
             }
-            return;
+            break;
+
+        default: specialChar = false; break;
     }
 
-    uint8_t *glyphPtr = &Font->Glyphs + character * Font->BytesPerGlyph;
-    for(int32_t y = yOffset; y < yOffset + 16; y++)
+    if(!specialChar)
     {
-        for(int32_t x = xOffset; x < xOffset + 8; x++)
+        uint8_t *glyphPtr = &Font->Glyphs + character * Font->BytesPerGlyph;
+        for(int32_t y = yOffset; y < yOffset + 16; y++)
         {
-            PutPixel(x, y, BackGroundColour); // To erase an earlier pixel.
-            if((*glyphPtr & (0b10000000 >> (x - xOffset))) > 0)
+            for(int32_t x = xOffset; x < xOffset + 8; x++)
             {
-                PutPixel(x, y, ForegroundColour);
+                PutPixel(x, y, BackGroundColour); // To erase an earlier pixel.
+                if((*glyphPtr & (0b10000000 >> (x - xOffset))) > 0)
+                {
+                    PutPixel(x, y, ForegroundColour);
+                }
             }
+            glyphPtr += 1;
         }
-        glyphPtr += 1;
+
+        Cursor.X = xOffset + 8;
+        Cursor.Y = yOffset;
+        if(Cursor.X + 8 > Buffer.Width)
+        {
+            Cursor.X = 0;
+            Cursor.Y += 16;
+        }
     }
-    Cursor.X = xOffset + 8;
-    Cursor.Y = yOffset;
-    if(Cursor.X + 8 > Buffer.Width)
+
+    if(Cursor.Y >= Buffer.Height)
     {
-        Cursor.X = 0;
-        Cursor.Y += 16;
+        ScrollUp(16);
+        Cursor.Y -= 16;
     }
 }
 
@@ -136,12 +150,22 @@ void Renderer::ClearScreen()
 {
     for(int32_t y = 0; y < Buffer.Height; y++)
     {
-        for(int32_t x = 0; x < Buffer.Width; x++)
-        {
-            PutPixel(x, y, BackGroundColour);
-        }
+        memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * y,
+            BackGroundColour, Buffer.PixelsPerScanLine);
     }
     Cursor.X = Cursor.Y = 0;
+}
+
+void Renderer::ScrollUp(const int32_t pixels)
+{
+    for(int32_t y = 0; y < Buffer.Height - pixels; y++)
+    {
+         memcpy(Buffer.BaseAddress + Buffer.PixelsPerScanLine * (pixels + y), 
+            Buffer.BaseAddress + Buffer.PixelsPerScanLine * y,
+            Buffer.PixelsPerScanLine << 2);
+    }
+    memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * (Buffer.Height - pixels),
+        BackGroundColour, Buffer.PixelsPerScanLine * pixels);
 }
 
 // The main renderer for the kernel.

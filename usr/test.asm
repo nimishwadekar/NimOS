@@ -18,7 +18,7 @@ _start:
     mov [dat], byte '0'
 next:
     mov rdx, 1
-    mov r10, 250
+    mov r10, 100
     mov rax, 0x51
     syscall
 

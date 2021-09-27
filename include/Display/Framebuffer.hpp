@@ -17,7 +17,7 @@ class Framebuffer
     uint32_t Size;
     int32_t Width;
     int32_t Height;
-    uint32_t PixelsPerScanLine;
+    int32_t PixelsPerScanLine;
 
-    Framebuffer(uint32_t *baseAddress, FBType type, uint32_t size, int32_t width, int32_t height, uint32_t pixelsPerScanLine);
+    Framebuffer(uint32_t *baseAddress, FBType type, uint32_t size, int32_t width, int32_t height, int32_t pixelsPerScanLine);
 };
