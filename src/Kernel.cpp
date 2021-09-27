@@ -24,10 +24,12 @@ void KernelStart(void)
     PagingManager.MapPage((void*) USER_STACK_TOP, userStack);
 
     FILE program = VFSOpenFile("usr/test.elf", "r");
-    int64_t pages = (program.Length / 0x1000) + 1;
-    uint8_t *programAddress = (uint8_t*) FrameAllocator.RequestPageFrames(pages);
-    for(int64_t i = 0; i < pages; i++) PagingManager.MapPage(programAddress + i * 0x1000, programAddress + i * 0x1000);
-    VFSReadFile(&program, programAddress, program.Length);
+    uint8_t *programAddress = (uint8_t*) Malloc(program.Length);
+    if(VFSReadFile(&program, programAddress, program.Length) != program.Length)
+    {
+        errorf("Program file read error.\n");
+        while(true);
+    }
 
     void *programEntry = ELF::LoadELF(programAddress);
     VFSCloseFile(&program);

@@ -198,6 +198,7 @@ int VFSFlushFile(FILE *file)
     if((file->Flags & FS_FILE) == 0) return FILE_EOF; // Not a file.
     if(file->Flags & FS_MODIFIED) return 0; // Nothing to flush.
 
+    uint8_t index = file->Device - 'A';
     return FILE_SYSTEMS[index]->Flush(FILE_SYSTEMS[index]->FS, file);
 }
 
