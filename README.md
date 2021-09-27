@@ -30,15 +30,15 @@
 - Ext2 File System (Read-only)
 - User Space
 - ELF Executable Loader
-
----
-
-### Features currently being implemented:
 - System Calls
 
 ---
 
-### Features to be implemented:
+### Features currently being implemented:
 - Minimal C Library
+
+---
+
+### Features to be implemented:
 - Time
 - Shell
