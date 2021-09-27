@@ -4,15 +4,15 @@
 #include <Memory/PageFrameAllocator.hpp>
 #include <Memory/PageTableManager.hpp>
 
-//Heap KernelHeap;
+Heap KernelHeap;
 
-void *HeapStart;
+/* void *HeapStart;
 void *HeapEnd;
-HeapSegmentHeader *LastHeader;
+HeapSegmentHeader *LastHeader; */
 
 // HEAP FUNCTIONS
 
-void InitializeHeap(void *heapAddress, uint64_t pageCount)
+void Heap::InitializeHeap(void *heapAddress, uint64_t pageCount)
 {
     void *position = heapAddress;
     for(uint64_t i = 0; i < pageCount; i++)
@@ -42,7 +42,7 @@ void InitializeHeap(void *heapAddress, uint64_t pageCount)
     LastHeader = startSegmentHeader;
 }
 
-void *Malloc(uint64_t size)
+void *Heap::Malloc(uint64_t size)
 {
     if((size & (BLOCK_SIZE - 1)) > 0) // size % BLOCK_SIZE
     {
@@ -59,7 +59,7 @@ void *Malloc(uint64_t size)
         {
             if(currentSegment->Size > size)
             {
-                currentSegment->Split(size);
+                currentSegment->Split(this, size);
                 currentSegment->Free = false;
                 return (void*) ((uint64_t) currentSegment + sizeof(HeapSegmentHeader));
             }
@@ -77,15 +77,15 @@ void *Malloc(uint64_t size)
     return Malloc(size);
 }
 
-void Free(void *address)
+void Heap::Free(void *address)
 {
     HeapSegmentHeader *segment = (HeapSegmentHeader*) ((uint64_t) address - sizeof(HeapSegmentHeader));
     segment->Free = true;
-    segment->MergeNext();
-    segment->MergePrev();
+    segment->MergeNext(this);
+    segment->MergePrev(this);
 }
 
-void ExtendHeap(uint64_t size)
+void Heap::ExtendHeap(uint64_t size)
 {
     if((size & (0x1000 - 1)) > 0) // size % 0x1000
     {
@@ -115,13 +115,13 @@ void ExtendHeap(uint64_t size)
     newSegment->Prev = LastHeader;
     LastHeader->Next = newSegment;
     newSegment->Size = size - sizeof(HeapSegmentHeader);
-    newSegment->MergePrev();
+    newSegment->MergePrev(this);
 }
 
 
 // HEAP SEGMENT HEADER FUNCTIONS
 
-HeapSegmentHeader *HeapSegmentHeader::Split(uint64_t firstPartSize)
+HeapSegmentHeader *HeapSegmentHeader::Split(Heap *heap, uint64_t firstPartSize)
 {
     //if(firstPartSize < BLOCK_SIZE) return NULL;
     int64_t splitSegmentSize = Size - firstPartSize - sizeof(HeapSegmentHeader);
@@ -136,21 +136,21 @@ HeapSegmentHeader *HeapSegmentHeader::Split(uint64_t firstPartSize)
     secondSegment->Free = true;
 
     Size = firstPartSize;
-    if(LastHeader == this) LastHeader = Next;
+    if(heap->LastHeader == this) heap->LastHeader = Next;
     return secondSegment;
 }
 
-void HeapSegmentHeader::MergeNext(void)
+void HeapSegmentHeader::MergeNext(Heap *heap)
 {
     if(Next == NULL || !Next->Free) return;
 
-    if(Next == LastHeader) LastHeader = this;
+    if(Next == heap->LastHeader) heap->LastHeader = this;
     if(Next->Next != NULL) Next->Next->Prev = this;
     Size = Size + sizeof(HeapSegmentHeader) + Next->Size;
     Next = Next->Next;
 }
 
-void HeapSegmentHeader::MergePrev(void)
+void HeapSegmentHeader::MergePrev(Heap *heap)
 {
-    if(Prev != NULL && Prev->Free) Prev->MergeNext();
+    if(Prev != NULL && Prev->Free) Prev->MergeNext(heap);
 }
