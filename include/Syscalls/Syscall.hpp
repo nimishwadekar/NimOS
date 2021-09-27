@@ -114,7 +114,7 @@ struct Registers
 
 #define SYS_SETFORE     0x82
 // Sets foreground colour.
-// rdx - colour
+// edx - colour
 
 #define SYS_GETBACK     0x83
 // Gets background colour.
@@ -122,7 +122,7 @@ struct Registers
 
 #define SYS_SETBACK     0x84
 // Sets background colour. Also clears the screen.
-// rdx - colour
+// edx - colour
 
 #define SYS_GETRES      0x85
 // Gets screen resolution.
@@ -134,19 +134,27 @@ struct Registers
 
 #define SYS_SETCRSR     0x87
 // Sets cursor position.
-// rdi - position[x:y]
+// r8 - x
+// r9 - y
 
 #define SYS_DRAWP       0x88
 // Draws a pixel.
-// rdi - position[x:y]
+// r8 - x
+// r9 - y
+// r10 - colour
 
 #define SYS_DRAWL       0x89
 // Draws a line.
-// rsi - pos1[x:y]
-// rdi - pos2[x:y]
+// rdi - x1
+// rsi - y1
+// r8 - x2
+// r9 - y2
+// r10 - colour
 
 #define SYS_DRAWR       0x8A
 // Draws a rectangle.
-// rdi - top left corner position[x:y]
+// rdi - x
+// rsi - y
 // r8 - width
 // r9 - height
+// r10 - colour

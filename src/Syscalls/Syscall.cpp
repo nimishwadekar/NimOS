@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <Display/Renderer.hpp>
+#include <Syscalls/Display.hpp>
 #include <Syscalls/FileIO.hpp>
 #include <Syscalls/Memory.hpp>
 #include <Syscalls/StdIO.hpp>
@@ -36,6 +37,17 @@ extern "C" void SyscallHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_
         case SYS_MMAP: SysMMap(&regs); break;
 
         case SYS_SLEEP: SysSleep(&regs); break;
+
+        case SYS_GETFORE: SysGetFore(&regs); break;
+        case SYS_SETFORE: SysSetFore(&regs); break;
+        case SYS_GETBACK: SysGetBack(&regs); break;
+        case SYS_SETBACK: SysSetBack(&regs); break;
+        case SYS_GETRES: SysGetRes(&regs); break;
+        case SYS_GETCRSR: SysGetCrsr(&regs); break;
+        case SYS_SETCRSR: SysSetCrsr(&regs); break;
+        case SYS_DRAWP: SysDrawP(&regs); break;
+        case SYS_DRAWL: SysDrawL(&regs); break;
+        case SYS_DRAWR: SysDrawR(&regs); break;
 
         default: regs.RAX = -1; // Invalid system call.
     }
