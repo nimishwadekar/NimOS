@@ -1,7 +1,6 @@
 [bits 64]
 
 global JumpToUserMode
-extern BeginUserMode
 
 JumpToUserMode:
     ; Enable syscalls

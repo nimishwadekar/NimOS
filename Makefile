@@ -1,7 +1,7 @@
 OS_NAME = TokyoOS
 
 OVMF = bin/OVMF.fd
-CC = g++
+CC = gcc
 LD = ld
 ASSEMBLER = nasm
 LINK_SCRIPT = ./link.ld
@@ -20,7 +20,8 @@ OS_IMG = $(BUILDDIR)/$(OS_NAME).img
 USRDIR = usr
 USROBJDIR = lib/usr
 USRELFDIR = disk/ext2dir/usr
-USER_ELF = $(USRELFDIR)/test.elf
+USER_ELF = $(USRELFDIR)/main.elf
+USR_LIBC = usr/libc/include
 
 SRC = $(call rwildcard,$(SRCDIR),*.cpp)
 ASMSRC = $(call rwildcard,$(SRCDIR),*.asm)
@@ -30,15 +31,18 @@ OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
 OBJS += $(patsubst $(SRCDIR)/%.psf, $(OBJDIR)/%_font.o, $(PSFSRC))
 DIRS = $(wildcard $(SRCDIR)/*)
 
-USRSRC = $(call rwildcard,$(USRDIR),*.asm)
+USRSRC = $(call rwildcard,$(USRDIR),*.c)
+USRASMSRC = $(call rwildcard,$(USRDIR),*.asm)
 USRELF = $(patsubst $(USRDIR)/%.asm, $(USRELFDIR)/%.elf, $(USRSRC))
-USROBJS = $(patsubst $(USRDIR)/%.asm, $(USROBJDIR)/%.o, $(USRSRC))
+USROBJS = $(patsubst $(USRDIR)/%.asm, $(USROBJDIR)/%.o, $(USRASMSRC))
+USROBJS += $(patsubst $(USRDIR)/%.c, $(USROBJDIR)/%.o, $(USRSRC))
+USRDIRS = $(wildcard $(USRDIR)/*)
 
 MKBOOTIMG = $(UTILSDIR)/mkbootimg
 BOOTJSON = $(UTILSDIR)/mkbootimg.json
 
 IGNORE_ERRORS = -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function -Wno-unused-but-set-variable
-CFLAGS = -I$(INCDIR) -ffreestanding -mno-red-zone -fpic -fno-stack-protector -fno-exceptions -fno-rtti -nostdlib -Werror -Wall -Wextra $(IGNORE_ERRORS)
+CFLAGS = -ffreestanding -mno-red-zone -fpic -fno-stack-protector -fno-exceptions -fno-rtti -nostdlib -Werror -Wall -Wextra $(IGNORE_ERRORS)
 ASMFLAGS = 
 LDFLAGS = -nostdlib -nostartfiles
 STRIPFLAGS = -s -K mmio -K fb -K bootboot -K environment -K initstack
@@ -63,7 +67,7 @@ $(OBJDIR)/Interrupts/Interrupts.o: $(SRCDIR)/Interrupts/Interrupts.cpp
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo !==== COMPILING $^
 	mkdir -p $(@D)
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) -I$(INCDIR) $(CFLAGS) -c $^ -o $@
 
 $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 	@echo !==== ASSEMBLING $^
@@ -88,8 +92,14 @@ run:
 
 user: $(USROBJS) linkUser
 
+$(USROBJDIR)/%.o: $(USRDIR)/%.c
+	@echo !==== COMPILING USER $^
+	mkdir -p $(@D)
+	$(CC) -I$(USR_LIBC) -ffreestanding -nostdlib -c $^ -o $@
+
 $(USROBJDIR)/%.o: $(USRDIR)/%.asm
 	@echo !==== ASSEMBLING USER $^
+	mkdir -p $(@D)
 	$(ASSEMBLER) $^ -f elf64 -o $@
 
 linkUser:
@@ -98,4 +108,4 @@ linkUser:
 
 clean:
 	rm -rf $(OBJDIR)/*
-	mkdir $(OBJDIR)/usr
+#	mkdir $(OBJDIR)/usr

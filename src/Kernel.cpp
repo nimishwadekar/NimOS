@@ -23,7 +23,7 @@ void KernelStart(void)
     void *userStack = FrameAllocator.RequestPageFrame();
     PagingManager.MapPage((void*) USER_STACK_TOP, userStack);
 
-    FILE *program = VFSOpenFile("usr/test.elf", "r");
+    FILE *program = VFSOpenFile("usr/main.elf", "r");
     uint8_t *programAddress = (uint8_t*) KernelHeap.Malloc(program->Length);
     if(VFSReadFile(program, programAddress, program->Length) != program->Length)
     {
@@ -32,6 +32,11 @@ void KernelStart(void)
     }
 
     void *programEntry = ELF::LoadELF(programAddress);
+    if(!programEntry)
+    {
+        errorf("Program file format incorrect.\n");
+        while(true);
+    }
     VFSCloseFile(program);
 
     MainRenderer.SetBackgroundColour(USER_COLOUR_BACK);

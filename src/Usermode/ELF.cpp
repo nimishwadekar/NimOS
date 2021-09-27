@@ -18,9 +18,9 @@ namespace ELF
         {
             if(progHeader->Type != ELF_HDR_TYPE_LOAD) continue;
 
-            //uint64_t pageStart = progHeader->P_Vaddr - (progHeader->P_Vaddr % 0x1000);
             uint64_t pages = (progHeader->P_Vaddr % 0x1000 + progHeader->P_MemSz + 0xFFF) / 0x1000;
-            for(uint64_t p = 0; p < pages; p++) PagingManager.MapPage((uint8_t*) progHeader->P_Vaddr + p * 0x1000, FrameAllocator.RequestPageFrame());
+            uint8_t *addr = (uint8_t*) FrameAllocator.RequestPageFrames(pages);
+            for(uint64_t p = 0; p < pages; p++) PagingManager.MapPage((uint8_t*) progHeader->P_Vaddr + p * 0x1000, addr + p * 0x1000);
             memcpy((uint8_t*) fileAddress + progHeader->P_Offset, (void*) progHeader->P_Vaddr, progHeader->P_FileSz);
             if(progHeader->P_FileSz < progHeader->P_MemSz) 
                 memset((uint8_t*) progHeader->P_Vaddr + progHeader->P_FileSz, 0, progHeader->P_MemSz - progHeader->P_FileSz);
