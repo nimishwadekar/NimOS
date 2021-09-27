@@ -7,6 +7,10 @@
 #include <FS/Ext2.hpp>
 
 #define DEVICE_MAX 26
+#define MAX_OPEN_FILES 8
+
+FILE OpenedFiles[MAX_OPEN_FILES];
+uint32_t OpenFileCount;
 
 // 'A' - EFI System, Normal partitions from 'C'.
 FileSystem *FILE_SYSTEMS[DEVICE_MAX];
@@ -79,9 +83,12 @@ void VFSInitialize(const DiskInfo *diskInfo)
 
         SetupFileSystem(partitions + i, vol);
     }
+
+    memset(OpenedFiles, 0, MAX_OPEN_FILES * sizeof(FILE));
+    OpenFileCount = 0;
 }
 
-FILE VFSOpenFile(const char *fileName, const char *mode)
+FILE *VFSOpenFile(const char *fileName, const char *mode)
 {
     do
     {
@@ -110,15 +117,17 @@ FILE VFSOpenFile(const char *fileName, const char *mode)
             FILE file = FILE_SYSTEMS[index]->Open(FILE_SYSTEMS[index]->FS, fileName);
             file.Device = device;
             file.Flags |= flags;
-            return file;
+
+            file.Handle = OpenFileCount;
+            OpenedFiles[OpenFileCount] = file;
+            OpenFileCount += 1;
+
+            return OpenedFiles + OpenFileCount - 1;
         }
     }
     } while(false); // To allow break.
 
-
-    FILE file;
-    file.Flags = FS_INVALID;
-    return file;
+    return 0;
 }
 
 int VFSCloseFile(FILE *file)
@@ -132,7 +141,13 @@ int VFSCloseFile(FILE *file)
     }
 
     uint8_t index = file->Device - 'A';
-    return FILE_SYSTEMS[index]->Close(FILE_SYSTEMS[index]->FS, file);
+    int retVal = FILE_SYSTEMS[index]->Close(FILE_SYSTEMS[index]->FS, file);
+
+    for(uint32_t i = file->Handle; i < OpenFileCount - 1; i++)
+        OpenedFiles[i] = OpenedFiles[i + 1];
+    OpenFileCount -= 1;
+
+    return retVal;
 }
 
 int64_t VFSReadFile(FILE *file, void *buffer, const int64_t length)

@@ -23,7 +23,7 @@ void VFSInitialize(const DiskInfo *diskInfo);
 
 // Default volume is assumed to be 'C'.
 
-FILE VFSOpenFile(const char *fileName, const char *mode);
+FILE *VFSOpenFile(const char *fileName, const char *mode);
 int VFSCloseFile(FILE *file);
 int64_t VFSReadFile(FILE *file, void *buffer, const int64_t length);
 int64_t VFSWriteFile(FILE *file, const void *buffer, const int64_t length);
