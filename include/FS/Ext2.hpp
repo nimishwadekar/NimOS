@@ -156,8 +156,6 @@ namespace Ext2
         uint8_t *Buffer;
         uint32_t BufferPageCount;
 
-        // Replace with Ext2File array.
-        //Inode *OpenFiles[8]; // Temporary.
         Ext2File *OpenFiles[8];
 
         Ext2System(GPTEntry *gpt);

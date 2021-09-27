@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <Display/Renderer.hpp>
-#include <Syscalls/Stdio.hpp>
+#include <Syscalls/FileIO.hpp>
+#include <Syscalls/StdIO.hpp>
 #include <Syscalls/Syscall.hpp>
 
 // Add parameters and call syscall 1 from program.asm
@@ -22,6 +23,15 @@ extern "C" void SyscallHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_
         case SYS_PRINT: SysPrint(&regs); break;
         case SYS_INPUTN: SysInputN(&regs); break;
         case SYS_INPUT: SysInput(&regs); break;
+
+        case SYS_FOPEN: SysFOpen(&regs); break;
+        case SYS_FCLOSE: SysFClose(&regs); break;
+        case SYS_FREAD: SysFRead(&regs); break;
+        case SYS_FWRITE: SysFWrite(&regs); break;
+        case SYS_FSEEK: SysFSeek(&regs); break;
+        case SYS_FTELL: SysFTell(&regs); break;
+
+        default: regs.RAX = -1; // Invalid system call.
     }
 
     rax = regs.RAX; // Set the return value on the stack.

@@ -115,6 +115,8 @@ FILE *VFSOpenFile(const char *fileName, const char *mode)
         if(FILE_SYSTEMS[index]) // Call respective FS' open() function.
         {
             FILE file = FILE_SYSTEMS[index]->Open(FILE_SYSTEMS[index]->FS, fileName);
+            if((file.Flags & FS_VALID) == FS_INVALID) break;
+
             file.Device = device;
             file.Flags |= flags;
 

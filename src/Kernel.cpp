@@ -23,16 +23,16 @@ void KernelStart(void)
     void *userStack = FrameAllocator.RequestPageFrame();
     PagingManager.MapPage((void*) USER_STACK_TOP, userStack);
 
-    FILE program = VFSOpenFile("usr/test.elf", "r");
-    uint8_t *programAddress = (uint8_t*) Malloc(program.Length);
-    if(VFSReadFile(&program, programAddress, program.Length) != program.Length)
+    FILE *program = VFSOpenFile("usr/test.elf", "r");
+    uint8_t *programAddress = (uint8_t*) KernelHeap.Malloc(program->Length);
+    if(VFSReadFile(program, programAddress, program->Length) != program->Length)
     {
         errorf("Program file read error.\n");
         while(true);
     }
 
     void *programEntry = ELF::LoadELF(programAddress);
-    VFSCloseFile(&program);
+    VFSCloseFile(program);
 
     MainRenderer.SetBackgroundColour(USER_COLOUR_BACK);
     MainRenderer.SetForegroundColour(USER_COLOUR_FRONT);
@@ -41,6 +41,7 @@ void KernelStart(void)
     JumpToUserMode((void*) &SyscallEntry, (uint8_t*) USER_STACK_TOP + 0x1000, programEntry); // Does not return here.
 
     errorf("CAME BACK TO THE KERNEL!!!\n");
+    while(true);
 
     /* while(true)
     {

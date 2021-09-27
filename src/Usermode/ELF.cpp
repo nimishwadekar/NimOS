@@ -27,7 +27,5 @@ namespace ELF
         }
 
         return (void*) header->ProgramEntryPosition;
-
-        while(1);
     }
 }

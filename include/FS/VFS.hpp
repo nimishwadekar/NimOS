@@ -19,6 +19,8 @@ struct FileSystem
     int (*Flush)(void *fs, FILE *file);
 };
 
+extern FILE OpenedFiles[];
+
 void VFSInitialize(const DiskInfo *diskInfo);
 
 // Default volume is assumed to be 'C'.
