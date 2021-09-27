@@ -5,29 +5,30 @@
 
 void SysPrintN(Registers *regs)
 {
-    char *str = (char*) regs->RSI;
-    for(uint64_t n = regs->R10; n > 0; str++, n--)
+    char *str = (char*) regs->RDI;
+    for(uint64_t n = regs->RSI; n > 0; str++, n--)
     {
         MainRenderer.PutChar(*str);
     }
-    regs->RAX = 0;
+    regs->RAX = regs->RSI;
 }
 
 
 void SysPrint(Registers *regs)
 {
-    char *str = (char*) regs->RSI;
-    for( ; *str != 0; str++)
+    char *str = (char*) regs->RDI;
+    uint64_t n = 0;
+    for( ; *str != 0; str++, n++)
     {
         MainRenderer.PutChar(*str);
     }
-    regs->RAX = 0;
+    regs->RAX = n;
 }
 
 
 void SysInputN(Registers *regs)
 {
-    uint64_t n = regs->R10;
+    uint64_t n = regs->RSI;
     char *dst = (char*) regs->RDI;
     for( ; n > 0; n--, dst++)
     {
@@ -36,17 +37,21 @@ void SysInputN(Registers *regs)
         *dst = KBBuffer.Dequeue();
         MainRenderer.PutChar(*dst);
     }
+    regs->RAX = n;
 }
 
 
 void SysInput(Registers *regs)
 {
     char *dst = (char*) regs->RDI;
+    uint64_t n = 0;
     do
     {
         while(KBBuffer.IsEmpty());
 
         *dst = KBBuffer.Dequeue();
         MainRenderer.PutChar(*dst);
+        n += 1;
     } while(*(dst++) != '\n');
+    regs->RAX = n;
 }

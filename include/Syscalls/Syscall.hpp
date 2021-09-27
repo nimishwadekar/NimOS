@@ -21,17 +21,17 @@ struct Registers
 
 #define SYS_PRINTN      0x01
 // Prints n bytes.
-// rsi = string
-// r10 = n
+// rdi = string
+// rsi = n
 
 #define SYS_PRINT       0x02
 // Prints till null character.
-// rsi = string
+// rdi = string
 
 #define SYS_INPUTN      0x03
 // Inputs n characters and stores at location.
 // rdi = location
-// r10 = n
+// rsi = n
 
 #define SYS_INPUT       0x04
 // Inputs characters till Enter key is pressed. Enter is included in the input data.
@@ -42,35 +42,35 @@ struct Registers
 
 #define SYS_FOPEN       0x11
 // Opens file.
-// rsi - Null terminated file name string
-// rdx - Mode (0 - read, 1 - write, 2 - both)
+// rdi - Null terminated file name string
+// rsi - Mode (0 - read, 1 - write, 2 - both)
 // Return value - File descriptor/Error code(-1 wrong mode, -2 no file to read)
 
 #define SYS_FCLOSE      0x12
 // Closes an open file.
-// rdx - File descriptor
+// rdi - File descriptor
 
 #define SYS_FREAD       0x13
 // Reads n bytes from an open file.
-// rdx - File descriptor
-// rdi - Destination
+// rdi - File descriptor
+// rsi - Destination
 // r10 - n
 
 #define SYS_FWRITE      0x14
 // Writes n bytes to an open file.
-// rdx - File descriptor
+// rdi - File descriptor
 // rsi - Source
 // r10 - n
 
 #define SYS_FSEEK       0x15
 // Seeks position in file.
-// rdx - File descriptor
-// r10 - Offset
-// r8 - Whence (0 - set, 1 - cur, 2 - end)
+// rdi - File descriptor
+// rsi - Offset
+// r10 - Whence (0 - set, 1 - cur, 2 - end)
 
 #define SYS_FTELL       0x16
 // Tells position in file.
-// rdx - File descriptor
+// rdi - File descriptor
 // Return value - position in file
 
 
@@ -78,14 +78,14 @@ struct Registers
 
 #define SYS_EXEC        0x21
 // Executes program.
-// rsi - Null terminated file name string
-// rdx - argv
+// rdi - Null terminated file name string
+// rsi - argv
 // r10 - envp
 
 #define SYS_EXECR       0x22
 // Executes program and returns after finishing.
-// rsi - Null terminated file name string
-// rdx - argv
+// rdi - Null terminated file name string
+// rsi - argv
 // r10 - envp
 
 
@@ -93,17 +93,17 @@ struct Registers
 
 #define SYS_MMAP        0x41
 // Allocates pages dynamically.
-// rsi - Virtual address
-// r10 - Number of pages
-// r8 - 0 (non-contiguous), 1 (contiguous)
+// rdi - Virtual address
+// rsi - Number of pages
+// r10 - 0 (may be non-contiguous), 1 (always contiguous)
 
 
 // Time System Calls
 
 #define SYS_SLEEP       0x51
 // Sleeps for a specified period of time.
-// r10 - Period
-// rdx - 0 - seconds, 1 - milliseconds
+// rdi - Period
+// rsi - 0 - seconds, 1 - milliseconds
 
 
 // Display System Calls
@@ -114,7 +114,7 @@ struct Registers
 
 #define SYS_SETFORE     0x82
 // Sets foreground colour.
-// edx - colour
+// rdi - colour
 
 #define SYS_GETBACK     0x83
 // Gets background colour.
@@ -122,7 +122,7 @@ struct Registers
 
 #define SYS_SETBACK     0x84
 // Sets background colour. Also clears the screen.
-// edx - colour
+// rdi - colour
 
 #define SYS_GETRES      0x85
 // Gets screen resolution.
@@ -134,27 +134,27 @@ struct Registers
 
 #define SYS_SETCRSR     0x87
 // Sets cursor position.
-// r8 - x
-// r9 - y
+// rdi - x
+// rsi - y
 
 #define SYS_DRAWP       0x88
 // Draws a pixel.
-// r8 - x
-// r9 - y
+// rdi - x
+// rsi - y
 // r10 - colour
 
 #define SYS_DRAWL       0x89
 // Draws a line.
 // rdi - x1
 // rsi - y1
-// r8 - x2
-// r9 - y2
-// r10 - colour
+// r10 - x2
+// rdx - y2
+// r8 - colour
 
 #define SYS_DRAWR       0x8A
 // Draws a rectangle.
 // rdi - x
 // rsi - y
-// r8 - width
-// r9 - height
-// r10 - colour
+// r10 - width
+// rdx - height
+// r8 - colour

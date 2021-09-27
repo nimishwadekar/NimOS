@@ -4,6 +4,6 @@
 void SysSleep(Registers *regs)
 {
     int factor = 1;
-    if(regs->RDX == 0) factor = 1000;
-    PIT::Sleep(regs->R10 * factor);
+    if(regs->RSI == 0) factor = 1000;
+    PIT::Sleep(regs->RDI * factor);
 }

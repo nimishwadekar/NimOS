@@ -4,7 +4,7 @@
 void SysFOpen(Registers *regs)
 {
     const char *mode = 0;
-    switch(regs->RDX)
+    switch(regs->RSI)
     {
         case 0: mode = "r"; break;
         case 1: mode = "w"; break;
@@ -12,7 +12,7 @@ void SysFOpen(Registers *regs)
         default: regs->RAX = ERR_BAD_MODE; return;
     }
 
-    FILE *file = VFSOpenFile((const char*) regs->RSI, mode);
+    FILE *file = VFSOpenFile((const char*) regs->RDI, mode);
     if(!file) regs->RAX = ERR_FILE_NOT_FOUND_RD;
     else regs->RAX = file->Handle;
 }
@@ -20,29 +20,29 @@ void SysFOpen(Registers *regs)
 
 void SysFClose(Registers *regs)
 {
-    regs->RAX = VFSCloseFile(&OpenedFiles[regs->RDX]);
+    regs->RAX = VFSCloseFile(&OpenedFiles[regs->RDI]);
 }
 
 
 void SysFRead(Registers *regs)
 {
-    regs->RAX = VFSReadFile(&OpenedFiles[regs->RDX], (void*) regs->RDI, regs->R10);
+    regs->RAX = VFSReadFile(&OpenedFiles[regs->RDI], (void*) regs->RSI, regs->R10);
 }
 
 
 void SysFWrite(Registers *regs)
 {
-    regs->RAX = VFSWriteFile(&OpenedFiles[regs->RDX], (void*) regs->RSI, regs->R10);
+    regs->RAX = VFSWriteFile(&OpenedFiles[regs->RDI], (void*) regs->RSI, regs->R10);
 }
 
 
 void SysFSeek(Registers *regs)
 {
-    regs->RAX = VFSSeekFile(&OpenedFiles[regs->RDX], regs->R10, regs->R8);
+    regs->RAX = VFSSeekFile(&OpenedFiles[regs->RDI], regs->RSI, regs->R10);
 }
 
 
 void SysFTell(Registers *regs)
 {
-    regs->RAX = VFSTellFile(&OpenedFiles[regs->RDX]);
+    regs->RAX = VFSTellFile(&OpenedFiles[regs->RDI]);
 }
