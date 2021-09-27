@@ -5,17 +5,13 @@ extern SyscallHandler
 
 global SyscallEntry
 
-; Parameters rdi, rsi, rdx, r10, r8, r9
-; Registers preserved rbx, rdx, rsi, rdi, rbp, rsp, r8, r9, r10
 STATE_RBX: dq 0
-STATE_RDX: dq 0
-STATE_RSI: dq 0
-STATE_RDI: dq 0
 STATE_RBP: dq 0
 STATE_RSP: dq 0
-STATE_R8:  dq 0
-STATE_R9:  dq 0
-STATE_R10: dq 0
+STATE_R12: dq 0
+STATE_R13: dq 0
+STATE_R14: dq 0
+STATE_R15: dq 0
 
 STATE_RFLAGS: dq 0
 STATE_RIP: dq 0
@@ -25,14 +21,12 @@ SyscallEntry:
     mov [STATE_RFLAGS], r11
 
     mov [STATE_RBX], rbx
-    mov [STATE_RDX], rdx
-    mov [STATE_RSI], rsi
-    mov [STATE_RDI], rdi
     mov [STATE_RBP], rbp
     mov [STATE_RSP], rsp
-    mov [STATE_R8], r8
-    mov [STATE_R9], r9
-    mov [STATE_R10], r10
+    mov [STATE_R12], r12
+    mov [STATE_R13], r13
+    mov [STATE_R14], r14
+    mov [STATE_R15], r15
 
     mov rcx, r10
     mov rsp, [TaskStateSegment + 4]
@@ -42,14 +36,12 @@ SyscallEntry:
 
     pop rax
     mov rbx, [STATE_RBX]
-    mov rdx, [STATE_RDX]
-    mov rsi, [STATE_RSI]
-    mov rdi, [STATE_RDI]
     mov rbp, [STATE_RBP]
     mov rsp, [STATE_RSP]
-    mov r8, [STATE_R8]
-    mov r9, [STATE_R9]
-    mov r10, [STATE_R10]
+    mov r12, [STATE_R12]
+    mov r13, [STATE_R13]
+    mov r14, [STATE_R14]
+    mov r15, [STATE_R15]
 
     mov rcx, [STATE_RIP]
     mov r11, [STATE_RFLAGS]

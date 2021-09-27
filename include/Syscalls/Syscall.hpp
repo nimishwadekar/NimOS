@@ -54,19 +54,19 @@ struct Registers
 // Reads n bytes from an open file.
 // rdi - File descriptor
 // rsi - Destination
-// r10 - n
+// rdx - n
 
 #define SYS_FWRITE      0x14
 // Writes n bytes to an open file.
 // rdi - File descriptor
 // rsi - Source
-// r10 - n
+// rdx - n
 
 #define SYS_FSEEK       0x15
 // Seeks position in file.
 // rdi - File descriptor
 // rsi - Offset
-// r10 - Whence (0 - set, 1 - cur, 2 - end)
+// rdx - Whence (0 - set, 1 - cur, 2 - end)
 
 #define SYS_FTELL       0x16
 // Tells position in file.
@@ -80,13 +80,13 @@ struct Registers
 // Executes program.
 // rdi - Null terminated file name string
 // rsi - argv
-// r10 - envp
+// rdx - envp
 
 #define SYS_EXECR       0x22
 // Executes program and returns after finishing.
 // rdi - Null terminated file name string
 // rsi - argv
-// r10 - envp
+// rdx - envp
 
 
 // Memory System Calls
@@ -95,7 +95,7 @@ struct Registers
 // Allocates pages dynamically.
 // rdi - Virtual address
 // rsi - Number of pages
-// r10 - 0 (may be non-contiguous), 1 (always contiguous)
+// rdx - 0 (may be non-contiguous), 1 (always contiguous)
 
 
 // Time System Calls
@@ -141,20 +141,20 @@ struct Registers
 // Draws a pixel.
 // rdi - x
 // rsi - y
-// r10 - colour
+// rdx - colour
 
 #define SYS_DRAWL       0x89
 // Draws a line.
 // rdi - x1
 // rsi - y1
-// r10 - x2
-// rdx - y2
+// rdx - x2
+// r10 - y2
 // r8 - colour
 
 #define SYS_DRAWR       0x8A
 // Draws a rectangle.
 // rdi - x
 // rsi - y
-// r10 - width
-// rdx - height
+// rdx - width
+// r10 - height
 // r8 - colour

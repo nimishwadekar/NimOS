@@ -52,5 +52,6 @@ extern "C" void SyscallHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_
         default: regs.RAX = -1; // Invalid system call.
     }
 
-    rax = regs.RAX; // Set the return value on the stack.
+    rax = regs.RAX;
+    rdx = regs.RDX;
 }

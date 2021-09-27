@@ -47,7 +47,7 @@ void SysSetCrsr(Registers *regs)
 
 void SysDrawP(Registers *regs)
 {
-    MainRenderer.PutPixel((int32_t) regs->RDI, (int32_t) regs->RSI, (uint32_t) regs->R10);
+    MainRenderer.PutPixel((int32_t) regs->RDI, (int32_t) regs->RSI, (uint32_t) regs->RDX);
 }
 
 
@@ -55,8 +55,8 @@ void SysDrawL(Registers *regs)
 {
     int32_t x1 = (int32_t) regs->RDI;
     int32_t y1 = (int32_t) regs->RSI;
-    int32_t x2 = (int32_t) regs->R10;
-    int32_t y2 = (int32_t) regs->RDX;
+    int32_t x2 = (int32_t) regs->RDX;
+    int32_t y2 = (int32_t) regs->R10;
     uint32_t colour = (uint32_t) regs->R8;
 
     if(x1 == x2)
@@ -89,8 +89,8 @@ void SysDrawR(Registers *regs)
 {
     int32_t x1 = (int32_t) regs->RDI;
     int32_t y1 = (int32_t) regs->RSI;
-    int32_t width = (int32_t) regs->R10;
-    int32_t height = (int32_t) regs->RDX;
+    int32_t width = (int32_t) regs->RDX;
+    int32_t height = (int32_t) regs->R10;
     uint32_t colour = (uint32_t) regs->R8;
 
     for(int32_t x = x1; x < x1 + width; x++) 
