@@ -269,6 +269,11 @@ namespace Ext2
         return 0;
     }
 
+    int Flush(void *fs, FILE *file)
+    {
+        return 0;
+    }
+
     char GetChar(void *fs, FILE *file)
     {
         /* if(file->Position == file->Length) return FILE_EOF;

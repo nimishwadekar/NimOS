@@ -23,13 +23,14 @@ void KernelStart(void)
     void *userStack = FrameAllocator.RequestPageFrame();
     PagingManager.MapPage((void*) USER_STACK_TOP, userStack);
 
-    FILE program = VFSOpenFile("usr/test.elf");
+    FILE program = VFSOpenFile("usr/test.elf", "r");
     int64_t pages = (program.Length / 0x1000) + 1;
     uint8_t *programAddress = (uint8_t*) FrameAllocator.RequestPageFrames(pages);
     for(int64_t i = 0; i < pages; i++) PagingManager.MapPage(programAddress + i * 0x1000, programAddress + i * 0x1000);
     VFSReadFile(&program, programAddress, program.Length);
 
     void *programEntry = ELF::LoadELF(programAddress);
+    VFSCloseFile(&program);
 
     MainRenderer.SetBackgroundColour(USER_COLOUR_BACK);
     MainRenderer.SetForegroundColour(USER_COLOUR_FRONT);

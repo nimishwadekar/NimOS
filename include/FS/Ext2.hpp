@@ -135,6 +135,7 @@ namespace Ext2
         uint32_t LoadedBlock0;
         uint8_t *Buf1;
         uint32_t LoadedBlock1;
+        
 
         Ext2File(Inode *i, uint16_t blockSizeBytes);
         bool Increment(void);
@@ -174,8 +175,9 @@ namespace Ext2
     FILE Open(void *fs, const char *filename);
     int Close(void *fs, FILE *file);
     int64_t Read(void *fs, FILE *file, void *buffer, const int64_t length);
-    int64_t Write(void *fs, FILE *file, const void *buffer, const int64_t length);
 
-    // Not implemented properly.
-    char GetChar(void *fs, FILE *file);
+    // Not implemented.
+    
+    int64_t Write(void *fs, FILE *file, const void *buffer, const int64_t length);
+    int Flush(void *fs, FILE *file);
 }
