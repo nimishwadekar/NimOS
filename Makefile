@@ -97,7 +97,7 @@ $(USROBJDIR)/%.o: $(USRDIR)/%.c
 	mkdir -p $(@D)
 	$(CC) -I$(USR_LIBC) -ffreestanding -nostdlib -c $^ -o $@
 
-$(USROBJDIR)/%.o: $(USRDIR)/%.s
+$(USROBJDIR)/%_s.o: $(USRDIR)/%.s
 	@echo !==== ASSEMBLING USER $^
 	mkdir -p $(@D)
 	$(ASSEMBLER) $^ -f elf64 -o $@
