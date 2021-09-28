@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _SYSCALL_H
+#define _SYSCALL_H
 
 #include <stdint.h>
 
@@ -43,3 +44,5 @@ int64_t _syscall_5(int64_t syscall, int64_t arg0, int64_t arg1, int64_t arg2, in
 #define SYS_DRAWP       0x88
 #define SYS_DRAWL       0x89
 #define SYS_DRAWR       0x8A
+
+#endif
