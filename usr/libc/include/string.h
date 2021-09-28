@@ -296,4 +296,9 @@ RETURN VALUE
 */
 size_t strlen(const char *s);
 
+/*
+Reverses the string.
+*/
+char *strrev(char *str);
+
 #endif
