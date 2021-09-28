@@ -9,6 +9,21 @@
 #define	EXIT_FAILURE	1	// Failing exit status.
 #define	EXIT_SUCCESS	0	// Successful exit status.
 
+typedef struct
+{
+    int quot, rem;
+} div_t;
+
+typedef struct
+{
+    long quot, rem;
+} ldiv_t;
+
+typedef struct
+{
+    long long quot, rem;
+} lldiv_t;
+
 
 /*
 DESCRIPTION
@@ -42,6 +57,16 @@ int atoi(const char *nptr);
 long atol(const char *nptr);
 /**/
 long long atoll(const char *nptr);
+
+
+/*
+       Converts integer to string.
+*/
+char *itoa(int value, char *str, int base);
+/**/
+char *ltoa(long int value, char *str, int base);
+/**/
+char *lltoa(long long int value, char *str, int base);
 
 
 /*
@@ -347,5 +372,26 @@ int abs(int j);
 long int labs(long int j);
 /**/
 long long int llabs(long long int j);
+
+
+/*
+DESCRIPTION
+       The  div()  function  computes the value numerator/denominator and returns the quotient and re‐
+       mainder in a structure named div_t that contains two integer  members  (in  unspecified  order)
+       named  quot and rem.  The quotient is rounded toward zero.  The result satisfies quot*denomina‐
+       tor+rem = numerator.
+
+       The ldiv(), lldiv(), and imaxdiv() functions do the same, dividing  numbers  of  the  indicated
+       type  and  returning  the result in a structure of the indicated name, in all cases with fields
+       quot and rem of the same type as the function arguments.
+
+RETURN VALUE
+       The div_t (etc.) structure.
+*/
+div_t div(int numerator, int denominator);
+/**/
+ldiv_t ldiv(long numerator, long denominator);
+/**/
+lldiv_t lldiv(long long numerator, long long denominator);
 
 #endif
