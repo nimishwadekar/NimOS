@@ -288,7 +288,7 @@ char *strtok(char *str, const char *delim);
 /*
 DESCRIPTION
        The strlen() function calculates the length of the string pointed
-       to by s, excluding the terminating null byte ('\0').
+       to by s, excluding the terminating null byte.
 
 RETURN VALUE
        The strlen() function returns the number of bytes in  the  string
