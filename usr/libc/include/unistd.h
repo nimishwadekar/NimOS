@@ -10,6 +10,6 @@
    error, but if `sleep' returns SECONDS, it probably didn't work.
    This function is a cancellation point and therefore not marked with
    __THROW.  */
-unsigned int sleep (unsigned int seconds);
+unsigned int sleep(unsigned int seconds);
 
 #endif
