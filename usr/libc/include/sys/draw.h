@@ -47,7 +47,7 @@ int setcrsrpos(unsigned int x, unsigned int y);
 /*
 Draws pixel at (x, y) in colour argb.
 */
-int drawppint(unsigned int x, unsigned int y, unsigned int argb);
+int drawpoint(unsigned int x, unsigned int y, unsigned int argb);
 
 
 /*
