@@ -3,18 +3,26 @@
 #include <string.h>
 #include <stdlib.h>
 
+extern void _heap_initialize(void *heapAddress, uint64_t pageCount);
+
 int main()
 {
-    const char *str = "1024";
-    char buf[40] = {};
-    /* _syscall_1(SYS_SETBACK, 0);
-    _syscall_3(SYS_DRAWP, 50, 50, 0xFFFF);
-    _syscall_5(SYS_DRAWL, 100, 200, 300, 400, 0xFFFF); */
-    char *endptr;
-    double ret = strtod("0.5", &endptr);
-    int reti = strfromd(buf, 0, "%g", ret);
-    if(*endptr == 0 && reti == 0) _syscall_1(SYS_PRINT, (int64_t) buf);
-    else  _syscall_1(SYS_PRINT, (int64_t) "Error");
+    char buff[50] = {};
+    /*char *s = (char*) _syscall_3(SYS_MMAP, (int64_t) 0x500000000, (int64_t) 1, 0);
+    s[0] = 'H';
+    s[1] = 0;
+    //_syscall_1(SYS_PRINT, (int64_t) lltoa((long long)s, buff, 16));
+    _syscall_1(SYS_PRINT, (int64_t) s);
+    return 0; */
+
+    _heap_initialize((void*) 0x500000000, 1);
+    char *buf = malloc(50);
+    buf[0] = 'H';
+    buf[1] = 'e';
+    buf[2] = 'a';
+    buf[3] = 'p';
+    buf[4] = 0;
+    _syscall_1(SYS_PRINT, (int64_t) buf);
 
     return 0;
 }
