@@ -1,5 +1,14 @@
 #include <stdlib.h>
-#include <string.h>
+
+static void reverse(char* a, char *b)
+{
+    for( ; a < b; a++, b--)
+    {
+        char tmp = *a;
+        *a = *b;
+        *b = tmp;
+    }
+}
 
 char *itoa(int value, char *str, int base)
 {
@@ -27,7 +36,7 @@ char *itoa(int value, char *str, int base)
     if(neg) str[i++] = '-';
     str[i] = 0;
 
-    strrev(str);
+    reverse(str, str + i - 1);
     return str;
 }
 
@@ -58,7 +67,7 @@ char *ltoa(long int value, char *str, int base)
     if(neg) str[i++] = '-';
     str[i] = 0;
 
-    strrev(str);
+    reverse(str, str + i - 1);
     return str;
 }
 
@@ -89,6 +98,6 @@ char *lltoa(long long int value, char *str, int base)
     if(neg) str[i++] = '-';
     str[i] = 0;
 
-    strrev(str);
+    reverse(str, str + i - 1);
     return str;
 }
