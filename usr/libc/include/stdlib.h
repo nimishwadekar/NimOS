@@ -3,6 +3,9 @@
 
 #include <stddef.h>
 
+#define __null ((void*) 0)
+#define NULL __null
+
 // The largest number rand will return (same as INT_MAX).
 #define RAND_MAX    2147483647
 
@@ -340,6 +343,10 @@ void *calloc(size_t nmemb, size_t size);
 void *realloc(void *ptr, size_t size);
 /**/
 void *reallocarray(void *ptr, size_t nmemb, size_t size);
+/*
+Alignment should be a multiple of 2. Size should be a multiple of alignment.
+*/
+void *aligned_alloc(size_t alignment, size_t size);
 
 
 /*
