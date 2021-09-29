@@ -1,4 +1,4 @@
-#include <sys/draw.h>
+#include <graphics.h>
 
 unsigned int getfg(void)
 {

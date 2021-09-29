@@ -1,4 +1,4 @@
-#include <sys/draw.h>
+#include <graphics.h>
 
 int drawpoint(unsigned int x, unsigned int y, unsigned int argb)
 {
