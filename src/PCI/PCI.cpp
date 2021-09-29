@@ -38,7 +38,9 @@ namespace PCI
                         {
                             case 0x01: // AHCI 1.0 device
                             {
-                                AHCI::Driver = new AHCI::AHCIDriver(deviceHeader);
+                                //AHCI::Driver = new AHCI::AHCIDriver(deviceHeader);
+                                AHCI::Driver = (AHCI::AHCIDriver*) KernelHeap.Malloc(sizeof(AHCI::AHCIDriver));
+                                AHCI::Driver->Initialise(deviceHeader);
                                 break;
                             }
                         }

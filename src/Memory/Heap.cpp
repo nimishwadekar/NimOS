@@ -3,6 +3,7 @@
 #include <Memory/Heap.hpp>
 #include <Memory/PageFrameAllocator.hpp>
 #include <Memory/PageTableManager.hpp>
+#include <IO/PIT.hpp>
 
 Heap KernelHeap;
 
@@ -44,9 +45,9 @@ void Heap::InitializeHeap(void *heapAddress, uint64_t pageCount)
 
 void *Heap::Malloc(uint64_t size)
 {
-    if((size & (BLOCK_SIZE - 1)) > 0) // size % BLOCK_SIZE
+    if(size % BLOCK_SIZE > 0) // size % BLOCK_SIZE
     {
-        size -= (size & (BLOCK_SIZE - 1));
+        size -= (size % BLOCK_SIZE);
         size += BLOCK_SIZE;
     }
 
@@ -128,7 +129,7 @@ HeapSegmentHeader *HeapSegmentHeader::Split(Heap *heap, uint64_t firstPartSize)
     if(splitSegmentSize < BLOCK_SIZE) return NULL;
 
     HeapSegmentHeader *secondSegment = (HeapSegmentHeader*) ((uint64_t) this + sizeof(HeapSegmentHeader) + firstPartSize);
-    Next->Prev = secondSegment;
+    if(Next != NULL) Next->Prev = secondSegment;
     secondSegment->Next = Next;
     Next = secondSegment;
     secondSegment->Prev = this;

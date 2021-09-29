@@ -164,6 +164,7 @@ namespace AHCI
 
         Port(HBAPort *port, PortType type, uint8_t portNumber);
         ~Port(void);
+        void Init(HBAPort *port, PortType type, uint8_t portNumber);
         void Configure(void);
         void StartCommand(void);
         void StopCommand(void);
@@ -182,6 +183,7 @@ namespace AHCI
 
         AHCIDriver(PCI::DeviceHeader *pciBaseAddress);
         ~AHCIDriver(void);
+        void Initialise(PCI::DeviceHeader *pciBaseAddress);
         void ProbePorts(void);
 
         private:
