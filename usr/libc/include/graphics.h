@@ -1,5 +1,5 @@
-#ifndef _SYS_DRAW_H
-#define _SYS_DRAW_H 1
+#ifndef _SYS_GRAPHICS_H
+#define _SYS_GRAPHICS_H 1
 
 #include <sys/types.h>
 
