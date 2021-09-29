@@ -1,8 +1,11 @@
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
 double atof(const char *nptr)
 {
+    while(isspace(*nptr)) nptr++;
+
 	long long int integer;
     double fraction;
     size_t point = 0;

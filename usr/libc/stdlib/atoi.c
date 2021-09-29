@@ -1,7 +1,10 @@
+#include <ctype.h>
 #include <stdlib.h>
 
 int atoi(const char *nptr)
 {
+    while(isspace(*nptr)) nptr++;
+
     int neg = 0;
     if(*nptr == '+' || *nptr == '-')
     {
@@ -18,6 +21,8 @@ int atoi(const char *nptr)
 
 long atol(const char *nptr)
 {
+    while(isspace(*nptr)) nptr++;
+
     int neg = 0;
     if(*nptr == '+' || *nptr == '-')
     {
@@ -34,6 +39,8 @@ long atol(const char *nptr)
 
 long long atoll(const char *nptr)
 {
+    while(isspace(*nptr)) nptr++;
+
 	int neg = 0;
     if(*nptr == '+' || *nptr == '-')
     {
