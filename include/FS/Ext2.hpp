@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <DyanmicArray.hpp>
 #include <FS/File.hpp>
 #include <Storage/AHCI.hpp>
 #include <Storage/GPT.hpp>
@@ -156,9 +157,7 @@ namespace Ext2
         uint8_t *Buffer;
         uint32_t BufferPageCount;
 
-        Ext2File **OpenFiles;
-        uint32_t OpenFileCount;
-        uint32_t OpenFileCapacity;
+        DynamicArray<Ext2File*> OpenFiles;
 
         Ext2System(GPTEntry *gpt);
         bool LoadBlock(const uint64_t block, void *buffer);

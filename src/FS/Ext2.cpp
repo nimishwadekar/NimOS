@@ -18,11 +18,6 @@ namespace Ext2
     {
         printf("\n");
 
-        OpenFiles = (Ext2File**) KernelHeap.Malloc(8 * sizeof(Ext2File*));
-        memset(OpenFiles, 0, 8 * sizeof(Ext2File*));
-        OpenFileCount = 0;
-        OpenFileCapacity = 8;
-
         LogicalOffset = gpt->StartingLBA;
         DiskPort = DiskInformation.DiskPort;
         BufferPageCount = 4;
@@ -167,7 +162,7 @@ namespace Ext2
             } while(DirIndices[diri] != 0);
 
             // Temporary.
-            uint32_t id;
+            /* uint32_t id;
             for(id = 0; id < ext2->OpenFileCapacity; id++) if(!ext2->OpenFiles[id]) break;
             if(id == ext2->OpenFileCapacity)
             {
@@ -176,11 +171,14 @@ namespace Ext2
                 KernelHeap.Free(ext2->OpenFiles);
                 ext2->OpenFiles = (Ext2File**) newLoc;
                 ext2->OpenFileCapacity *= 2;
-            }
+            } */
 
             Ext2File *newFile = new Ext2File(inode, ext2->BlockSizeBytes);
-            ext2->OpenFiles[id] = newFile;
-            ext2->OpenFileCount += 1;
+            uint32_t id = ext2->OpenFiles.Add(newFile);
+
+            
+            /* ext2->OpenFiles[id] = newFile;
+            ext2->OpenFileCount += 1; */
 
             FILE file;
             memset(&file, 0, sizeof(FILE));
@@ -203,10 +201,9 @@ namespace Ext2
     {
         uint32_t id = file->ID;
         Ext2System *ext2 = (Ext2System*) fs;
-        if(!ext2->OpenFiles[id]) return FILE_EOF;
-        delete ext2->OpenFiles[id];
-        ext2->OpenFiles[id] = nullptr;
-        ext2->OpenFileCount -= 1;
+        if(!ext2->OpenFiles.Array[id]) return FILE_EOF;
+        delete ext2->OpenFiles.Array[id];
+        ext2->OpenFiles.Array[id] = nullptr;
         return 0;
     }
 
@@ -230,7 +227,7 @@ namespace Ext2
         uint8_t *buf = (uint8_t*) buffer;
         if(!ext2->LoadBlock(file->CurrentBlock, dataBuf)) return length - len;
 
-        Ext2File *openFile = ext2->OpenFiles[file->ID];
+        Ext2File *openFile = ext2->OpenFiles.Array[file->ID];
 
         if(pos % blockSize != 0)
         {
