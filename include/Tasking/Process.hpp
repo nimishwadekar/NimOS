@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <DynamicArray.hpp>
 #include <FS/File.hpp>
-#include <Stack.hpp>
 
 #define PROCESS_STACK_TOP 0xFFC00000000
 
