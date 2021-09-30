@@ -28,7 +28,10 @@ int64_t _syscall_5(int64_t syscall, int64_t arg0, int64_t arg1, int64_t arg2, in
 #define SYS_FTELL       0x16
 
 #define SYS_EXEC        0x21
-#define SYS_EXECR       0x22
+#define SYS_SPAWN       0x22
+#define SYS_EXIT        0x23
+#define SYS_PID         0x24
+#define SYS_PPID        0x25
 
 #define SYS_MMAP        0x41
 

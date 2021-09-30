@@ -74,20 +74,29 @@ struct Registers
 // Return value - position in file
 
 
-// Execution System Calls
+// Process System Calls
 
 #define SYS_EXEC        0x21
-// Executes program.
+// Executes program in the current process.
 // rdi - Null terminated file name string
 // rsi - argv
 // rdx - envp
 
-#define SYS_EXECR       0x22
-// Executes program and returns after finishing.
+#define SYS_SPAWN       0x22
+// Spawns a new child process and starts executing it.
 // rdi - Null terminated file name string
 // rsi - argv
 // rdx - envp
 
+#define SYS_EXIT        0x23
+// Exits current process.
+// rdi - Exit code
+
+#define SYS_PID         0x24
+// Gets ID of current process.
+
+#define SYS_PPID        0x25
+// Gets ID of parent process.
 
 // Memory System Calls
 
