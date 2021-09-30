@@ -18,7 +18,10 @@ namespace Ext2
     {
         printf("\n");
 
-        memset(OpenFiles, 0, 8 * sizeof(Inode*));
+        OpenFiles = (Ext2File**) KernelHeap.Malloc(8 * sizeof(Ext2File*));
+        memset(OpenFiles, 0, 8 * sizeof(Ext2File*));
+        OpenFileCount = 0;
+        OpenFileCapacity = 8;
 
         LogicalOffset = gpt->StartingLBA;
         DiskPort = DiskInformation.DiskPort;
@@ -165,15 +168,19 @@ namespace Ext2
 
             // Temporary.
             uint32_t id;
-            for(id = 0; id < 8; id++) if(!ext2->OpenFiles[id]) break;
-            if(id == 8)
+            for(id = 0; id < ext2->OpenFileCapacity; id++) if(!ext2->OpenFiles[id]) break;
+            if(id == ext2->OpenFileCapacity)
             {
-                errorf("Reached max capacity of open files.\n");
-                return invalidFile;
+                void *newLoc = KernelHeap.Malloc(ext2->OpenFileCapacity * 2);
+                memcpy(ext2->OpenFiles, newLoc, ext2->OpenFileCapacity * sizeof(Ext2File));
+                KernelHeap.Free(ext2->OpenFiles);
+                ext2->OpenFiles = (Ext2File**) newLoc;
+                ext2->OpenFileCapacity *= 2;
             }
 
             Ext2File *newFile = new Ext2File(inode, ext2->BlockSizeBytes);
             ext2->OpenFiles[id] = newFile;
+            ext2->OpenFileCount += 1;
 
             FILE file;
             memset(&file, 0, sizeof(FILE));
@@ -199,6 +206,7 @@ namespace Ext2
         if(!ext2->OpenFiles[id]) return FILE_EOF;
         delete ext2->OpenFiles[id];
         ext2->OpenFiles[id] = nullptr;
+        ext2->OpenFileCount -= 1;
         return 0;
     }
 

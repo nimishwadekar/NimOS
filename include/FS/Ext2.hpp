@@ -156,7 +156,9 @@ namespace Ext2
         uint8_t *Buffer;
         uint32_t BufferPageCount;
 
-        Ext2File *OpenFiles[8];
+        Ext2File **OpenFiles;
+        uint32_t OpenFileCount;
+        uint32_t OpenFileCapacity;
 
         Ext2System(GPTEntry *gpt);
         bool LoadBlock(const uint64_t block, void *buffer);
