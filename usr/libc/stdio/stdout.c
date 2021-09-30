@@ -12,13 +12,13 @@ int sprintf(char *str, const char *format, ...)
 }
 
 
-int putchar(int c)
+int puts(const char *s)
 {
 	
 }
 
 
-int puts(const char *s)
+int putchar(int c)
 {
 	
 }

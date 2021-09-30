@@ -255,6 +255,11 @@ Writes a single character to stdout.
 int putchar(int c);
 
 /*
+Reads a string from stdin.
+*/
+char *gets(char *s);
+
+/*
 Writes a line to stdout.
 */
 int puts(const char *s);
