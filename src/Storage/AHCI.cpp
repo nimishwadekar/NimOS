@@ -70,49 +70,6 @@ namespace AHCI
         for(int i = 0; i < PortCount; i++) delete Ports[i];
     }
 
-    void AHCIDriver::Initialise(PCI::DeviceHeader *pciBaseAddress)
-    {
-        PortCount = 0;
-        PCIBaseAddress = pciBaseAddress;
-        printf("AHCI Driver initialised.\n");
-
-        PCI::DeviceHeader0 *pci0 = (PCI::DeviceHeader0*) pciBaseAddress;
-        pci0->Header.Command &= ~PCI_COMMAND_INT_DISABLE; // Enabling PCI interrupts.
-
-        ABAR = (HBAMemory*) (uint64_t) pci0->BAR[5];
-
-        ABAR->GlobalHostControl |= HBAMEM_GHC_IE; // Enabling HBAMemory interrupts.
-
-        PagingManager.MapPage(ABAR, ABAR, true);
-
-        ProbePorts();
-
-        for(int i = 0; i < PortCount; i++)
-        {
-            Port *port = Ports[i];
-            port->Configure();
-            port->Buffer = (uint8_t*) FrameAllocator.RequestPageFrame();
-            memset(port->Buffer, 0, 0x1000);
-            if(port->Type != PortType::SATA) continue;
-
-            if(!port->Identify(port->Buffer)) // Identify the SATA port.
-            {
-                errorf("AHCI: Could not identify port %u\n", i);
-                continue;
-            }
-
-            #ifdef LOGGING
-            logf("Port %u IDENTIFY:\n", i);
-            uint16_t *identify = (uint16_t*) port->Buffer;
-            logf("Hard disk: 0x%x\n", identify[0]);
-            logf("LBA48 enable: %u\n", (identify[83] & (1 << 10)) != 0);
-            logf("LBA28 sectors: %u\n", *(uint32_t*)(identify + 60));
-            uint64_t lba48Sectors = *(uint64_t*)(identify + 100);
-            logf("LBA48 sectors: %u\n", lba48Sectors);
-            #endif
-        }
-    }
-
     void AHCIDriver::ProbePorts(void)
     {
         uint32_t portsImplemented = ABAR->PortsImplemented;
@@ -127,9 +84,7 @@ namespace AHCI
                 {
                     case PortType::SATA:
                     case PortType::SATAPI:
-                        //Ports[PortCount] = new Port(&ABAR->Ports[i], portType, PortCount);
-                        Ports[PortCount] = (AHCI::Port*) KernelHeap.Malloc(sizeof(AHCI::Port));
-                        Ports[PortCount]->Init(&ABAR->Ports[i], portType, PortCount);
+                        Ports[PortCount] = new Port(&ABAR->Ports[i], portType, PortCount);
                         PortCount += 1;
                         break;
 
@@ -164,13 +119,6 @@ namespace AHCI
     Port::Port(HBAPort *port, PortType type, uint8_t portNumber) : hbaPort(port), Type(type), PortNumber(portNumber)
     {
 
-    }
-
-    void Port::Init(HBAPort *port, PortType type, uint8_t portNumber)
-    {
-        hbaPort = port;
-        Type = type;
-        PortNumber = portNumber;
     }
 
     Port::~Port(void)
