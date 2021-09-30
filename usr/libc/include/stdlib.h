@@ -55,6 +55,16 @@ char *lltoa(long long int value, char *str, int base);
 
 
 /*
+       Converts unsigned integer to string.
+*/
+char *utoa(unsigned int value, char *str, int base);
+/**/
+char *ultoa(unsigned long int value, char *str, int base);
+/**/
+char *ulltoa(unsigned long long int value, char *str, int base);
+
+
+/*
 DESCRIPTION
        The  strtod(),  strtof(),  and  strtold()  functions  convert the initial portion of the string
        pointed to by nptr to double, float, and long double representation, respectively.
