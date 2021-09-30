@@ -7,7 +7,7 @@
 #include <bits/types/FILE.h>
 #include <bits/types/struct_FILE.h>
 
-#define BUFSIZ 8192
+#define BUFSIZ 512
 #define EOF (-1)
 
 #define SEEK_SET	0
