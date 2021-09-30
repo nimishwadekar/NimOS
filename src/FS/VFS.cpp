@@ -7,10 +7,8 @@
 #include <FS/Ext2.hpp>
 
 #define DEVICE_MAX 26
-#define MAX_OPEN_FILES 8
 
-FILE OpenedFiles[MAX_OPEN_FILES];
-uint32_t OpenFileCount;
+DynamicArray<FILE*> OpenedFiles;
 
 // 'A' - EFI System, Normal partitions from 'C'.
 FileSystem *FILE_SYSTEMS[DEVICE_MAX];
@@ -83,9 +81,6 @@ void VFSInitialize(const DiskInfo *diskInfo)
 
         SetupFileSystem(partitions + i, vol);
     }
-
-    memset(OpenedFiles, 0, MAX_OPEN_FILES * sizeof(FILE));
-    OpenFileCount = 0;
 }
 
 FILE *VFSOpenFile(const char *fileName, const char *mode)
@@ -120,16 +115,16 @@ FILE *VFSOpenFile(const char *fileName, const char *mode)
             file.Device = device;
             file.Flags |= flags;
 
-            file.Handle = OpenFileCount;
-            OpenedFiles[OpenFileCount] = file;
-            OpenFileCount += 1;
+            FILE *dynFile = new FILE;
+            memcpy(&file, dynFile, sizeof(FILE));
 
-            return OpenedFiles + OpenFileCount - 1;
+            dynFile->Handle = OpenedFiles.Add(dynFile);
+            return dynFile;
         }
     }
     } while(false); // To allow break.
 
-    return 0;
+    return nullptr;
 }
 
 int VFSCloseFile(FILE *file)
@@ -145,9 +140,8 @@ int VFSCloseFile(FILE *file)
     uint8_t index = file->Device - 'A';
     int retVal = FILE_SYSTEMS[index]->Close(FILE_SYSTEMS[index]->FS, file);
 
-    for(uint32_t i = file->Handle; i < OpenFileCount - 1; i++)
-        OpenedFiles[i] = OpenedFiles[i + 1];
-    OpenFileCount -= 1;
+    uint32_t handle = file->Handle;
+    OpenedFiles.Delete(handle);
 
     return retVal;
 }

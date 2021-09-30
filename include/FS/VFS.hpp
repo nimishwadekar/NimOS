@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <DyanmicArray.hpp>
 #include <FS/File.hpp>
 #include <Storage/DiskInfo.hpp>
 
@@ -19,7 +20,7 @@ struct FileSystem
     int (*Flush)(void *fs, FILE *file);
 };
 
-extern FILE OpenedFiles[];
+extern DynamicArray<FILE*> OpenedFiles;
 
 void VFSInitialize(const DiskInfo *diskInfo);
 

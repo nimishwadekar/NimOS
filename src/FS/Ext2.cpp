@@ -161,24 +161,8 @@ namespace Ext2
                 diri += 1;
             } while(DirIndices[diri] != 0);
 
-            // Temporary.
-            /* uint32_t id;
-            for(id = 0; id < ext2->OpenFileCapacity; id++) if(!ext2->OpenFiles[id]) break;
-            if(id == ext2->OpenFileCapacity)
-            {
-                void *newLoc = KernelHeap.Malloc(ext2->OpenFileCapacity * 2);
-                memcpy(ext2->OpenFiles, newLoc, ext2->OpenFileCapacity * sizeof(Ext2File));
-                KernelHeap.Free(ext2->OpenFiles);
-                ext2->OpenFiles = (Ext2File**) newLoc;
-                ext2->OpenFileCapacity *= 2;
-            } */
-
             Ext2File *newFile = new Ext2File(inode, ext2->BlockSizeBytes);
             uint32_t id = ext2->OpenFiles.Add(newFile);
-
-            
-            /* ext2->OpenFiles[id] = newFile;
-            ext2->OpenFileCount += 1; */
 
             FILE file;
             memset(&file, 0, sizeof(FILE));
@@ -202,8 +186,7 @@ namespace Ext2
         uint32_t id = file->ID;
         Ext2System *ext2 = (Ext2System*) fs;
         if(!ext2->OpenFiles.Array[id]) return FILE_EOF;
-        delete ext2->OpenFiles.Array[id];
-        ext2->OpenFiles.Array[id] = nullptr;
+        ext2->OpenFiles.Delete(id);
         return 0;
     }
 

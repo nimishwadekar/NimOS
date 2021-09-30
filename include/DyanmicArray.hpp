@@ -9,6 +9,7 @@ struct DynamicArray
 
     DynamicArray();
     int Add(T element);
+    void Delete(int index);
 };
 
 #include <Memory/Memory.hpp>
@@ -41,4 +42,11 @@ int DynamicArray<T>::Add(T element)
     Array[Capacity] = element;
     Capacity *= 2;
     return Capacity / 2;
+}
+
+template <typename T>
+void DynamicArray<T>::Delete(int index)
+{
+    delete Array[index];
+    Array[index] = nullptr;
 }

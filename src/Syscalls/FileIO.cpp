@@ -20,29 +20,29 @@ void SysFOpen(Registers *regs)
 
 void SysFClose(Registers *regs)
 {
-    regs->RAX = VFSCloseFile(&OpenedFiles[regs->RDI]);
+    regs->RAX = VFSCloseFile(OpenedFiles.Array[regs->RDI]);
 }
 
 
 void SysFRead(Registers *regs)
 {
-    regs->RAX = VFSReadFile(&OpenedFiles[regs->RDI], (void*) regs->RSI, regs->RDX);
+    regs->RAX = VFSReadFile(OpenedFiles.Array[regs->RDI], (void*) regs->RSI, regs->RDX);
 }
 
 
 void SysFWrite(Registers *regs)
 {
-    regs->RAX = VFSWriteFile(&OpenedFiles[regs->RDI], (void*) regs->RSI, regs->RDX);
+    regs->RAX = VFSWriteFile(OpenedFiles.Array[regs->RDI], (void*) regs->RSI, regs->RDX);
 }
 
 
 void SysFSeek(Registers *regs)
 {
-    regs->RAX = VFSSeekFile(&OpenedFiles[regs->RDI], regs->RSI, regs->RDX);
+    regs->RAX = VFSSeekFile(OpenedFiles.Array[regs->RDI], regs->RSI, regs->RDX);
 }
 
 
 void SysFTell(Registers *regs)
 {
-    regs->RAX = VFSTellFile(&OpenedFiles[regs->RDI]);
+    regs->RAX = VFSTellFile(OpenedFiles.Array[regs->RDI]);
 }
