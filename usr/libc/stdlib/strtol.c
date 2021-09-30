@@ -40,7 +40,7 @@ long int strtol(const char *nptr, char **endptr, int base)
     }
 
     long num = 0;
-	for( ; *nptr != 0; nptr++)
+	for( ; *nptr && !isspace(*nptr); nptr++)
     {
         int digit = *nptr;
         if(isdigit(digit)) digit = digit - '0';
@@ -105,7 +105,7 @@ long long int strtoll(const char *nptr, char **endptr, int base)
     }
 
     long long num = 0;
-	for( ; *nptr != 0; nptr++)
+	for( ; *nptr && !isspace(*nptr); nptr++)
     {
         int digit = *nptr;
         if(isdigit(digit)) digit = digit - '0';

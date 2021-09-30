@@ -88,7 +88,6 @@ int _vaprintf(char *buffer, const char *format, va_list args, int stdoutput)
             break;
 
             case 'd':
-            case 'i':
             {
                 if(llmod)
                 {

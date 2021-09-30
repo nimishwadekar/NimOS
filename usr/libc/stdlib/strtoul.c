@@ -40,7 +40,7 @@ unsigned long int strtoul(const char *nptr, char **endptr, int base)
     }
 
     unsigned long num = 0;
-	for( ; *nptr != 0; nptr++)
+	for( ; *nptr && !isspace(*nptr); nptr++)
     {
         int digit = *nptr;
         if(isdigit(digit)) digit = digit - '0';
@@ -105,7 +105,7 @@ unsigned long long int strtoull(const char *nptr, char **endptr, int base)
     }
 
     unsigned long long num = 0;
-	for( ; *nptr != 0; nptr++)
+	for( ; *nptr && !isspace(*nptr); nptr++)
     {
         int digit = *nptr;
         if(isdigit(digit)) digit = digit - '0';
