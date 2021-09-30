@@ -31,12 +31,24 @@ OBJS += $(patsubst $(SRCDIR)/%.s, $(OBJDIR)/%_s.o, $(ASMSRC))
 OBJS += $(patsubst $(SRCDIR)/%.psf, $(OBJDIR)/%_font.o, $(PSFSRC))
 DIRS = $(wildcard $(SRCDIR)/*)
 
-USRSRC = $(call rwildcard,$(USRDIR),*.c)
-USRASMSRC = $(call rwildcard,$(USRDIR),*.s)
-USRELF = $(patsubst $(USRDIR)/%.s, $(USRELFDIR)/%.elf, $(USRSRC))
-USROBJS = $(patsubst $(USRDIR)/%.c, $(USROBJDIR)/%.o, $(USRSRC))
-USROBJS += $(patsubst $(USRDIR)/%.s, $(USROBJDIR)/%_s.o, $(USRASMSRC))
-USRDIRS = $(wildcard $(USRDIR)/*)
+
+########################################################################################
+# User files
+
+LIBC_CSRC = $(call rwildcard,usr/libc,*.c)
+LIBC_SSRC = $(call rwildcard,usr/libc,*.s)
+LIBC_OBJ = $(patsubst usr/libc/%.c, lib/usr/libc/%.o, $(LIBC_CSRC))
+LIBC_OBJ += $(patsubst usr/libc/%.s, lib/usr/libc/%_s.o, $(LIBC_SSRC))
+
+USR_START_OBJ = lib/usr/start_s.o
+
+USR0_SRC = usr/main.c
+USR0_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(USR0_SRC))
+USR0_OBJ += $(USR_START_OBJ)
+USR0_ELF = $(USRELFDIR)/main.elf
+
+#########################################################################################
+
 
 MKBOOTIMG = $(UTILSDIR)/mkbootimg
 BOOTJSON = $(UTILSDIR)/mkbootimg.json
@@ -47,7 +59,7 @@ ASMFLAGS =
 LDFLAGS = -nostdlib -nostartfiles
 STRIPFLAGS = -s -K mmio -K fb -K bootboot -K environment -K initstack
 
-all: initdir user disk
+all: initdir disk
 
 initdir: kernel
 	@mkdir initrd initrd/sys 2>/dev/null | true
@@ -90,7 +102,16 @@ link:
 run:
 	qemu-system-x86_64 -machine q35 -cpu qemu64 -bios $(OVMF) -m 64 -drive file=$(OS_IMG),format=raw -serial file:log/serial.log
 
-user: $(USROBJS) linkUser
+
+
+libc: $(LIBC_OBJ)
+
+lib/usr/libc/%.o: usr/libc/*.c
+	@echo !==== COMPILING LIBC $^
+	mkdir -p $(@D)
+	$(CC) -I$(USR_LIBC) -ffreestanding -nostdlib -c $^ -o $@
+
+user0: $(USR0_OBJ) linkUser
 
 $(USROBJDIR)/%.o: $(USRDIR)/%.c
 	@echo !==== COMPILING USER $^
@@ -104,7 +125,7 @@ $(USROBJDIR)/%_s.o: $(USRDIR)/%.s
 
 linkUser:
 	@echo !==== LINKING USER
-	$(LD) $(LDFLAGS) $(USROBJS) -o $(USER_ELF)
+	$(LD) $(LDFLAGS) $(USR0_OBJ) $(LIBC_OBJ) -o $(USER_ELF)
 
 clean:
 	rm -rf $(OBJDIR)/*
