@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/syscall.h>
 
 #define BLOCK_SIZE 16
@@ -60,15 +61,14 @@ void *malloc(size_t size)
 
     // If not enough memory in heap.
     _heap_extend(size);
-    /* char buff[20] = {};
-    _syscall_1(SYS_PRINT, (int64_t) lltoa((long long)15, buff, 16));
-    while(1); */
     return malloc(size);
 }
 
 
 void free(void *ptr)
 {
+    if(ptr == NULL) return;
+
 	heaphdr_t *segment = (heaphdr_t*) ((uint64_t) ptr - sizeof(heaphdr_t));
     segment->free = 1;
     _heap_merge_next(segment);
@@ -78,19 +78,21 @@ void free(void *ptr)
 
 void *calloc(size_t nmemb, size_t size)
 {
-	
+    if(!nmemb || !size) return NULL;
+
+	void *ptr = malloc(nmemb * size);
+    return memset(ptr, 0, nmemb * size);
 }
 
 
 void *realloc(void *ptr, size_t size)
 {
-	
-}
+    if(!size) return NULL;
+	if(ptr == NULL) return malloc(size);
 
-
-void *aligned_alloc(size_t alignment, size_t size)
-{
-
+    free(ptr);
+    void *reloc = malloc(size);
+    return memmove(reloc, ptr, size);
 }
 
 

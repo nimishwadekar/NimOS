@@ -338,10 +338,6 @@ void free(void *ptr);
 void *calloc(size_t nmemb, size_t size);
 /**/
 void *realloc(void *ptr, size_t size);
-/*
-Alignment should be a multiple of 2. Size should be a multiple of alignment.
-*/
-void *aligned_alloc(size_t alignment, size_t size);
 
 
 /*

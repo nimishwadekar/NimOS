@@ -15,14 +15,14 @@ int main()
     _syscall_1(SYS_PRINT, (int64_t) s);
     return 0; */
 
-    _heap_initialize((void*) 0x500000000, 1);
-    char *buf = malloc(50);
+    _heap_initialize((void*) 0x400000000, 1);
+    char *buf = malloc(10);
     buf[0] = 'H';
     buf[1] = 'e';
     buf[2] = 'a';
     buf[3] = 'p';
     buf[4] = 0;
-    _syscall_1(SYS_PRINT, (int64_t) buf);
+    _syscall_1(SYS_PRINT, (int64_t) lltoa((long long) buf, buff + 10, 16));
 
     return 0;
 }
