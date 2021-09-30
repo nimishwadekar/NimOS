@@ -8,10 +8,11 @@ extern void _heap_initialize(void *heapAddress, uint64_t pageCount);
 
 int main()
 {
-    int n;
-    printf("P:%p\n%nend\n", &main, &n);
-    printf("N = %d\n", n);
-    printf("\n-------------");
+    printf("Enter: ");
+    char n[50];
+    gets(n);
+    printf("You entered %s\n", n);
+    printf("\n\n-------------");
 
     return 0;
 }
