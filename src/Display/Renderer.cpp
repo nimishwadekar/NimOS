@@ -76,14 +76,14 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
             for(int32_t y = Cursor.Y; y < Cursor.Y + 16; y++) for(int32_t x = Cursor.X; x < Cursor.X + 8; x++) PutPixel(x, y, BackGroundColour);
             break;
         
-        case ' ':
+        /* case ' ':
             Cursor.X += 8;
             if(Cursor.X + 8 > Buffer.Width)
             {
                 Cursor.X = 0;
                 Cursor.Y += 16;
             }
-            break;
+            break; */
 
         default: specialChar = false; break;
     }
@@ -166,6 +166,28 @@ void Renderer::ScrollUp(const int32_t pixels)
     }
     memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * (Buffer.Height - pixels),
         BackGroundColour, Buffer.PixelsPerScanLine * pixels);
+}
+
+void Renderer::DrawCursor()
+{
+    for(int32_t y = Cursor.Y + 16 - CURSOR_THICKNESS; y < Cursor.Y + 16; y++)
+    {
+        for(int32_t x = Cursor.X; x < Cursor.X + 8; x++)
+        {
+            PutPixel(x, y, ForegroundColour);
+        }
+    }
+}
+
+void Renderer::EraseCursor()
+{
+    for(int32_t y = Cursor.Y + 16 - CURSOR_THICKNESS; y < Cursor.Y + 16; y++)
+    {
+        for(int32_t x = Cursor.X; x < Cursor.X + 8; x++)
+        {
+            PutPixel(x, y, BackGroundColour);
+        }
+    }
 }
 
 // The main renderer for the kernel.

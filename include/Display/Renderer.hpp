@@ -19,6 +19,8 @@ struct Point
 #define USER_COLOUR_BACK    0x0C1021
 #define USER_COLOUR_FRONT   0xF8F8F8
 
+#define CURSOR_THICKNESS 2
+
 // A wrapper class over the Framebuffer.
 class Renderer
 {
@@ -40,6 +42,8 @@ class Renderer
     void SetCursor(const int32_t xOffset, const int32_t yOffset);
     void ClearScreen();
     void ScrollUp(const int32_t pixels);
+    void DrawCursor();
+    void EraseCursor();
 };
 
 extern Renderer MainRenderer;
