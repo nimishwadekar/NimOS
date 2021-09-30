@@ -4,12 +4,12 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @2329000 22903 bytes
+ * Gzip compressed initrd @2329000 23089 bytes
  * Initrd loaded @22EA000 70144 bytes
  * Environment @2571000 31 bytes
  * Screen 640 x 480, scanline 2560, fb @C0000000 1228800 bytes, type 1 ARGB
  * System tables
- * System time 2021-09-30 19:46:37 GMT+0:00 
+ * System time 2021-09-30 20:36:43 GMT+0:00 
  * cpio sys/core
  * Parsing ELF64 @22EA14A
  * fb          @FFFFFFFFFC000000
@@ -112,3 +112,6 @@ group size = 32768 blocks, 8192 inodes
 VFS initialized.
 Kernel initialized.
 
+PageTableManager::MapPage(void*, void*) : Page Frame at 0x169000 allocated for Level 3 Table.
+PageTableManager::MapPage(void*, void*) : Page Frame at 0x16A000 allocated for Level 2 Table.
+PageTableManager::MapPage(void*, void*) : Page Frame at 0x16B000 allocated for Level 1 Table.
