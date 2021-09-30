@@ -1,6 +1,6 @@
 #pragma once
 
-// Niche variety.
+// Subset, only for pointers.
 template <typename T>
 struct DynamicArray
 {

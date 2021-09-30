@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <DyanmicArray.hpp>
+#include <DynamicArray.hpp>
 #include <FS/File.hpp>
 #include <Storage/DiskInfo.hpp>
 
