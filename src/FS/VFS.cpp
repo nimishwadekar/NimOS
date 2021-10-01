@@ -15,6 +15,8 @@ FileSystem *FILE_SYSTEMS[DEVICE_MAX];
 
 void SetupFileSystem(Partition *partition, uint8_t device)
 {
+    OpenedFiles = DynamicArray<FILE*>();
+
     FileSystem *newFS = new FileSystem;
     newFS->Part = partition;
 
@@ -116,7 +118,8 @@ FILE *VFSOpenFile(const char *fileName, const char *mode)
             file.Flags |= flags;
 
             FILE *dynFile = new FILE;
-            memcpy(&file, dynFile, sizeof(FILE));
+            //memcpy(&file, dynFile, sizeof(FILE));
+            *dynFile = file;
 
             dynFile->Handle = OpenedFiles.Add(dynFile);
             return dynFile;
@@ -188,7 +191,7 @@ int VFSSeekFile(FILE *file, const int64_t offset, const int whence)
         break;
 
         default:
-        return 1;
+        return -1;
     }
     return 0;
 }
