@@ -6,6 +6,7 @@ struct DynamicArray
 {
     T *Array;
     int Capacity;
+    int Count;
 
     DynamicArray();
     int Add(T element);
@@ -16,7 +17,7 @@ struct DynamicArray
 #include <Memory/Heap.hpp>
 
 template <typename T>
-DynamicArray<T>::DynamicArray() : Capacity(8)
+DynamicArray<T>::DynamicArray() : Capacity(8), Count(0)
 {
     Array = (T*) KernelHeap.Malloc(8 * sizeof(T));
     memset(Array, 0, 8 * sizeof(T));
@@ -30,6 +31,7 @@ int DynamicArray<T>::Add(T element)
         if(!Array[i])
         {
             Array[i] = element;
+            Count += 1;
             return i;
         }
     }
@@ -40,6 +42,7 @@ int DynamicArray<T>::Add(T element)
     KernelHeap.Free(Array);
     Array = newLoc;
     Array[Capacity] = element;
+    Count += 1;
     Capacity *= 2;
     return Capacity / 2;
 }
@@ -49,4 +52,5 @@ void DynamicArray<T>::Delete(int index)
 {
     delete Array[index];
     Array[index] = nullptr;
+    Count -= 1;
 }
