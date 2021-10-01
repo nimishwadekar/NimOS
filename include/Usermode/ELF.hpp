@@ -33,9 +33,11 @@ namespace ELF
         uint64_t ProgramHeaderTablePosition;
         uint64_t SectionHeaderTablePosition;
         uint32_t Flags;
+        
         uint16_t HeaderSize;
         uint16_t ProgramHeaderSize;
         uint16_t ProgramHeaderCount;
+
         uint16_t SectionHeaderSize;
         uint16_t SectionHeaderCount;
         uint16_t SectionHeaderTableIndex; // With Section Header names.
@@ -63,6 +65,13 @@ namespace ELF
         uint64_t Alignment;
     } __attribute__((packed));
 
-    // Loads an ELF File into memory. Returns the start location of the program.
-    void *LoadELF(void *fileAddress);
+    struct LoadInfo
+    {
+        void *Entry;
+        uint64_t FirstAddress;
+        uint64_t LastAddress;
+    };
+
+    // Loads an ELF File into memory.
+    LoadInfo LoadELF(void *fileAddress);
 }

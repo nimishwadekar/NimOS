@@ -4,21 +4,21 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting OS...
  * Locate initrd in Option ROMs
  * Locate initrd in \BOOTBOOT\INITRD
- * Gzip compressed initrd @232C000 23165 bytes
- * Initrd loaded @22ED000 70144 bytes
+ * Gzip compressed initrd @2329000 23308 bytes
+ * Initrd loaded @22EA000 70144 bytes
  * Environment @2571000 31 bytes
  * Screen 640 x 480, scanline 2560, fb @C0000000 1228800 bytes, type 1 ARGB
  * System tables
- * System time 2021-10-01 20:18:29 GMT+0:00 
+ * System time 2021-10-01 22:17:44 GMT+0:00 
  * cpio sys/core
- * Parsing ELF64 @22ED14A
+ * Parsing ELF64 @22EA14A
  * fb          @FFFFFFFFFC000000
  * bootboot    @FFFFFFFFFEFFE000
  * environment @FFFFFFFFFEFFF000
- * Entry point @FFFFFFFFFF000E3E, text @2321000 67104 bytes
+ * Entry point @FFFFFFFFFF000E73, text @231E000 67104 bytes
  * SMP numcores 1
- * Pagetables PML4 @22C7000
- * Memory Map @231F000 5760 bytes try #1
+ * Pagetables PML4 @22C4000
+ * Memory Map @2436000 5856 bytes try #1
 Serial port COM1 initialized for logging.
 
 ******************************************************************************************
@@ -101,3 +101,4 @@ Kernel initialized.
 
 PageTableManager::MapPage(void*, void*) : Page Frame at 0x171000 allocated for Level 2 Table.
 PageTableManager::MapPage(void*, void*) : Page Frame at 0x172000 allocated for Level 1 Table.
+Limits: 0x400000 - 0x409000

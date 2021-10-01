@@ -30,13 +30,15 @@ void KernelStart(void)
         while(true);
     }
 
-    void *programEntry = ELF::LoadELF(programAddress);
+    ELF::LoadInfo info = ELF::LoadELF(programAddress);
+    void *programEntry = info.Entry;
     if(!programEntry)
     {
         errorf("Program file format incorrect.\n");
         while(true);
     }
     VFSCloseFile(program);
+    KernelHeap.Free(programAddress);
 
     /********* TEMPORARY *****************/
     VFSOpenFile("someOuterFile", "r");
@@ -48,7 +50,7 @@ void KernelStart(void)
     MainRenderer.ClearScreen();
 
     void *stackTop = (uint8_t*) USER_STACK_TOP + 0x1000;
-    PushProcess(programEntry, stackTop);
+    PushProcess(programEntry, stackTop, info.FirstAddress, info.LastAddress);
 
     JumpToUserMode((void*) &SyscallEntry, stackTop, programEntry); // Does not return here.
 

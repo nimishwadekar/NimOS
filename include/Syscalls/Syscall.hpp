@@ -78,15 +78,13 @@ struct Registers
 
 #define SYS_EXEC        0x21
 // Executes program in the current process.
-// rdi - Null terminated file name string
+// rdi - Executable file address
 // rsi - argv
-// rdx - envp
 
 #define SYS_SPAWN       0x22
-// Spawns a new child process and starts executing it.
-// rdi - Null terminated file name string
+// Spawns a new process and executes a program in it. The previous process waits till completion of new process.
+// rdi - Executable file address
 // rsi - argv
-// rdx - envp
 
 #define SYS_EXIT        0x23
 // Exits current process.
@@ -97,6 +95,7 @@ struct Registers
 
 #define SYS_PPID        0x25
 // Gets ID of parent process.
+
 
 // Memory System Calls
 

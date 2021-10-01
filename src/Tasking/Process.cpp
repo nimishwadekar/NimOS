@@ -17,7 +17,7 @@ void InitializeProcessManager()
     ProcessCount = 1;
 }
 
-int PushProcess(void *pc, void *stackTop)
+int PushProcess(void *pc, void *stackTop, uint64_t startAddr, uint64_t endAddr)
 {
     if(ProcessCount >= PROCESS_MAX) return -1;
 
@@ -25,6 +25,8 @@ int PushProcess(void *pc, void *stackTop)
     p.PC = pc;
     p.StackTop = stackTop;
     p.ProcessID = ProcessCount + 1;
+    p.StartAddr = startAddr;
+    p.EndAddr = endAddr;
 
     *ProcessTop = p;
     ProcessTop += 1;

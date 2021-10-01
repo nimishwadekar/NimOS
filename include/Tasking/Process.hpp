@@ -13,19 +13,19 @@
 struct Process
 {
     int ProcessID;
-    //uint32_t OpenFileHandles[8];
     DynamicArray<FILE*> OpenedFiles;
-    void* PC;
-    void* StackTop;
+    void *PC;
+    void *StackTop;
+    uint64_t StartAddr;
+    uint64_t EndAddr;
 };
 
 extern Process *ProcessTop;
 extern int ProcessCount;
 
 void InitializeProcessManager();
-int PushProcess(void *pc, void *stackTop);
+int PushProcess(void *pc, void *stackTop, uint64_t startAddr, uint64_t endAddr);
 Process PopProcess();
 int AddFileToCurrentProcess(FILE *file);
-
 // Doesn't actually deallocate the file structure from memory.
 void RemoveFileFromCurrentProcess(uint32_t handle);
