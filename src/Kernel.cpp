@@ -22,7 +22,7 @@ void KernelStart(void)
     void *userStack = FrameAllocator.RequestPageFrame();
     PagingManager.MapPage((void*) USER_STACK_TOP, userStack);
 
-    FILE *program = VFSOpenFile("usr/main.elf", "r");
+    FILE *program = VFSOpenFile("usr/main.elf", "r");    
     uint8_t *programAddress = (uint8_t*) KernelHeap.Malloc(program->Length);
     if(VFSReadFile(program, programAddress, program->Length) != program->Length)
     {
@@ -38,15 +38,14 @@ void KernelStart(void)
     }
     VFSCloseFile(program);
 
+    /********* TEMPORARY *****************/
+    VFSOpenFile("someOuterFile", "r");
+    VFSOpenFile("anotherDirectory/file", "r");
+    /********* TEMPORARY *****************/
+
     MainRenderer.SetBackgroundColour(USER_COLOUR_BACK);
     MainRenderer.SetForegroundColour(USER_COLOUR_FRONT);
     MainRenderer.ClearScreen();
-
-    PagingManager.MapPage((void*) PROCESS_STACK_TOP, FrameAllocator.RequestPageFrame());
-    ProcessTop = (Process*) PROCESS_STACK_TOP;
-    
-    ProcessTop->ProcessID = 1; // Kernel process.
-    ProcessTop += 1;
 
     void *stackTop = (uint8_t*) USER_STACK_TOP + 0x1000;
     PushProcess(programEntry, stackTop);

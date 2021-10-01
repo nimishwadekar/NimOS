@@ -21,11 +21,11 @@ void SysExit(Registers *regs)
 
 void SysPID(Registers *regs)
 {
-    regs->RAX = (ProcessTop - 1)->ProcessID;
+    regs->RAX = ProcessCount;
 }
 
 
 void SysPPID(Registers *regs)
 {
-    regs->RAX = (ProcessTop - 2)->ProcessID;
+    regs->RAX = ProcessCount - 1;
 }

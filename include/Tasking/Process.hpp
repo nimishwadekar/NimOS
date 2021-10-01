@@ -6,6 +6,10 @@
 
 #define PROCESS_STACK_TOP 0xFFC00000000
 
+#define PROCESS_MAX 50
+
+#define PROCESS_FILE_MAX 32
+
 struct Process
 {
     int ProcessID;
@@ -16,6 +20,12 @@ struct Process
 };
 
 extern Process *ProcessTop;
+extern int ProcessCount;
 
-void PushProcess(void *pc, void *stackTop);
+void InitializeProcessManager();
+int PushProcess(void *pc, void *stackTop);
 Process PopProcess();
+int AddFileToCurrentProcess(FILE *file);
+
+// Doesn't actually deallocate the file structure from memory.
+void RemoveFileFromCurrentProcess(uint32_t handle);

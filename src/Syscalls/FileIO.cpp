@@ -1,5 +1,8 @@
 #include <FS/VFS.hpp>
 #include <Syscalls/FileIO.hpp>
+#include <Tasking/Process.hpp>
+
+#include <Display/Renderer.hpp>
 
 void SysFOpen(Registers *regs)
 {
@@ -13,13 +16,19 @@ void SysFOpen(Registers *regs)
     }
 
     FILE *file = VFSOpenFile((const char*) regs->RDI, mode);
-    if(!file) regs->RAX = ERR_FILE_NOT_FOUND_RD;
+    if(!file)
+    {
+        regs->RAX = ERR_FILE_NOT_FOUND_RD;
+        return;
+    }
     else regs->RAX = file->Handle;
+    AddFileToCurrentProcess(file);
 }
 
 
 void SysFClose(Registers *regs)
 {
+    RemoveFileFromCurrentProcess(regs->RDI);
     regs->RAX = VFSCloseFile(OpenedFiles.Array[regs->RDI]);
 }
 
