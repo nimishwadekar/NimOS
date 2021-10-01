@@ -9,9 +9,19 @@ extern void _heap_initialize(void *heapAddress, uint64_t pageCount);
 
 int main()
 {
-    int64_t pid = _syscall_0(SYS_PPID);
-    printf("PPID = %d\n", pid);
-    printf("\n\n-------------");
+    _heap_initialize((void*) 0x500000000, 1);
 
+
+    FILE *f = fopen("anotherDirectory/src/hello.c", "r");
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    char *buf = calloc(200, 1);
+    printf("eof: %d\n", feof(f));
+    printf("Read = %ld\n", fread(buf, 1, size, f));
+    printf("eof: %d\n", feof(f));
+    fclose(f);
+
+    printf("\n\n-------------");
     return 0;
 }
