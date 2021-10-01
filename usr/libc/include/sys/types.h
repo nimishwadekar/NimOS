@@ -13,4 +13,6 @@ typedef struct _crsr_pos
     unsigned int y;
 } crsr_pos_t;
 
+typedef int pid_t;
+
 #endif
