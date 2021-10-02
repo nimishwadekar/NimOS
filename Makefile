@@ -4,7 +4,7 @@ OVMF = bin/OVMF.fd
 CC = gcc
 LD = ld
 ASSEMBLER = nasm
-LINK_SCRIPT = ./link.ld
+LINK_SCRIPT = src/kern/link.ld
 
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
