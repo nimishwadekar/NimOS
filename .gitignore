@@ -1,3 +1,4 @@
 bin/kernel.elf
 bin/TokyoOS.img
 util.py
+log/*
