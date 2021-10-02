@@ -9,7 +9,7 @@ Booting OS...
  * Environment @2571000 31 bytes
  * Screen 640 x 480, scanline 2560, fb @C0000000 1228800 bytes, type 1 ARGB
  * System tables
- * System time 2021-10-02 10:39:59 GMT+0:00 
+ * System time 2021-10-02 11:05:06 GMT+0:00 
  * cpio sys/core
  * Parsing ELF64 @22ED14A
  * fb          @FFFFFFFFFC000000

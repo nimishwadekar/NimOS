@@ -9,8 +9,8 @@ LINK_SCRIPT = ./link.ld
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
 INCDIR = include
-SRCDIR = src
-OBJDIR = lib
+SRCDIR = src/kern
+OBJDIR = lib/kern
 BUILDDIR = bin
 LOGDIR = log
 UTILSDIR = utils
@@ -21,7 +21,6 @@ USRDIR = usr
 USROBJDIR = lib/usr
 USRELFDIR = disk/ext2dir/usr
 USER_ELF = $(USRELFDIR)/main.elf
-USR_LIBC = usr/libc/include
 
 SRC = $(call rwildcard,$(SRCDIR),*.cpp)
 ASMSRC = $(call rwildcard,$(SRCDIR),*.s)
@@ -84,7 +83,7 @@ run:
 	qemu-system-x86_64 -machine q35 -cpu qemu64 -bios $(OVMF) -m 64 -drive file=$(OS_IMG),format=raw -serial file:log/serial.log
 
 clean:
-	rm -rf $(OBJDIR)/*
+	rm -rf lib/*
 
 
 
@@ -92,21 +91,18 @@ clean:
 #############                           User files                         #############
 ########################################################################################
 
-LIBC_CSRC = $(call rwildcard,usr/libc,*.c)
-LIBC_SSRC = $(call rwildcard,usr/libc,*.s)
-LIBC_OBJ = $(patsubst usr/libc/%.c, lib/usr/libc/%.o, $(LIBC_CSRC))
-LIBC_OBJ += $(patsubst usr/libc/%.s, lib/usr/libc/%.o, $(LIBC_SSRC))
-
-USR_CRT0 = lib/usr/libc/crt0.o
+LIBC_CSRC = $(call rwildcard,src/libc,*.c)
+LIBC_SSRC = $(call rwildcard,src/libc,*.s)
+LIBC_OBJ = $(patsubst src/libc/%.c, lib/libc/%.o, $(LIBC_CSRC))
+LIBC_OBJ += $(patsubst src/libc/%.s, lib/libc/%.o, $(LIBC_SSRC))
+LIBC_INC = src/libc/include
 
 USR0_SRC = usr/main.c
 USR0_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(USR0_SRC))
-#USR0_OBJ += $(USR_CRT0)
 USR0_ELF = $(USRELFDIR)/main.elf
 
 USR1_SRC = usr/spawn.c
 USR1_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(USR1_SRC))
-#USR1_OBJ += $(USR_CRT0)
 USR1_ELF = $(USRELFDIR)/spawn.elf
 
 ########################################################################################
@@ -114,21 +110,26 @@ USR1_ELF = $(USRELFDIR)/spawn.elf
 
 libc: $(LIBC_OBJ)
 
-#lib/usr/libc/%.o: usr/libc/*.c
-#	@echo !==== COMPILING LIBC $^
-#	mkdir -p $(@D)
-#	$(CC) -I$(USR_LIBC) -ffreestanding -nostdlib -c $^ -o $@
+lib/libc/%.o: src/libc/%.c
+	@echo !==== COMPILING LIBC $^
+	mkdir -p $(@D)
+	$(CC) -I$(LIBC_INC) -ffreestanding -nostdlib -c $^ -o $@
+
+lib/libc/%.o: src/libc/%.s
+	@echo !==== COMPILING LIBC $^
+	mkdir -p $(@D)
+	$(ASSEMBLER) $^ -f elf64 -o $@
+
 
 user0: $(USR0_OBJ) linkUser0
-
 user1: $(USR1_OBJ) linkUser1
 
-$(USROBJDIR)/%.o: $(USRDIR)/%.c
+lib/usr/%.o: usr/%.c
 	@echo !==== COMPILING USER $^
 	mkdir -p $(@D)
-	$(CC) -I$(USR_LIBC) -ffreestanding -nostdlib -c $^ -o $@
+	$(CC) -I$(LIBC_INC) -ffreestanding -nostdlib -c $^ -o $@
 
-$(USROBJDIR)/%.o: $(USRDIR)/%.s
+lib/usr/%.o: usr/%.s
 	@echo !==== ASSEMBLING USER $^
 	mkdir -p $(@D)
 	$(ASSEMBLER) $^ -f elf64 -o $@
@@ -140,3 +141,6 @@ linkUser0:
 linkUser1:
 	@echo !==== LINKING USER
 	$(LD) $(LDFLAGS) $(USR1_OBJ) $(LIBC_OBJ) -o $(USR1_ELF)
+
+info:
+	$(info $$LIBC_OBJ is [${LIBC_OBJ}])
