@@ -9,7 +9,7 @@ int ProcessCount;
 
 void InitializeProcessManager()
 {
-    PagingManager.MapPage((void*) PROCESS_STACK_TOP, FrameAllocator.RequestPageFrame());
+    PagingManager.MapPage((void*) PROCESS_STACK_TOP, FrameAllocator.RequestPageFrame(), true);
     ProcessTop = (Process*) PROCESS_STACK_TOP;
     
     Process kernelProcess;

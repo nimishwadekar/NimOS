@@ -1,5 +1,7 @@
 [bits 64]
 
+extern TaskStateSegment
+
 ; Used by the kernel for the first jump into user mode.
 ; Parameters: Syscall entry, Stack top, Heap base, Program entry.
 global JumpToUserMode
@@ -31,6 +33,9 @@ JumpToUserMode:
 
     ; No flag masks set.
 
+    ; Set Kernel stack pointer in TSS
+    mov [TaskStateSegment + 4], rsp
+
     ; Set up state for return to user program.
     mov rcx, r9
     mov r11, 0x202 ; correct flags
@@ -56,3 +61,10 @@ JumpToUserAddress_Syscall:
     mov r11, 0x202
 
     o64 sysret
+
+
+extern SyscallExit
+global JumpToSyscallExit
+JumpToSyscallExit:
+    mov r9, SyscallExit
+    jmp r9

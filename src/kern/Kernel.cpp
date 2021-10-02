@@ -11,6 +11,7 @@
 #include <String.hpp>
 #include <Syscalls/Syscall.hpp>
 #include <Tasking/Process.hpp>
+#include <Usermode/ArgV.hpp>
 #include <Usermode/ELF.hpp>
 #include <Usermode/Usermode.hpp>
 
@@ -51,6 +52,8 @@ void KernelStart(void)
         errorf("Could not create root process.\n");
         while(true);
     }
+
+    InitArgvBuffer();
 
     Process *root = PeekProcess();
     JumpToUserMode((void*) &SyscallEntry, root->StackTop, root->HeapBase, programEntry); // Does not return here.

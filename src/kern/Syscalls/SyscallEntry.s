@@ -4,16 +4,27 @@ extern TaskStateSegment
 extern SyscallHandler
 
 global SyscallEntry
+global SyscallExit
 
+global STATE_RBX
 STATE_RBX: dq 0
+global STATE_RBP
 STATE_RBP: dq 0
+global STATE_RSP
 STATE_RSP: dq 0
+global STATE_R12
 STATE_R12: dq 0
+global STATE_R13
 STATE_R13: dq 0
+global STATE_R14
 STATE_R14: dq 0
+global STATE_R15
 STATE_R15: dq 0
 
+global STATE_RFLAGS
 STATE_RFLAGS: dq 0
+
+global STATE_RIP
 STATE_RIP: dq 0
 
 SyscallEntry:
@@ -34,10 +45,11 @@ SyscallEntry:
 
     call SyscallHandler
 
+SyscallExit:
     pop rax
+    mov rsp, [STATE_RSP]
     mov rbx, [STATE_RBX]
     mov rbp, [STATE_RBP]
-    mov rsp, [STATE_RSP]
     mov r12, [STATE_R12]
     mov r13, [STATE_R13]
     mov r14, [STATE_R14]

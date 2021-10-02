@@ -5,13 +5,25 @@
 #include <FS/File.hpp>
 
 #define PROCESS_STACK_TOP   0xFFC00000000
-#define PROCESS_MAX         50
+#define PROCESS_MAX         20
 #define PROCESS_FILE_MAX    32
 
 #define STACK_TOP_ADDR      0x4F0000000
 #define STACK_SIZE_KB       100
 #define HEAP_BASE_ADDR      0x500000000
 #define HEAP_MAX_SIZE_MB    80
+
+struct ProcessRegs
+{
+    uint64_t RBX;
+    uint64_t RBP;
+    uint64_t RSP;
+    uint64_t R12;
+    uint64_t R13;
+    uint64_t R14;
+    uint64_t R15;
+    uint64_t RFLAGS;
+};
 
 struct Process
 {
@@ -23,6 +35,7 @@ struct Process
     void *HeapBase;
     uint64_t StartAddr;
     uint64_t PageCount;
+    ProcessRegs Regs;
 };
 
 extern Process *ProcessTop;
