@@ -12,7 +12,7 @@ void SysExec(Registers *regs)
 {
     //void *program = ELF::LoadELF((void*) regs->RDI);
     Process *p = ProcessTop - 1;
-    printf("Limits: 0x%x - 0x%x\n", p->StartAddr, p->EndAddr);
+    printf("Process: 0x%x, %u pages\n", p->StartAddr, p->PageCount);
 
     while(1);
 }

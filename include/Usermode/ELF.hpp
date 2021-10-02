@@ -69,7 +69,7 @@ namespace ELF
     {
         void *Entry;
         uint64_t FirstAddress;
-        uint64_t LastAddress;
+        uint64_t PageCount;
     };
 
     // Loads an ELF File into memory.

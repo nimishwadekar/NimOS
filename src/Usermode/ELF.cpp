@@ -36,7 +36,7 @@ namespace ELF
         LoadInfo info;
         info.Entry = (void*) header->ProgramEntryPosition;
         info.FirstAddress = firstAddr & (~0xFFF);
-        info.LastAddress = (lastAddr & (~0xFFF)) + 0x1000;
+        info.PageCount = (((lastAddr & (~0xFFF)) + 0x1000) - info.FirstAddress) / 0x1000;
         return info;
     }
 }

@@ -50,7 +50,7 @@ void KernelStart(void)
     MainRenderer.ClearScreen();
 
     void *stackTop = (uint8_t*) USER_STACK_TOP + 0x1000;
-    PushProcess(programEntry, stackTop, info.FirstAddress, info.LastAddress);
+    PushProcess(programEntry, stackTop, info.FirstAddress, info.PageCount);
 
     JumpToUserMode((void*) &SyscallEntry, stackTop, programEntry); // Does not return here.
 

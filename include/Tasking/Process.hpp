@@ -17,14 +17,14 @@ struct Process
     void *PC;
     void *StackTop;
     uint64_t StartAddr;
-    uint64_t EndAddr;
+    uint64_t PageCount;
 };
 
 extern Process *ProcessTop;
 extern int ProcessCount;
 
 void InitializeProcessManager();
-int PushProcess(void *pc, void *stackTop, uint64_t startAddr, uint64_t endAddr);
+int PushProcess(void *pc, void *stackTop, uint64_t startAddr, uint64_t pageCount);
 Process PopProcess();
 int AddFileToCurrentProcess(FILE *file);
 // Doesn't actually deallocate the file structure from memory.

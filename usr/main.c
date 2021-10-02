@@ -4,7 +4,6 @@
 #include <string.h>
 #include <sys/syscall.h>
 #include <unistd.h>
-#include <elf.h>
 
 extern void _heap_initialize(void *heapAddress, uint64_t pageCount);
 
