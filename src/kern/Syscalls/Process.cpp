@@ -1,6 +1,7 @@
 #include <Syscalls/Process.hpp>
 #include <Tasking/Process.hpp>
 #include <Usermode/ELF.hpp>
+#include <Usermode/Usermode.hpp>
 
 #include <Display/Renderer.hpp>
 
@@ -11,11 +12,19 @@
 void SysExec(Registers *regs)
 {
     ELF::LoadInfo info = ELF::LoadELF((void*) regs->RDI);
-    Process *p = ProcessTop - 1;
-    printf("Old process: 0x%x, %u pages\n", p->StartAddr, p->PageCount);
-    printf("New process: 0x%x, %u pages\n", info.FirstAddress, info.PageCount);
+    PopProcess();
+    if(PushProcess(info.Entry, info.FirstAddress, info.PageCount) == -1)
+    {
+        regs->RAX = (uint64_t) -1;
+        return;
+    }
+    Process *newProcess = PeekProcess();
 
-    while(1);
+    uint64_t *stack = (uint64_t*) newProcess->StackTop - 2;
+    *stack = 0;
+    *(stack + 1) = 0;
+
+    JumpToUserAddress_Syscall(stack, newProcess->HeapBase, info.Entry);
 }
 
 

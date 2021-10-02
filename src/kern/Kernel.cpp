@@ -53,7 +53,6 @@ void KernelStart(void)
     }
 
     Process *root = PeekProcess();
-    printf("stack: %x\nheap: %x\n", root->StackTop, root->HeapBase);
     JumpToUserMode((void*) &SyscallEntry, root->StackTop, root->HeapBase, programEntry); // Does not return here.
 
     errorf("CAME BACK TO THE KERNEL!!!\n");

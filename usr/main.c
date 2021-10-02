@@ -7,7 +7,7 @@
 
 int main()
 {
-    //execv("usr/spawn.elf", NULL);
+    execv("usr/spawn.elf", NULL);
 
     printf("\n\n-------------");
     return 0;

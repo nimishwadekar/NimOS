@@ -31,7 +31,7 @@ int PushProcess(void *entry, uint64_t startAddr, uint64_t pageCount)
 
     p.StackPhysical = FrameAllocator.RequestPageFrames(STACK_SIZE_KB * 1024 / 0x1000);
     if(!p.StackPhysical) return -1;
-    p.StackTop = (void*) (STACK_TOP_ADDR - (ProcessCount - 1) * 0x1000);
+    p.StackTop = (void*) (STACK_TOP_ADDR - (ProcessCount - 1) * STACK_SIZE_KB * 1024);
     for(uint64_t i = 0; i < STACK_SIZE_KB * 1024; i += 0x1000)
         PagingManager.MapPage((uint8_t*) p.StackTop - STACK_SIZE_KB * 1024 + i, (uint8_t*) p.StackPhysical + i);
 
