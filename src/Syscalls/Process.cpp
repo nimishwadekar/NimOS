@@ -10,9 +10,10 @@
 
 void SysExec(Registers *regs)
 {
-    //void *program = ELF::LoadELF((void*) regs->RDI);
+    ELF::LoadInfo info = ELF::LoadELF((void*) regs->RDI);
     Process *p = ProcessTop - 1;
-    printf("Process: 0x%x, %u pages\n", p->StartAddr, p->PageCount);
+    printf("Old process: 0x%x, %u pages\n", p->StartAddr, p->PageCount);
+    printf("New process: 0x%x, %u pages\n", info.FirstAddress, info.PageCount);
 
     while(1);
 }

@@ -95,18 +95,18 @@ clean:
 LIBC_CSRC = $(call rwildcard,usr/libc,*.c)
 LIBC_SSRC = $(call rwildcard,usr/libc,*.s)
 LIBC_OBJ = $(patsubst usr/libc/%.c, lib/usr/libc/%.o, $(LIBC_CSRC))
-LIBC_OBJ += $(patsubst usr/libc/%.s, lib/usr/libc/%_s.o, $(LIBC_SSRC))
+LIBC_OBJ += $(patsubst usr/libc/%.s, lib/usr/libc/%.o, $(LIBC_SSRC))
 
-USR_START_OBJ = lib/usr/start_s.o
+USR_CRT0 = lib/usr/libc/crt0.o
 
 USR0_SRC = usr/main.c
 USR0_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(USR0_SRC))
-USR0_OBJ += $(USR_START_OBJ)
+#USR0_OBJ += $(USR_CRT0)
 USR0_ELF = $(USRELFDIR)/main.elf
 
 USR1_SRC = usr/spawn.c
 USR1_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(USR1_SRC))
-USR1_OBJ += $(USR_START_OBJ)
+#USR1_OBJ += $(USR_CRT0)
 USR1_ELF = $(USRELFDIR)/spawn.elf
 
 ########################################################################################
@@ -128,7 +128,7 @@ $(USROBJDIR)/%.o: $(USRDIR)/%.c
 	mkdir -p $(@D)
 	$(CC) -I$(USR_LIBC) -ffreestanding -nostdlib -c $^ -o $@
 
-$(USROBJDIR)/%_s.o: $(USRDIR)/%.s
+$(USROBJDIR)/%.o: $(USRDIR)/%.s
 	@echo !==== ASSEMBLING USER $^
 	mkdir -p $(@D)
 	$(ASSEMBLER) $^ -f elf64 -o $@

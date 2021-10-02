@@ -4,6 +4,7 @@
 #include <sys/syscall.h>
 
 #define BLOCK_SIZE 16
+#define HEAP_MAX_MB 80
 
 typedef struct _heaphdr
 {
@@ -58,6 +59,10 @@ void *malloc(size_t size)
         }
         currentSegment = currentSegment->next;
     }
+
+    // If heap max size reached.
+    if((uint64_t) _heap_end - (uint64_t) _heap_start + size > HEAP_MAX_MB * 1024 * 1024)
+        return NULL;
 
     // If not enough memory in heap.
     _heap_extend(size);
