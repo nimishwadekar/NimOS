@@ -5,8 +5,9 @@ global JumpToUserMode
 JumpToUserMode:
     ; Enable syscalls
     cli
-    mov rbx, rdx
-    mov rbp, rsi
+    mov r8, rdx ; Heap base
+    mov r9, rcx ; Program entry
+    mov rbp, rsi ; Stack top
 
     ; Set Syscall entry point
     mov eax, edi
@@ -27,10 +28,19 @@ JumpToUserMode:
     mov edx, 0x00180008
     wrmsr
 
-    ; Set flag masks
+    ; No flag masks set.
 
-    ; Set up state for return
-    mov rcx, rbx
+    ; Set up state for return to user program.
+    mov rcx, r9
     mov r11, 0x202 ; correct flags
     mov rsp, rbp
+
+    ; Set up main() arguments on stack.
+    sub rsp, 16
+    mov qword [rsp], 0
+    mov qword [rsp + 8], 0
+
+    mov rdi, rsp ; CRT0 argument stack top
+    mov rsi, r8 ; CRT0 argument heap address
+
     o64 sysret

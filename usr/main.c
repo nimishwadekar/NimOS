@@ -5,13 +5,9 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-extern void _heap_initialize(void *heapAddress, uint64_t pageCount);
-
 int main()
 {
-    _heap_initialize((void*) 0x500000000, 1);
-
-    execv("usr/spawn.elf", NULL);
+    //execv("usr/spawn.elf", NULL);
 
     printf("\n\n-------------");
     return 0;
