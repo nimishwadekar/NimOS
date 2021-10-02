@@ -11,9 +11,6 @@ int main()
 {
     _heap_initialize((void*) 0x500000000, 1);
 
-    printf("here");
-    while(1);
-
     execv("usr/spawn.elf", NULL);
 
     printf("\n\n-------------");

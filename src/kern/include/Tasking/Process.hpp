@@ -4,11 +4,12 @@
 #include <DynamicArray.hpp>
 #include <FS/File.hpp>
 
-#define PROCESS_STACK_TOP 0xFFC00000000
+#define PROCESS_STACK_TOP   0xFFC00000000
+#define STACK_SIZE_KB       100
+#define HEAP_BASE_ADDR      0x500000000
 
-#define PROCESS_MAX 50
-
-#define PROCESS_FILE_MAX 32
+#define PROCESS_MAX         50
+#define PROCESS_FILE_MAX    32
 
 struct Process
 {

@@ -8,7 +8,7 @@ LINK_SCRIPT = src/kern/link.ld
 
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
-INCDIR = include
+INCDIR = src/kern/include
 SRCDIR = src/kern
 OBJDIR = lib/kern
 BUILDDIR = bin

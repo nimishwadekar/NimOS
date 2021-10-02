@@ -19,6 +19,11 @@ void KernelStart(void)
 {
     printf("Kernel initialized.\n\n");
 
+    PagingManager.MapPage((void*) 0x400000000, FrameAllocator.RequestPageFrame());
+    *(unsigned*)0x400000000 = 0xCAFEBABE;
+    printf("%x\n", *(unsigned*)0x400000000);
+    while(1);
+
     void *userStack = FrameAllocator.RequestPageFrame();
     PagingManager.MapPage((void*) USER_STACK_TOP, userStack);
 
