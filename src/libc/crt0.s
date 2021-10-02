@@ -21,5 +21,9 @@ _start:
     mov rsi, rsp
 
     call main
-    jmp $
+
+    ; Exit syscall.
+    mov rdi, 0
+    mov rax, 0x23
+    syscall
 

@@ -19,8 +19,10 @@ pid_t getppid(void);
 
 int execv(const char *pathname, char *const argv[]);
 
+// exitcode - Location to store exit code of spawned process in.
+int spawnv(const char *pathname, char *const argv[], int *exitcode);
 
-int spawnv(const char *pathname, char *const argv[]);
+void exit(int status);
 
 
 /* Make the process sleep for SECONDS seconds, or until a signal arrives

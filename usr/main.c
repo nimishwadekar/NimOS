@@ -7,13 +7,14 @@
 
 int main()
 {
+    int c;
     char *argv[] = {"arg1", "arg2", "arg3", "arg4", "arg5", "arg6", "arg7", "arg8", NULL};
-    spawnv("usr/spawn.elf", argv);
+    spawnv("usr/spawn.elf", argv, &c);
+    printf("Exited with code %d\n", c);
 
     printf("\n\n-------------");
-    return 0;
+    while(1);
 }
-
 /**
  * 
  * REMOVE PRINTS FROM KERNEL.

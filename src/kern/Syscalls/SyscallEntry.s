@@ -44,9 +44,9 @@ SyscallEntry:
     push rax
 
     call SyscallHandler
-
-SyscallExit:
     pop rax
+    
+SyscallExit:
     mov rsp, [STATE_RSP]
     mov rbx, [STATE_RBX]
     mov rbp, [STATE_RBP]
@@ -57,5 +57,4 @@ SyscallExit:
 
     mov rcx, [STATE_RIP]
     mov r11, [STATE_RFLAGS]
-
     o64 sysret

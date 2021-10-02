@@ -82,10 +82,11 @@ void RemoveFileFromCurrentProcess(uint32_t handle)
     }
 }
 
-void CopyTopProcess()
+void BackupTopProcess()
 {
     Process *p = ProcessTop - 1;
     uint8_t *copyAddr = (uint8_t*) (PROCESS_COPY_ADDR + (ProcessCount - 2) * PROCESS_COPY_MAX_MB * 1024 * 1024);
+
     uint8_t *copyPhysAddr = (uint8_t*) FrameAllocator.RequestPageFrames(p->PageCount);
     for(uint64_t i = 0; i < p->PageCount; i++) 
         PagingManager.MapPage(copyAddr + i * 0x1000, copyPhysAddr + i * 0x1000);
@@ -95,9 +96,12 @@ void CopyTopProcess()
     p->DupPhysAddress = copyPhysAddr;
 }
 
-void ClearCopyTopProcess()
+void RestoreTopProcess()
 {
     Process *p = ProcessTop - 1;
+
+    memcpy(p->DupAddress, (void*) p->StartAddr, p->PageCount * 0x1000);
+
     uint8_t *copyPhysAddr = (uint8_t*) p->DupPhysAddress;
     for(uint64_t i = 0; i < p->PageCount; i++)
         FrameAllocator.FreePageFrame(copyPhysAddr + i * 0x1000);

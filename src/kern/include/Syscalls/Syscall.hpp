@@ -85,6 +85,7 @@ struct Registers
 // Spawns a new process and executes a program in it. The previous process waits till completion of new process.
 // rdi - Executable file address
 // rsi - argv
+// rdx - Address to store exit code in
 
 #define SYS_EXIT        0x23
 // Exits current process.

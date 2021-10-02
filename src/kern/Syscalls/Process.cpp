@@ -79,8 +79,18 @@ void SysSpawn(Registers *regs)
 
     printf("In spawn\n");
     Process *oldProcess = PeekProcess();
+    oldProcess->PC = (void*) STATE_RIP;
+    oldProcess->Regs.R12 = STATE_R12;
+    oldProcess->Regs.R13 = STATE_R13;
+    oldProcess->Regs.R14 = STATE_R14;
+    oldProcess->Regs.R15 = STATE_R15;
+    oldProcess->Regs.RBP = STATE_RBP;
+    oldProcess->Regs.RBX = STATE_RBX;
+    oldProcess->Regs.RFLAGS = STATE_RFLAGS;
+    oldProcess->Regs.RSP = STATE_RSP;
+    oldProcess->SpawnExitCodeAddr = (int*) regs->RDX;
 
-    CopyTopProcess();
+    BackupTopProcess();
 
     ELF::LoadInfo info = ELF::LoadELF((void*) regs->RDI);
     if(PushProcess(info.Entry, info.FirstAddress, info.PageCount) == -1)
@@ -107,7 +117,21 @@ void SysSpawn(Registers *regs)
 
 void SysExit(Registers *regs)
 {
+    PopProcess();
+    RestoreTopProcess();
 
+    Process *p = PeekProcess();
+    STATE_RIP = (uint64_t) p->PC;
+    STATE_R12 = p->Regs.R12;
+    STATE_R13 = p->Regs.R13;
+    STATE_R14 = p->Regs.R14;
+    STATE_R15 = p->Regs.R15;
+    STATE_RBP = p->Regs.RBP;
+    STATE_RBX = p->Regs.RBX;
+    STATE_RFLAGS = p->Regs.RFLAGS;
+    STATE_RSP = p->Regs.RSP;
+
+    if(p->SpawnExitCodeAddr) *(p->SpawnExitCodeAddr) = (int) regs->RDI;
 }
 
 

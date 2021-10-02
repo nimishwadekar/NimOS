@@ -8,6 +8,4 @@ int main(int argc, char *argv[])
     printf("%p\n\n", argv[argc]);
 
     printf("PID: %d\nPPID = %d\n", getpid(), getppid());
-
-    while(1);
 }

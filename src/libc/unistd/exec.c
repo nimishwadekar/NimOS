@@ -18,8 +18,7 @@ int execv(const char *pathname, char *const argv[])
     return -1;
 }
 
-
-int spawnv(const char *pathname, char *const argv[])
+int spawnv(const char *pathname, char *const argv[], int *exitcode)
 {
     FILE *file = fopen(pathname, "r");
     if(!file) return -1;
@@ -30,6 +29,6 @@ int spawnv(const char *pathname, char *const argv[])
         return -1;
     }
 
-    _syscall_2(SYS_SPAWN, (int64_t) buf, (int64_t) argv);
-    return -1;
+    _syscall_3(SYS_SPAWN, (int64_t) buf, (int64_t) argv, (int64_t) exitcode);
+    return 0;
 }
