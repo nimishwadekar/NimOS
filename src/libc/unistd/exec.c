@@ -21,5 +21,15 @@ int execv(const char *pathname, char *const argv[])
 
 int spawnv(const char *pathname, char *const argv[])
 {
+    FILE *file = fopen(pathname, "r");
+    if(!file) return -1;
+    void *buf = malloc(file->length);
+    if(fread(buf, 1, file->length, file) != file->length)
+    {
+        free(buf);
+        return -1;
+    }
 
+    _syscall_2(SYS_SPAWN, (int64_t) buf, (int64_t) argv);
+    return -1;
 }

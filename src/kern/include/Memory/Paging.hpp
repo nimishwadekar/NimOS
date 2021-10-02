@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-enum PageTableFlags
+enum class PageTableFlags
 {
     Present = 0,
     ReadWrite = 1,

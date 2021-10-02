@@ -27,7 +27,11 @@ namespace ELF
             if(lastAddr < progHeader->P_Vaddr + progHeader->P_MemSz) lastAddr = progHeader->P_Vaddr + progHeader->P_MemSz;
 
             uint8_t *addr = (uint8_t*) FrameAllocator.RequestPageFrames(pages);
-            for(uint64_t p = 0; p < pages; p++) PagingManager.MapPage((uint8_t*) progHeader->P_Vaddr + p * 0x1000, addr + p * 0x1000);
+            for(uint64_t p = 0; p < pages; p++)
+            {
+                PagingManager.MapPage((uint8_t*) progHeader->P_Vaddr + p * 0x1000, addr + p * 0x1000);
+            }
+
             memcpy((uint8_t*) fileAddress + progHeader->P_Offset, (void*) progHeader->P_Vaddr, progHeader->P_FileSz);
             if(progHeader->P_FileSz < progHeader->P_MemSz) 
                 memset((uint8_t*) progHeader->P_Vaddr + progHeader->P_FileSz, 0, progHeader->P_MemSz - progHeader->P_FileSz);

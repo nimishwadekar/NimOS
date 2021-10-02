@@ -91,3 +91,20 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress, bool
     entry.SetFlag(PageTableFlags::UserAccess, !supervisor);
     level1Table->Entries[indexer.TableLevel1Index] = entry;
 }
+
+PageTableEntry *PageTableManager::GetTableEntry(void *virtualAddress, int level)
+{
+    if(level > 3 || level < 0) return nullptr;
+
+    PageMapIndexer indexer((uint64_t) virtualAddress);
+    if(level == 3) return TableLevel4->Entries + indexer.TableLevel4Index;
+
+    PageTable *table = (PageTable*) TableLevel4->Entries[indexer.TableLevel4Index].GetAddress();
+    if(level == 2) return table->Entries + indexer.TableLevel3Index;
+
+    table = (PageTable*) table->Entries[indexer.TableLevel3Index].GetAddress();
+    if(level == 1) return table->Entries + indexer.TableLevel2Index;
+
+    table = (PageTable*) table->Entries[indexer.TableLevel2Index].GetAddress();
+    return table->Entries + indexer.TableLevel1Index;
+}
