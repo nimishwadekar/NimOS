@@ -19,14 +19,6 @@ void KernelStart(void)
 {
     printf("Kernel initialized.\n\n");
 
-    PagingManager.MapPage((void*) 0x400000000, FrameAllocator.RequestPageFrame());
-    *(unsigned*)0x400000000 = 0xCAFEBABE;
-    printf("%x\n", *(unsigned*)0x400000000);
-    while(1);
-
-    void *userStack = FrameAllocator.RequestPageFrame();
-    PagingManager.MapPage((void*) USER_STACK_TOP, userStack);
-
     FILE *program = VFSOpenFile("usr/main.elf", "r");    
     uint8_t *programAddress = (uint8_t*) KernelHeap.Malloc(program->Length);
     if(VFSReadFile(program, programAddress, program->Length) != program->Length)
@@ -54,10 +46,15 @@ void KernelStart(void)
     MainRenderer.SetForegroundColour(USER_COLOUR_FRONT);
     MainRenderer.ClearScreen();
 
-    void *stackTop = (uint8_t*) USER_STACK_TOP + 0x1000;
-    PushProcess(programEntry, stackTop, info.FirstAddress, info.PageCount);
+    if(PushProcess(programEntry, info.FirstAddress, info.PageCount) == -1)
+    {
+        errorf("Could not create root process.\n");
+        while(true);
+    }
 
-    JumpToUserMode((void*) &SyscallEntry, stackTop, programEntry); // Does not return here.
+    Process *root = PeekProcess();
+    printf("stack: %x\nheap: %x\n", root->StackTop, root->HeapBase);
+    JumpToUserMode((void*) &SyscallEntry, root->StackTop, root->HeapBase, programEntry); // Does not return here.
 
     errorf("CAME BACK TO THE KERNEL!!!\n");
     while(true);

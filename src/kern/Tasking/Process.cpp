@@ -2,6 +2,8 @@
 #include <Memory/PageTableManager.hpp>
 #include <Tasking/Process.hpp>
 
+#include <Display/Renderer.hpp>
+
 Process *ProcessTop;
 int ProcessCount;
 
@@ -17,16 +19,23 @@ void InitializeProcessManager()
     ProcessCount = 1;
 }
 
-int PushProcess(void *pc, void *stackTop, uint64_t startAddr, uint64_t pageCount)
+int PushProcess(void *entry, uint64_t startAddr, uint64_t pageCount)
 {
     if(ProcessCount >= PROCESS_MAX) return -1;
 
     Process p;
-    p.PC = pc;
-    p.StackTop = stackTop;
+    p.PC = entry;
     p.ProcessID = ProcessCount + 1;
     p.StartAddr = startAddr;
     p.PageCount = pageCount;
+
+    p.StackPhysical = FrameAllocator.RequestPageFrames(STACK_SIZE_KB * 1024 / 0x1000);
+    if(!p.StackPhysical) return -1;
+    p.StackTop = (void*) (STACK_TOP_ADDR - (ProcessCount - 1) * 0x1000);
+    for(uint64_t i = 0; i < STACK_SIZE_KB * 1024; i += 0x1000)
+        PagingManager.MapPage((uint8_t*) p.StackTop - STACK_SIZE_KB * 1024 + i, (uint8_t*) p.StackPhysical + i);
+
+    p.HeapBase = (void*) (HEAP_BASE_ADDR + HEAP_MAX_SIZE_MB * 1024 * 1024 * (ProcessCount - 1));
 
     *ProcessTop = p;
     ProcessTop += 1;
@@ -35,11 +44,19 @@ int PushProcess(void *pc, void *stackTop, uint64_t startAddr, uint64_t pageCount
 }
 
 
-Process PopProcess()
+void PopProcess()
 {
     ProcessTop -= 1;
     ProcessCount -= 1;
-    return *ProcessTop;
+
+    for(uint64_t i = 0; i < STACK_SIZE_KB * 1024; i += 0x1000)
+        FrameAllocator.FreePageFrame((uint8_t*) ProcessTop->StackPhysical + i);
+}
+
+
+Process *PeekProcess()
+{
+    return ProcessTop - 1;
 }
 
 
