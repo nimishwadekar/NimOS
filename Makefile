@@ -49,7 +49,7 @@ disk: initdir $(BOOTJSON)
 	./$(MKBOOTIMG) $(BOOTJSON) $(OS_IMG)
 	@rm -rf initrd
 
-kernel: $(OBJS) link
+kernel: $(OBJS) $(KERNEL_ELF)
 
 $(OBJDIR)/Interrupts/Interrupts.o: $(SRCDIR)/Interrupts/Interrupts.cpp
 	@echo !==== COMPILING $^
@@ -73,7 +73,7 @@ $(OBJDIR)/%_font.o: $(SRCDIR)/%.psf
 	$(LD) $(LDFLAGS) -r -b binary -o $@ font.psf
 	@rm font.psf
 
-link:
+$(KERNEL_ELF):
 	@echo !==== LINKING
 	$(LD) $(LDFLAGS) -T $(LINK_SCRIPT) $(OBJS) -o $(KERNEL_ELF)
 	strip $(STRIPFLAGS) $(KERNEL_ELF)
@@ -121,8 +121,8 @@ lib/libc/%.o: src/libc/%.s
 	$(ASSEMBLER) $^ -f elf64 -o $@
 
 
-user0: $(USR0_OBJ) linkUser0
-user1: $(USR1_OBJ) linkUser1
+user0: $(USR0_OBJ) $(USR0_ELF)
+user1: $(USR1_OBJ) $(USR1_ELF)
 
 lib/usr/%.o: usr/%.c
 	@echo !==== COMPILING USER $^
@@ -134,11 +134,11 @@ lib/usr/%.o: usr/%.s
 	mkdir -p $(@D)
 	$(ASSEMBLER) $^ -f elf64 -o $@
 
-linkUser0:
+$(USR0_ELF):
 	@echo !==== LINKING USER
 	$(LD) $(LDFLAGS) $(USR0_OBJ) $(LIBC_OBJ) -o $(USR0_ELF)
 
-linkUser1:
+$(USR1_ELF):
 	@echo !==== LINKING USER
 	$(LD) $(LDFLAGS) $(USR1_OBJ) $(LIBC_OBJ) -o $(USR1_ELF)
 
