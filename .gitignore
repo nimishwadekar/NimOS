@@ -1,4 +1,5 @@
 bin/kernel.elf
 bin/TokyoOS.img
+disk/usr/*.elf
 util.py
 log/*
