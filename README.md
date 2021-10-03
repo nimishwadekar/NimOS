@@ -31,11 +31,13 @@
 - User Space
 - ELF Executable Loader
 - System Calls
+- Minimal C Library
+- Single Tasking Processes
 
 ---
 
 ### Features currently being implemented:
-- Minimal C Library
+- Inter-process Communication
 
 ---
 
