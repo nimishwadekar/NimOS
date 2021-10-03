@@ -59,3 +59,8 @@ int AddFileToCurrentProcess(FILE *file);
 void RemoveFileFromCurrentProcess(uint32_t handle);
 void BackupTopProcess();
 void RestoreTopProcess();
+
+#define PROCESS_EXCEPTION_EXIT_CODE -2147
+
+// Used by exception handlers to exit current process.
+void ProcessException();

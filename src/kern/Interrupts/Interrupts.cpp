@@ -284,89 +284,92 @@ static void InitializeIDTEntry(const uint8_t interrupt, const uint64_t handler)
     IDT[interrupt] = entry;
 }
 
+// Called by exception handlers to exit current process.
+extern void ProcessException();
+
 #pragma region HANDLERS
 _intr_ static void IntHandler0x0(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x0]);
-	while(true);
+    printf("%s\n", InterruptMessages[0x0]);
+    ProcessException();
 }
 
 _intr_ static void IntHandler0x1(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x1]);
+    printf("%s\n", InterruptMessages[0x1]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x2(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x2]);
+    printf("%s\n", InterruptMessages[0x2]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x3(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x3]);
+    printf("%s\n", InterruptMessages[0x3]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x4(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x4]);
+    printf("%s\n", InterruptMessages[0x4]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x5(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x5]);
-	while(true);
+    printf("%s\n", InterruptMessages[0x5]);
+    ProcessException();
 }
 
 _intr_ static void IntHandler0x6(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x6]);
-	while(true);
+    printf("%s\n", InterruptMessages[0x6]);
+    ProcessException();
 }
 
 _intr_ static void IntHandler0x7(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x7]);
-	while(true);
+    printf("%s\n", InterruptMessages[0x7]);
+    ProcessException();
 }
 
 _intr_ static void IntHandler0x8(ExceptionFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\nError Code = 0x%x", InterruptMessages[0x8], frame->ErrorCode);
-	while(true);
+    printf("%s\nError Code = 0x%x", InterruptMessages[0x8], frame->ErrorCode);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0x9(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x9]);
-	while(true);
+    printf("%s\n", InterruptMessages[0x9]);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0xa(ExceptionFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\nError Code = 0x%x", InterruptMessages[0xa], frame->ErrorCode);
-	while(true);
+    printf("%s\nError Code = 0x%x", InterruptMessages[0xa], frame->ErrorCode);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0xb(ExceptionFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\nError Code = 0x%x", InterruptMessages[0xb], frame->ErrorCode);
-	while(true);
+    printf("%s\nError Code = 0x%x", InterruptMessages[0xb], frame->ErrorCode);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0xc(ExceptionFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\nError Code = 0x%x", InterruptMessages[0xc], frame->ErrorCode);
-	while(true);
+    printf("%s\nError Code = 0x%x", InterruptMessages[0xc], frame->ErrorCode);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0xd(ExceptionFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\nError Code = 0x%x", InterruptMessages[0xd], frame->ErrorCode);
-	while(true);
+    printf("%s\nError Code = 0x%x", InterruptMessages[0xd], frame->ErrorCode);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0xe(ExceptionFrame *frame)
@@ -382,112 +385,112 @@ _intr_ static void IntHandler0xe(ExceptionFrame *frame)
     flags[3] = (error & 0b01000) ? "Reserved-write" : "";
     flags[4] = (error & 0b10000) ? "Instruction-fetch" : "";
 
-    MainRenderer.PrintErrorf("PAGE FAULT at virtual address 0x%x : %s %s %s %s %s\n", cr2,
+    printf("PAGE FAULT at virtual address 0x%x : %s %s %s %s %s\n", cr2,
         flags[0], flags[1], flags[2], flags[3], flags[4]);
-    MainRenderer.PrintErrorf("CS : RIP = 0x%x : 0x%x\n", frame->CS, frame->RIP);
-    errorf("err: %x, cs: %x, ip: %x, rsp: %x, flags: %x\n", frame->ErrorCode, frame->CS, frame->RIP, frame->RSP, frame->RFlags);
-    while(true);
+    printf("CS : RIP = 0x%x : 0x%x\n", frame->CS, frame->RIP);
+    printf("err: %x, cs: %x, ip: %x, rsp: %x, flags: %x\n", frame->ErrorCode, frame->CS, frame->RIP, frame->RSP, frame->RFlags);
+    ProcessException();
 }
 
 _intr_ static void IntHandler0xf(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0xf]);
+    printf("%s\n", InterruptMessages[0xf]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x10(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x10]);
-	while(true);
+    printf("%s\n", InterruptMessages[0x10]);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0x11(ExceptionFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\nError Code = 0x%x", InterruptMessages[0x11], frame->ErrorCode);
-	while(true);
+    printf("%s\nError Code = 0x%x", InterruptMessages[0x11], frame->ErrorCode);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0x12(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x12]);
-	while(true);
+    printf("%s\n", InterruptMessages[0x12]);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0x13(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x13]);
-	while(true);
+    printf("%s\n", InterruptMessages[0x13]);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0x14(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x14]);
-	while(true);
+    printf("%s\n", InterruptMessages[0x14]);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0x15(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x15]);
+    printf("%s\n", InterruptMessages[0x15]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x16(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x16]);
+    printf("%s\n", InterruptMessages[0x16]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x17(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x17]);
+    printf("%s\n", InterruptMessages[0x17]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x18(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x18]);
+    printf("%s\n", InterruptMessages[0x18]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x19(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x19]);
+    printf("%s\n", InterruptMessages[0x19]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x1a(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x1a]);
+    printf("%s\n", InterruptMessages[0x1a]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x1b(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x1b]);
+    printf("%s\n", InterruptMessages[0x1b]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x1c(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x1c]);
+    printf("%s\n", InterruptMessages[0x1c]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x1d(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x1d]);
+    printf("%s\n", InterruptMessages[0x1d]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x1e(ExceptionFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\nError Code = 0x%x", InterruptMessages[0x1e], frame->ErrorCode);
-	while(true);
+    printf("%s\nError Code = 0x%x", InterruptMessages[0x1e], frame->ErrorCode);
+	ProcessException();
 }
 
 _intr_ static void IntHandler0x1f(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x1f]);
+    printf("%s\n", InterruptMessages[0x1f]);
 	while(true);
 }
 
@@ -506,85 +509,85 @@ _intr_ static void IntHandler0x21(InterruptFrame *frame)
 
 _intr_ static void IntHandler0x22(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x22]);
+    printf("%s\n", InterruptMessages[0x22]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x23(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x23]);
+    printf("%s\n", InterruptMessages[0x23]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x24(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x24]);
+    printf("%s\n", InterruptMessages[0x24]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x25(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x25]);
+    printf("%s\n", InterruptMessages[0x25]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x26(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x26]);
+    printf("%s\n", InterruptMessages[0x26]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x27(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x27]);
+    printf("%s\n", InterruptMessages[0x27]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x28(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x28]);
+    printf("%s\n", InterruptMessages[0x28]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x29(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x29]);
+    printf("%s\n", InterruptMessages[0x29]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x2a(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x2a]);
+    printf("%s\n", InterruptMessages[0x2a]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x2b(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x2b]);
+    printf("%s\n", InterruptMessages[0x2b]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x2c(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x2c]);
+    printf("%s\n", InterruptMessages[0x2c]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x2d(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x2d]);
+    printf("%s\n", InterruptMessages[0x2d]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x2e(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x2e]);
+    printf("%s\n", InterruptMessages[0x2e]);
 	while(true);
 }
 
 _intr_ static void IntHandler0x2f(InterruptFrame *frame)
 {
-    MainRenderer.PrintErrorf("%s\n", InterruptMessages[0x2f]);
+    printf("%s\n", InterruptMessages[0x2f]);
 	while(true);
 }
 #pragma endregion

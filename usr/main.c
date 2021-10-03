@@ -12,7 +12,7 @@ int main()
     spawnv("usr/spawn.elf", argv, &c);
     printf("Exited with code %d\n", c);
 
-    printf("\n\n-------------");
+    printf("\n\n-------------\n");
     while(1);
 }
 /**

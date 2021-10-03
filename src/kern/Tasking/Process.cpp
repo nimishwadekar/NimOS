@@ -106,3 +106,11 @@ void RestoreTopProcess()
     for(uint64_t i = 0; i < p->PageCount; i++)
         FrameAllocator.FreePageFrame(copyPhysAddr + i * 0x1000);
 }
+
+void ProcessException()
+{
+    // Exit syscall with code -1.
+    asm volatile("movq $0x23, %rax\n \
+        movq $-2147, %rdi\n \
+        syscall\n");
+}
