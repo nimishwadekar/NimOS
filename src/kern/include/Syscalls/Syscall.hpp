@@ -97,6 +97,14 @@ struct Registers
 #define SYS_PPID        0x25
 // Gets ID of parent process.
 
+#define SYS_SHMAT       0x26
+// Attaches to shared memory. One per process at a time. Size of shared memory is 4 KB.
+// rdi - key
+// Return value - Address of shared memory. NULL if not attached.
+
+#define SYS_SHMDT       0x27
+// Detaches from shared memory.
+// Return value - 0 if successfully detached, else -1 if attached to none.
 
 // Memory System Calls
 

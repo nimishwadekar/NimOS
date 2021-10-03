@@ -15,4 +15,6 @@ typedef struct _crsr_pos
 
 typedef int pid_t;
 
+typedef unsigned char key_t;
+
 #endif

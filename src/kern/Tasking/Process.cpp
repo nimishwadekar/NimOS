@@ -1,6 +1,7 @@
 #include <Memory/PageFrameAllocator.hpp>
 #include <Memory/PageTableManager.hpp>
 #include <Tasking/Process.hpp>
+#include <Tasking/SharedMemory.hpp>
 
 #include <Display/Renderer.hpp>
 
@@ -17,7 +18,10 @@ void InitializeProcessManager()
     *ProcessTop = kernelProcess;
     ProcessTop += 1;
     ProcessCount = 1;
+
+    ShmManager.Initialise();
 }
+
 
 int PushProcess(void *entry, uint64_t startAddr, uint64_t pageCount)
 {
@@ -28,6 +32,7 @@ int PushProcess(void *entry, uint64_t startAddr, uint64_t pageCount)
     p.ProcessID = ProcessCount + 1;
     p.StartAddr = startAddr;
     p.PageCount = pageCount;
+    p.SharedMemKey = -1;
 
     p.StackPhysical = FrameAllocator.RequestPageFrames(STACK_SIZE_KB * 1024 / 0x1000);
     if(!p.StackPhysical) return -1;
@@ -82,6 +87,7 @@ void RemoveFileFromCurrentProcess(uint32_t handle)
     }
 }
 
+
 void BackupTopProcess()
 {
     Process *p = ProcessTop - 1;
@@ -96,6 +102,7 @@ void BackupTopProcess()
     p->DupPhysAddress = copyPhysAddr;
 }
 
+
 void RestoreTopProcess()
 {
     Process *p = ProcessTop - 1;
@@ -107,9 +114,10 @@ void RestoreTopProcess()
         FrameAllocator.FreePageFrame(copyPhysAddr + i * 0x1000);
 }
 
+
 void ProcessException()
 {
-    // Exit syscall with code -1.
+    // Exit syscall with code -2147.
     asm volatile("movq $0x23, %rax\n \
         movq $-2147, %rdi\n \
         syscall\n");

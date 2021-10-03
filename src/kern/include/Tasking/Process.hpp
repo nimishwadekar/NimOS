@@ -42,6 +42,9 @@ struct Process
     uint64_t PageCount;
     ProcessRegs Regs;
 
+    // -1 implies not attached to any shared memory segment.
+    int16_t SharedMemKey;
+
     //Assumes every program size is less than 2 MB.
     void *DupAddress;
     void *DupPhysAddress;

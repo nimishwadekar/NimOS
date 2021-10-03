@@ -33,14 +33,14 @@
 - System Calls
 - Minimal C Library
 - Single Tasking Processes
-
----
-
-### Features currently being implemented:
 - Inter-process Communication
 
 ---
 
-### Features to be implemented:
+### Features currently being implemented:
 - Time
+
+---
+
+### Features to be implemented:
 - Shell

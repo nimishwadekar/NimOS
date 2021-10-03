@@ -3,6 +3,7 @@
 #include <String.hpp>
 #include <Syscalls/Process.hpp>
 #include <Tasking/Process.hpp>
+#include <Tasking/SharedMemory.hpp>
 #include <Usermode/ArgV.hpp>
 #include <Usermode/ELF.hpp>
 #include <Usermode/Usermode.hpp>
@@ -144,4 +145,37 @@ void SysPID(Registers *regs)
 void SysPPID(Registers *regs)
 {
     regs->RAX = (ProcessTop - 2)->ProcessID;
+}
+
+
+void SysShmAt(Registers *regs)
+{
+    Process *p = PeekProcess();
+    if(regs->RDI >= SHM_MAX_SEGS || p->SharedMemKey == (int16_t) regs->RDI)
+    {
+        regs->RAX = 0;
+        return;
+    }
+
+    if(p->SharedMemKey != -1)
+    {
+        ShmManager.DetachProcess((uint8_t) p->SharedMemKey);
+    }
+    p->SharedMemKey = (uint16_t) regs->RDI;
+    regs->RAX = (uint64_t) ShmManager.AttachProcess((uint8_t) regs->RDI);
+}
+
+
+void SysShmDt(Registers *regs)
+{
+    Process *p = PeekProcess();
+    if(p->SharedMemKey == -1)
+    {
+        regs->RAX = (uint64_t) -1;
+        return;
+    }
+
+    ShmManager.DetachProcess((uint8_t) p->SharedMemKey);
+    p->SharedMemKey = -1;
+    regs->RAX = 0;
 }

@@ -40,6 +40,8 @@ extern "C" void SyscallHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_
         case SYS_EXIT: SysExit(&regs); break;
         case SYS_PID: SysPID(&regs); break;
         case SYS_PPID: SysPPID(&regs); break;
+        case SYS_SHMAT: SysShmAt(&regs); break;
+        case SYS_SHMDT: SysShmDt(&regs); break;
 
         case SYS_MMAP: SysMMap(&regs); break;
 
