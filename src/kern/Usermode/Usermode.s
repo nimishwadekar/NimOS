@@ -61,10 +61,3 @@ JumpToUserAddress_Syscall:
     mov r11, 0x202
 
     o64 sysret
-
-
-extern SyscallExit
-global JumpToSyscallExit
-JumpToSyscallExit:
-    mov r9, SyscallExit
-    jmp r9
