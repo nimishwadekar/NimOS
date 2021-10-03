@@ -40,8 +40,15 @@ void SysGetCrsr(Registers *regs)
 
 void SysSetCrsr(Registers *regs)
 {
-    MainRenderer.Cursor.X = (int32_t) regs->RDI;
-    MainRenderer.Cursor.Y = (int32_t) regs->RSI;
+    int32_t x = (int32_t) regs->RDI;
+    int32_t y = (int32_t) regs->RSI;
+    if(x < 0) x = 0;
+    else if(x >= MainRenderer.Buffer.Width) x = MainRenderer.Buffer.Width - 1;
+    if(y < 0) y = 0;
+    else if(y >= MainRenderer.Buffer.Height) y = MainRenderer.Buffer.Height - 1;
+
+    MainRenderer.Cursor.X = x;
+    MainRenderer.Cursor.Y = y;
 }
 
 
