@@ -137,11 +137,11 @@ void SysExit(Registers *regs)
 
 void SysPID(Registers *regs)
 {
-    regs->RAX = ProcessCount;
+    regs->RAX = PeekProcess()->ProcessID;
 }
 
 
 void SysPPID(Registers *regs)
 {
-    regs->RAX = ProcessCount - 1;
+    regs->RAX = (ProcessTop - 2)->ProcessID;
 }
