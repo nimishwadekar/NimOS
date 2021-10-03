@@ -49,32 +49,32 @@ disk: initdir $(BOOTJSON)
 	./$(MKBOOTIMG) $(BOOTJSON) $(OS_IMG)
 	@rm -rf initrd
 
-kernel: $(OBJS) $(KERNEL_ELF)
+kernel: $(OBJS) linkKern
 
 $(OBJDIR)/Interrupts/Interrupts.o: $(SRCDIR)/Interrupts/Interrupts.cpp
-	@echo !==== COMPILING $^
+	@echo !==== COMPILING KERNEL $^
 	mkdir -p $(@D)
 	$(CC) -I$(INCDIR) -mno-red-zone -mgeneral-regs-only -ffreestanding -c $^ -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	@echo !==== COMPILING $^
+	@echo !==== COMPILING KERNEL $^
 	mkdir -p $(@D)
 	$(CC) -I$(INCDIR) $(CFLAGS) -c $^ -o $@
 
 $(OBJDIR)/%_s.o: $(SRCDIR)/%.s
-	@echo !==== ASSEMBLING $^
+	@echo !==== ASSEMBLING KERNEL $^
 	mkdir -p $(@D)
 	$(ASSEMBLER) $(ASMFLAGS) $^ -f elf64 -o $@
 
 $(OBJDIR)/%_font.o: $(SRCDIR)/%.psf
-	@echo !==== COMPILING $^
+	@echo !==== COMPILING KERNEL $^
 	mkdir -p $(@D)
 	@cp $^ ./
 	$(LD) $(LDFLAGS) -r -b binary -o $@ font.psf
 	@rm font.psf
 
-$(KERNEL_ELF):
-	@echo !==== LINKING
+linkKern:
+	@echo !==== LINKING KERNEL
 	$(LD) $(LDFLAGS) -T $(LINK_SCRIPT) $(OBJS) -o $(KERNEL_ELF)
 	strip $(STRIPFLAGS) $(KERNEL_ELF)
 	readelf -hls $(KERNEL_ELF) > $(LOGDIR)/kernel.x86_64.txt
@@ -121,8 +121,8 @@ lib/libc/%.o: src/libc/%.s
 	$(ASSEMBLER) $^ -f elf64 -o $@
 
 
-user0: $(USR0_OBJ) $(USR0_ELF)
-user1: $(USR1_OBJ) $(USR1_ELF)
+user0: $(USR0_OBJ) linkUser0
+user1: $(USR1_OBJ) linkUser1
 
 lib/usr/%.o: usr/%.c
 	@echo !==== COMPILING USER $^
@@ -134,11 +134,11 @@ lib/usr/%.o: usr/%.s
 	mkdir -p $(@D)
 	$(ASSEMBLER) $^ -f elf64 -o $@
 
-$(USR0_ELF):
+linkUser0:
 	@echo !==== LINKING USER
 	$(LD) $(LDFLAGS) $(USR0_OBJ) $(LIBC_OBJ) -o $(USR0_ELF)
 
-$(USR1_ELF):
+linkUser1:
 	@echo !==== LINKING USER
 	$(LD) $(LDFLAGS) $(USR1_OBJ) $(LIBC_OBJ) -o $(USR1_ELF)
 
