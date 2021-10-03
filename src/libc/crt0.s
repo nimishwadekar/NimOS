@@ -23,7 +23,7 @@ _start:
     call main
 
     ; Exit syscall.
-    mov rdi, 0
+    mov rdi, rax
     mov rax, 0x23
     syscall
 
