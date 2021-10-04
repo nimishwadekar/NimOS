@@ -11,7 +11,6 @@
 #include <String.hpp>
 #include <Syscalls/Syscall.hpp>
 #include <Tasking/Process.hpp>
-#include <Usermode/ArgV.hpp>
 #include <Usermode/ELF.hpp>
 #include <Usermode/Usermode.hpp>
 
@@ -43,6 +42,14 @@ void KernelStart(void)
     VFSOpenFile("anotherDirectory/file", "r");
     /********* TEMPORARY *****************/
 
+    printf("\n\n\n");
+    printf("Initializing kernel .");
+    for(int i = 0; i < 3; i++)
+    {
+        PIT::Sleep(400);
+        printf(".");
+    }
+
     MainRenderer.SetBackgroundColour(USER_COLOUR_BACK);
     MainRenderer.SetForegroundColour(USER_COLOUR_FRONT);
     MainRenderer.ClearScreen();
@@ -53,7 +60,6 @@ void KernelStart(void)
         while(true);
     }
 
-    InitArgvBuffer();
 
     Process *root = PeekProcess();
     JumpToUserMode((void*) &SyscallEntry, root->StackTop, root->HeapBase, programEntry); // Does not return here.

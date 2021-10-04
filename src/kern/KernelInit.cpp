@@ -22,6 +22,7 @@
 #include <Storage/DiskInfo.hpp>
 #include <String.hpp>
 #include <Tasking/Process.hpp>
+#include <Usermode/ArgV.hpp>
 
 extern BOOTBOOT bootboot;
 extern unsigned char environment[4096];
@@ -86,6 +87,8 @@ void main()
     asm volatile("ltr %%ax" : : "r"((6 * 8) | 0));
 
     InitializeProcessManager();
+    InitArgvBuffer();
+    
     KernelStart();
 }
 

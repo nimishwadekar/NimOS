@@ -38,6 +38,7 @@ int64_t _syscall_5(int64_t syscall, int64_t arg0, int64_t arg1, int64_t arg2, in
 #define SYS_MMAP        0x41
 
 #define SYS_SLEEP       0x51
+#define SYS_TIME        0x52
 
 #define SYS_GETFORE     0x81
 #define SYS_SETFORE     0x82

@@ -46,6 +46,7 @@ extern "C" void SyscallHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_
         case SYS_MMAP: SysMMap(&regs); break;
 
         case SYS_SLEEP: SysSleep(&regs); break;
+        case SYS_TIME: SysTime(&regs); break;
 
         case SYS_GETFORE: SysGetFore(&regs); break;
         case SYS_SETFORE: SysSetFore(&regs); break;
