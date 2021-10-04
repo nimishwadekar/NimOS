@@ -1,6 +1,9 @@
 #include <DateTime.hpp>
 #include <IO/RTC.hpp>
 
+#include <Display/Renderer.hpp>
+char buf[32];
+
 namespace RTC
 {
     long long SecondsSinceBoot = 0;
@@ -15,6 +18,7 @@ namespace RTC
             SecondsSinceBoot += 1;
             SystemDateTime.TickSecond();
             half = false;
+            printf("%s\n", SystemDateTime.ToString(buf, 1));
         }
     }
 }

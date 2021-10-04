@@ -12,12 +12,26 @@ class DateTime
     int Minute;
     int Second;
 
-    int64_t SecondsSinceYear0;
     int TimeZoneOffsetHours;
     int TimeZoneOffsetMinutes;
 
     void Initialise(uint8_t datetime[8]);
+
+    void TickYear();
+    void TickMonth();
+    void TickDay();
+    void TickHour();
+    void TickMinute();
     void TickSecond();
+
+    void TickYearBack();
+    void TickMonthBack();
+    void TickDayBack();
+    void TickHourBack();
+    void TickMinuteBack();
+    void TickSecondBack();
+
+    bool IsYearLeap(int year);
 
     struct Hour12
     {

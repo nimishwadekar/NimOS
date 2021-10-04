@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <bootboot.h>
 #include <ACPI/ACPI.hpp>
+#include <DateTime.hpp>
 #include <Display/Framebuffer.hpp>
 #include <Display/Renderer.hpp>
 #include <Environment.hpp>
@@ -41,6 +42,9 @@ void main()
     gdtr.Size = sizeof(GDT) - 1;
     gdtr.PhysicalAddress = (uint64_t) &GlobalDescriptorTable;
     LoadGDT(&gdtr);
+    Environment.ParseEnvironemnt(environment);
+    //SystemDateTime.Initialise(bootboot.datetime);
+    InitializeInterrupts();
 
     #ifdef LOGGING
     if(InitializeSerialPort(SERIAL_COM1) == -1)
@@ -57,15 +61,7 @@ void main()
     PSF1 *font = (PSF1*) &_binary_font_psf_start;
     MainRenderer = Renderer(framebuffer, font, COLOUR_BLACK, COLOUR_WHITE);
     MainRenderer.ClearScreen();
-    InitializeInterrupts();
-    while(1);
-    Environment.ParseEnvironemnt(environment);
-
-    printf("Timezone: %s\nDatetime: ", Environment.Timezone);
-    printf("%x:%x:%x %x-%x-%x%x\n", bootboot.datetime[4], bootboot.datetime[5], bootboot.datetime[6], bootboot.datetime[3]
-        , bootboot.datetime[2], bootboot.datetime[0], bootboot.datetime[1]);
-
-    // CHECK TIME
+    SystemDateTime.Initialise(bootboot.datetime);
 
     while(1);
 
