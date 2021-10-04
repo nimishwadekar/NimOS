@@ -2,6 +2,7 @@
 #include <IO/Keyboard.hpp>
 #include <IO/PIT.hpp>
 #include <IO/Port.hpp>
+#include <IO/RTC.hpp>
 #include <Interrupts/Interrupts.hpp>
 
 #define _intr_ __attribute__((interrupt))
@@ -573,6 +574,7 @@ _intr_ static void IntHandler0x28(InterruptFrame *frame)
 {
     inb(0x71);
     PICEndOfInterrupt(8);
+    RTC::Tick();
 }
 
 _intr_ static void IntHandler0x29(InterruptFrame *frame)
