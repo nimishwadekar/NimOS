@@ -8,7 +8,4 @@ double fabs(double j);
 float fabsf(float j);
 long double fabsl(long double j);
 
-// Natural log.
-double log(double x);
-
 #endif
