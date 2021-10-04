@@ -3,6 +3,6 @@
     "initrd": { "type": "cpio", "gzip": true, "directory": "initrd" },
     "partitions": [
         { "type": "boot", "size": 16 },
-        { "type": "ext2", "size": 32, "name": "extPart", "directory": "disk/ext2dir" }
+        { "type": "ext2", "size": 32, "name": "Volume1", "directory": "disk/Volume1" }
     ]
 }

@@ -19,7 +19,7 @@ OS_IMG = $(BUILDDIR)/$(OS_NAME).img
 
 USRDIR = usr
 USROBJDIR = lib/usr
-USRELFDIR = disk/ext2dir/usr
+USRELFDIR = disk/Volume1/usr
 USER_ELF = $(USRELFDIR)/main.elf
 
 SRC = $(call rwildcard,$(SRCDIR),*.cpp)
@@ -97,13 +97,13 @@ LIBC_OBJ = $(patsubst src/libc/%.c, lib/libc/%.o, $(LIBC_CSRC))
 LIBC_OBJ += $(patsubst src/libc/%.s, lib/libc/%.o, $(LIBC_SSRC))
 LIBC_INC = src/libc/include
 
-USR0_SRC = usr/main.c
-USR0_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(USR0_SRC))
-USR0_ELF = $(USRELFDIR)/main.elf
+SHELL_SRC = usr/shell.c
+SHELL_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(SHELL_SRC))
+SHELL_ELF = $(USRELFDIR)/shell.elf
 
-USR1_SRC = usr/spawn.c
-USR1_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(USR1_SRC))
-USR1_ELF = $(USRELFDIR)/spawn.elf
+USR0_SRC = usr/program.c
+USR0_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(USR0_SRC))
+USR0_ELF = $(USRELFDIR)/program.elf
 
 ########################################################################################
 
@@ -121,8 +121,8 @@ lib/libc/%.o: src/libc/%.s
 	$(ASSEMBLER) $^ -f elf64 -o $@
 
 
+shell: $(SHELL_OBJ) linkShell
 user0: $(USR0_OBJ) linkUser0
-user1: $(USR1_OBJ) linkUser1
 
 lib/usr/%.o: usr/%.c
 	@echo !==== COMPILING USER $^
@@ -134,13 +134,13 @@ lib/usr/%.o: usr/%.s
 	mkdir -p $(@D)
 	$(ASSEMBLER) $^ -f elf64 -o $@
 
+linkShell:
+	@echo !==== LINKING USER
+	$(LD) $(LDFLAGS) $(SHELL_OBJ) $(LIBC_OBJ) -o $(SHELL_ELF)
+
 linkUser0:
 	@echo !==== LINKING USER
 	$(LD) $(LDFLAGS) $(USR0_OBJ) $(LIBC_OBJ) -o $(USR0_ELF)
-
-linkUser1:
-	@echo !==== LINKING USER
-	$(LD) $(LDFLAGS) $(USR1_OBJ) $(LIBC_OBJ) -o $(USR1_ELF)
 
 info:
 	$(info $$LIBC_OBJ is [${LIBC_OBJ}])

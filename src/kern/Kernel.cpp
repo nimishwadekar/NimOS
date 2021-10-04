@@ -19,7 +19,7 @@ void KernelStart(void)
 {
     printf("Kernel initialized.\n\n");
 
-    FILE *program = VFSOpenFile("usr/main.elf", "r");    
+    FILE *program = VFSOpenFile("usr/shell.elf", "r");
     uint8_t *programAddress = (uint8_t*) KernelHeap.Malloc(program->Length);
     if(VFSReadFile(program, programAddress, program->Length) != program->Length)
     {
@@ -36,11 +36,6 @@ void KernelStart(void)
     }
     VFSCloseFile(program);
     KernelHeap.Free(programAddress);
-
-    /********* TEMPORARY *****************/
-    VFSOpenFile("someOuterFile", "r");
-    VFSOpenFile("anotherDirectory/file", "r");
-    /********* TEMPORARY *****************/
 
     printf("\n\n\n");
     printf("Initializing kernel .");
