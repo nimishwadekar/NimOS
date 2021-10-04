@@ -2,10 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <graphics.h>
+#include <unistd.h>
 
 int main()
 {
-    for(int y = 200; y < 300; y++) drawline(200, y, 600, y, 0xFFFF);
+    for(int y = 200; y < 250; y++)
+    {
+        sleepms(100);
+        drawline(200, y, 600, y, 0xFFFF);
+    }
 
     printf("\n-------------\n");
     while(1);

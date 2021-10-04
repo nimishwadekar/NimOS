@@ -36,4 +36,6 @@ void exit(int status);
    __THROW.  */
 unsigned int sleep(unsigned int seconds);
 
+double sleepms(double milliseconds);
+
 #endif
