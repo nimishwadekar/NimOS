@@ -3,6 +3,7 @@
 #include <ACPI/ACPI.hpp>
 #include <Display/Framebuffer.hpp>
 #include <Display/Renderer.hpp>
+#include <Environment.hpp>
 #include <FS/VFS.hpp>
 #include <Fonts/PSF.hpp>
 #include <GDT.hpp>
@@ -18,6 +19,7 @@
 #include <Memory/Paging.hpp>
 #include <PCI/PCI.hpp>
 #include <Storage/DiskInfo.hpp>
+#include <String.hpp>
 #include <Tasking/Process.hpp>
 
 extern BOOTBOOT bootboot;
@@ -35,6 +37,12 @@ void SetupACPI(const uint64_t xsdtAddress);
 // Entry point into kernel, called by Bootloader.
 void main()
 {
+    GDTR gdtr;
+    gdtr.Size = sizeof(GDT) - 1;
+    gdtr.PhysicalAddress = (uint64_t) &GlobalDescriptorTable;
+    LoadGDT(&gdtr);
+    InitializeInterrupts();
+
     #ifdef LOGGING
     if(InitializeSerialPort(SERIAL_COM1) == -1)
     {
@@ -50,6 +58,15 @@ void main()
     PSF1 *font = (PSF1*) &_binary_font_psf_start;
     MainRenderer = Renderer(framebuffer, font, COLOUR_BLACK, COLOUR_WHITE);
     MainRenderer.ClearScreen();
+    Environment.ParseEnvironemnt(environment);
+
+    printf("Timezone: %s\nDatetime: ", Environment.Timezone);
+    printf("%x:%x:%x %x-%x-%x%x\n", bootboot.datetime[4], bootboot.datetime[5], bootboot.datetime[6], bootboot.datetime[3]
+        , bootboot.datetime[2], bootboot.datetime[0], bootboot.datetime[1]);
+
+    // CHECK TIME
+
+    while(1);
 
     MemoryMap memoryMap;
     memoryMap.Entries = (MemoryMapEntry*) (&bootboot.mmap);
@@ -57,31 +74,23 @@ void main()
     memoryMap.MemorySizeKB = memoryMap.Entries[memoryMap.EntryCount - 1].Address + MemoryMapEntry_Size(memoryMap.Entries[memoryMap.EntryCount - 1]);
     memoryMap.MemorySizeKB /= 1024;
 
-    // Load GDT
-    GDTR gdtr;
-    gdtr.Size = sizeof(GDT) - 1;
-    gdtr.PhysicalAddress = (uint64_t) &GlobalDescriptorTable;
-    LoadGDT(&gdtr);
-
     // Initialize Page Frame Allocator.
     FrameAllocator.Initialize(memoryMap);
 
     PageTable *pageTableL4;
     asm volatile("mov %%cr3, %%rax" : "=a"(pageTableL4) : );
+    printf("PML4: 0x%x\n", pageTableL4);
+
     PagingManager = PageTableManager(pageTableL4);
 
-    InitializeInterrupts();
     KernelHeap.InitializeHeap((void*) HEAP_ADDRESS, 16);
     SetupACPI(bootboot.arch.x86_64.acpi_ptr);
     PIT::SetDivisor(20000);
     DiskInformation.Initialize();
     VFSInitialize(&DiskInformation);
 
-    // Setup TSS.
-    uint64_t kernelRSP;
-    /* asm volatile("movq %%rsp, %0" : "=r"(kernelRSP));
-    TaskStateSegment.RSP[0] = kernelRSP; */
-    asm volatile("ltr %%ax" : : "r"((6 * 8) | 0)); // Load TSS entry offset in GDT.
+    // Load TSS entry offset in GDT.
+    asm volatile("ltr %%ax" : : "r"((6 * 8) | 0));
 
     InitializeProcessManager();
     KernelStart();

@@ -1,2 +1,3 @@
 screen=800x600
 kernel=sys/core
+timezone=+5:30
