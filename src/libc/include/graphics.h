@@ -62,9 +62,4 @@ Draws rectangle at (x, y) of width and height in colour argb.
 int drawrect(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int argb);
 
 
-/*
-Draws circle at (x, y) of radius in colour argb.
-*/
-int drawcircle(unsigned int x, unsigned int y, unsigned int radius, unsigned int argb);
-
 #endif

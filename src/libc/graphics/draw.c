@@ -20,9 +20,3 @@ int drawrect(unsigned int x, unsigned int y, unsigned int width, unsigned int he
     _syscall_5(SYS_DRAWR, x, y, width, height, argb);
     return 0;
 }
-
-
-int drawcircle(unsigned int x, unsigned int y, unsigned int radius, unsigned int argb)
-{
-
-}
