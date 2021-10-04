@@ -41,7 +41,6 @@ void main()
     gdtr.Size = sizeof(GDT) - 1;
     gdtr.PhysicalAddress = (uint64_t) &GlobalDescriptorTable;
     LoadGDT(&gdtr);
-    InitializeInterrupts();
 
     #ifdef LOGGING
     if(InitializeSerialPort(SERIAL_COM1) == -1)
@@ -58,6 +57,8 @@ void main()
     PSF1 *font = (PSF1*) &_binary_font_psf_start;
     MainRenderer = Renderer(framebuffer, font, COLOUR_BLACK, COLOUR_WHITE);
     MainRenderer.ClearScreen();
+    InitializeInterrupts();
+    while(1);
     Environment.ParseEnvironemnt(environment);
 
     printf("Timezone: %s\nDatetime: ", Environment.Timezone);

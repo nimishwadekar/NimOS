@@ -124,12 +124,11 @@ Exceptions = 0x8, 0xa, 0xb, 0xc, 0xd, 0x11, 0x1e
 */
 
 static void RemapPIC(void);
+static void EnableRTC(void);
 
 void InitializeInterrupts(void)
 {
-    RemapPIC();
-    PICUnmask(1); // Unmask Keyboard interrupt.
-    PICUnmask(0); // Unmask PIT interrupt.
+    asm volatile("cli");
 
     #pragma region HandlerInitialization
     InitializeIDTEntry(0x0, (uint64_t) IntHandler0x0);
@@ -185,6 +184,13 @@ void InitializeInterrupts(void)
     IDTRegister.Limit = 0x0FFF;
     IDTRegister.PhysicalAddress = (uint64_t) IDT;
     asm volatile("lidt %0" : : "m"(IDTRegister));
+
+    RemapPIC();
+    EnableRTC();
+    PICUnmask(2); // Unmask 2nd PIC.
+    PICUnmask(8); // Unmask RTC interrupt.
+    PICUnmask(0); // Unmask PIT interrupt.
+    PICUnmask(1); // Unmask Keyboard interrupt.
 
     asm volatile("sti");
 }
@@ -269,7 +275,10 @@ void PICMask(uint8_t interrupt)
 
 void PICEndOfInterrupt(const uint8_t interrupt)
 {
-    if(interrupt >= 8) outb(PIC2_COMMAND, PIC_EOI);
+    if(interrupt >= 8)
+    {
+        outb(PIC2_COMMAND, PIC_EOI);
+    }
     outb(PIC1_COMMAND, PIC_EOI);
 }
 
@@ -282,6 +291,18 @@ static void InitializeIDTEntry(const uint8_t interrupt, const uint64_t handler)
     entry.Selector = 0x08;
     entry.ZERO = 0;
     IDT[interrupt] = entry;
+}
+
+static void EnableRTC(void)
+{
+    outb(0x70, 0x8B); // Select reg 0xB and disable NMI.
+    //io_wait();
+    uint8_t regB = inb(0x71); // Read reg 0xB.
+    outb(0x70, 0x8B);
+    //io_wait();
+    outb(0x71, regB | 0x40); // Enable RTC interrupts.
+    //io_wait();
+    outb(0x70, 0x0C);
 }
 
 // Called by exception handlers to exit current process.
@@ -545,8 +566,8 @@ _intr_ static void IntHandler0x27(InterruptFrame *frame)
 
 _intr_ static void IntHandler0x28(InterruptFrame *frame)
 {
-    printf("%s\n", InterruptMessages[0x28]);
-	while(true);
+    inb(0x71);
+    PICEndOfInterrupt(8);
 }
 
 _intr_ static void IntHandler0x29(InterruptFrame *frame)
