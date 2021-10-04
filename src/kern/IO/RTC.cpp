@@ -8,6 +8,11 @@ namespace RTC
 {
     long long SecondsSinceBoot = 0;
 
+    void InitSystemTime(uint8_t datetime[8])
+    {
+        SystemDateTime.Initialise(datetime);
+    }
+
     void Tick()
     {
         static bool half = false;
@@ -18,7 +23,6 @@ namespace RTC
             SecondsSinceBoot += 1;
             SystemDateTime.TickSecond();
             half = false;
-            printf("%s\n", SystemDateTime.ToString(buf, 1));
         }
     }
 }

@@ -43,7 +43,6 @@ void main()
     gdtr.PhysicalAddress = (uint64_t) &GlobalDescriptorTable;
     LoadGDT(&gdtr);
     Environment.ParseEnvironemnt(environment);
-    //SystemDateTime.Initialise(bootboot.datetime);
     InitializeInterrupts();
 
     #ifdef LOGGING
@@ -61,9 +60,6 @@ void main()
     PSF1 *font = (PSF1*) &_binary_font_psf_start;
     MainRenderer = Renderer(framebuffer, font, COLOUR_BLACK, COLOUR_WHITE);
     MainRenderer.ClearScreen();
-    SystemDateTime.Initialise(bootboot.datetime);
-
-    while(1);
 
     MemoryMap memoryMap;
     memoryMap.Entries = (MemoryMapEntry*) (&bootboot.mmap);

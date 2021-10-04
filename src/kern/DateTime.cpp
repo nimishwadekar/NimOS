@@ -12,9 +12,10 @@ void DateTime::Initialise(uint8_t datetime[8])
         (datetime[1] >> 4) * 10 + (datetime[1] & 0x0F);
     Month = (datetime[2] >> 4) * 10 + (datetime[2] & 0x0F);
     Day = (datetime[3] >> 4) * 10 + (datetime[3] & 0x0F);
-    Hour = (datetime[4] >> 4) * 10 + (datetime[4] & 0x0F);
-    Minute = (datetime[5] >> 4) * 10 + (datetime[5] & 0x0F);
-    Second = (datetime[6] >> 4) * 10 + (datetime[6] & 0x0F);
+    Weekday = datetime[4] & 0x0F;
+    Hour = (datetime[5] >> 4) * 10 + (datetime[5] & 0x0F);
+    Minute = (datetime[6] >> 4) * 10 + (datetime[6] & 0x0F);
+    Second = (datetime[7] >> 4) * 10 + (datetime[7] & 0x0F);
 
     unsigned char *zone = (unsigned char*) Environment.Timezone;
     if(zone)
@@ -65,6 +66,9 @@ void DateTime::TickMonth()
 
 void DateTime::TickDay()
 {
+    Weekday++;
+    if(Weekday > 7) Weekday = 1;
+
     Day++;
     if(Day < 29) return;
 
@@ -123,6 +127,9 @@ void DateTime::TickMonthBack()
 
 void DateTime::TickDayBack()
 {
+    Weekday--;
+    if(Weekday < 1) Weekday = 7;
+
     Day--;
     if(Day > 0) return;
 
@@ -185,6 +192,9 @@ DateTime::Hour12 DateTime::Hour24ToHour12(int hour24)
 }
 
 
+static const char *WeekdayStr[8] = { nullptr, "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+static const char *MonthStr[13] = { nullptr, "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
 char *DateTime::ToString(char *buffer, int ampm)
 {
     char *buf = buffer;
@@ -195,7 +205,11 @@ char *DateTime::ToString(char *buffer, int ampm)
     buffer = ultona(Month, 10, 2, buffer) + 2;
     *(buffer++) = '-';
     buffer = ultona(Day, 10, 2, buffer) + 2;
+    *(buffer++) = ',';
     *(buffer++) = ' ';
+    buffer = strcpy(WeekdayStr[Weekday], buffer) + 3;
+    *(buffer++) = ' ';
+    
     buffer = ultona((ampm ? hr.Hour : Hour), 10, 2, buffer) + 2;
     *(buffer++) = ':';
     buffer = ultona(Minute, 10, 2, buffer) + 2;
