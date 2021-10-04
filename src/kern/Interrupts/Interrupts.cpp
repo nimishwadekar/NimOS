@@ -296,12 +296,17 @@ static void InitializeIDTEntry(const uint8_t interrupt, const uint64_t handler)
 static void EnableRTC(void)
 {
     outb(0x70, 0x8B); // Select reg 0xB and disable NMI.
-    //io_wait();
     uint8_t regB = inb(0x71); // Read reg 0xB.
     outb(0x70, 0x8B);
-    //io_wait();
     outb(0x71, regB | 0x40); // Enable RTC interrupts.
-    //io_wait();
+
+    // Change interrupt rate.
+    uint8_t rate = 0x0F; // 2 ticks per second.
+    outb(0x70, 0x8A);
+    uint8_t regA = inb(0x71);
+    outb(0x70, 0x8A);
+    outb(0x71, (regA & 0xF0) | rate);
+
     outb(0x70, 0x0C);
 }
 
