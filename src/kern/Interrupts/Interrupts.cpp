@@ -311,6 +311,7 @@ static void EnableRTC(void)
     outb(0x70, 0x0C);
 }
 
+
 // Called by exception handlers to exit current process.
 extern void ProcessException();
 
@@ -570,12 +571,46 @@ _intr_ static void IntHandler0x27(InterruptFrame *frame)
 	while(true);
 }
 
+
+static bool RTCTimeInitialised = false;
+static void ReadRTCTime(void)
+{
+    uint8_t datetime[8];
+    outb(0x70, 0x00); // Second
+    datetime[7] = inb(0x71);
+    outb(0x70, 0x02); // Minute
+    datetime[6] = inb(0x71);
+    outb(0x70, 0x04); // Hour
+    datetime[5] = inb(0x71);
+    outb(0x70, 0x06); // Weekday
+    datetime[4] = inb(0x71);
+    outb(0x70, 0x07); // Day
+    datetime[3] = inb(0x71);
+    outb(0x70, 0x08); // Month
+    datetime[2] = inb(0x71);
+    outb(0x70, 0x09); // Year
+    datetime[1] = inb(0x71);
+    outb(0x70, 0x32); // Century
+    datetime[0] = inb(0x71);
+
+    RTC::InitSystemTime(datetime);
+
+    RTCTimeInitialised = true;
+    outb(0x70, 0x0C);
+}
+
 _intr_ static void IntHandler0x28(InterruptFrame *frame)
 {
     inb(0x71);
     PICEndOfInterrupt(8);
+    if(!RTCTimeInitialised)
+    {
+        ReadRTCTime();
+        return;
+    }
     RTC::Tick();
 }
+
 
 _intr_ static void IntHandler0x29(InterruptFrame *frame)
 {
