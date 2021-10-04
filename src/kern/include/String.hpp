@@ -8,6 +8,8 @@ char *ultoa(const unsigned long n, int radix, char *buffer);
 // Unsigned long integer to string, length characters long.
 char *ultona(const unsigned long n, int radix, int length, char *buffer);
 
+int atoi(const unsigned char *a);
+
 // Formats the string.
 char *FormatString(char *buffer, const char *format, va_list args);
 

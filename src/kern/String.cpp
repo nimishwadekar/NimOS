@@ -47,6 +47,14 @@ char *ultona(const unsigned long n, int radix, int length, char *buffer)
     return buffer;
 }
 
+int atoi(const unsigned char *a)
+{
+    if(!*a) return 0;
+    int i = 0;
+    for( ; *a; a++) i = i * 10 + (*a - '0');
+    return i;
+}
+
 char *FormatString(char *buffer, const char *format, va_list args)
 {
     int fIndex = 0, bIndex = 0;
