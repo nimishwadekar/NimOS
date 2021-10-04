@@ -23,4 +23,4 @@ int strcmp(const char *a, const char *b);
 char *LiteralizeString(const char *string, char *buffer);
 
 // String tokenizer.
-char *strtok(char *str, const char *delim);
+unsigned char *strtok(unsigned char *str, const char *delim);

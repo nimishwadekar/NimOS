@@ -185,21 +185,21 @@ static int isdelim(int c, const char *delim)
     return 0;
 }
 
-static char *nextdelim(char *s, const char *delim)
+static unsigned char *nextdelim(unsigned char *s, const char *delim)
 {
     for(; *s && !isdelim(*s, delim); s++);
     return s; 
 }
 
-static char *nextnondelim(char *s, const char *delim)
+static unsigned char *nextnondelim(unsigned char *s, const char *delim)
 {
     for(; *s && isdelim(*s, delim); s++);
     return s; 
 }
 
-char *strtok(char *str, const char *delim)
+unsigned char *strtok(unsigned char *str, const char *delim)
 {
-    static char *s = nullptr;
+    static unsigned char *s = nullptr;
     if(str) 
     {
         s = str;
@@ -208,8 +208,8 @@ char *strtok(char *str, const char *delim)
     if(!s) return nullptr;
 
     if(!*s) return nullptr;
-    char *tok = s;
-    char *del = nextdelim(s, delim);
+    unsigned char *tok = s;
+    unsigned char *del = nextdelim(s, delim);
     s = nextnondelim(del, delim);
     *del = 0;
     return tok;
