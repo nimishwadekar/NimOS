@@ -73,17 +73,10 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
                 Cursor.Y -= 16;
                 Cursor.X = Buffer.Width - 8;
             }
-            for(int32_t y = Cursor.Y; y < Cursor.Y + 16; y++) for(int32_t x = Cursor.X; x < Cursor.X + 8; x++) PutPixel(x, y, BackGroundColour);
+            for(int32_t y = Cursor.Y; y < Cursor.Y + 16; y++) 
+                for(int32_t x = Cursor.X; x < Cursor.X + 8; x++) 
+                    PutPixel(x, y, BackGroundColour);
             break;
-        
-        /* case ' ':
-            Cursor.X += 8;
-            if(Cursor.X + 8 > Buffer.Width)
-            {
-                Cursor.X = 0;
-                Cursor.Y += 16;
-            }
-            break; */
 
         default: specialChar = false; break;
     }
@@ -113,7 +106,7 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
         }
     }
 
-    if(Cursor.Y >= Buffer.Height)
+    if(Cursor.Y + 32 >= Buffer.Height)
     {
         ScrollUp(16);
         Cursor.Y -= 16;
@@ -151,21 +144,27 @@ void Renderer::ClearScreen()
     for(int32_t y = 0; y < Buffer.Height; y++)
     {
         memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * y,
-            BackGroundColour, Buffer.PixelsPerScanLine);
+            BackGroundColour, Buffer.Width);
     }
     Cursor.X = Cursor.Y = 0;
 }
 
 void Renderer::ScrollUp(const int32_t pixels)
 {
-    for(int32_t y = 0; y < Buffer.Height - pixels; y++)
+    int32_t y;
+    for(y = 0; y < Buffer.Height - pixels; y++)
     {
          memcpy(Buffer.BaseAddress + Buffer.PixelsPerScanLine * (pixels + y), 
             Buffer.BaseAddress + Buffer.PixelsPerScanLine * y,
-            Buffer.PixelsPerScanLine << 2);
+            Buffer.Width << 2);
     }
-    memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * (Buffer.Height - pixels),
-        BackGroundColour, Buffer.PixelsPerScanLine * pixels);
+    /* memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * (Buffer.Height - pixels),
+        BackGroundColour, Buffer.PixelsPerScanLine * pixels); */
+
+    for( ; y < Buffer.Height; y++)
+    {
+        memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * y, BackGroundColour, Buffer.Width >> 2);
+    }
 }
 
 void Renderer::DrawCursor()

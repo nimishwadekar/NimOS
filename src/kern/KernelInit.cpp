@@ -57,7 +57,7 @@ void main()
     #endif
 
     Framebuffer framebuffer((uint32_t*) &fb, (Framebuffer::FBType) bootboot.fb_type, 
-        bootboot.fb_size, (int32_t) bootboot.fb_width, (int32_t) bootboot.fb_height, (int32_t) bootboot.fb_scanline / 4);
+        bootboot.fb_size, (int32_t) bootboot.fb_width, (int32_t) bootboot.fb_height, (int32_t) bootboot.fb_scanline >> 2);
     PSF1 *font = (PSF1*) &_binary_font_psf_start;
     MainRenderer = Renderer(framebuffer, font, COLOUR_BLACK, COLOUR_WHITE);
     MainRenderer.ClearScreen();
@@ -73,8 +73,6 @@ void main()
 
     PageTable *pageTableL4;
     asm volatile("mov %%cr3, %%rax" : "=a"(pageTableL4) : );
-    printf("PML4: 0x%x\n", pageTableL4);
-
     PagingManager = PageTableManager(pageTableL4);
 
     KernelHeap.InitializeHeap((void*) HEAP_ADDRESS, 16);
