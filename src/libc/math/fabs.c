@@ -6,13 +6,13 @@ double fabs(double j)
 }
 
 
-double fabsf(float j)
+float fabsf(float j)
 {
     return (j >= 0) ? j : -j;
 }
 
 
-double fabsl(long double j)
+long double fabsl(long double j)
 {
     return (j >= 0) ? j : -j;
 }

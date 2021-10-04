@@ -5,7 +5,10 @@
 Returns the absolute value of the floating point number.
 */
 double fabs(double j);
-double fabsf(float j);
-double fabsl(long double j);
+float fabsf(float j);
+long double fabsl(long double j);
+
+// Natural log.
+double log(double x);
 
 #endif
