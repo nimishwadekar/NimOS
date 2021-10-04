@@ -21,7 +21,7 @@ namespace PIT
         outb(0x40, (uint8_t) ((divisor & 0xFF00) >> 8));
     }
 
-    uint64_t GetFrequency(void)
+    inline uint64_t GetFrequency(void)
     {
         return BaseFrequency / Divisor;
     }
