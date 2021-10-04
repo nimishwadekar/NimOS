@@ -3,14 +3,13 @@
 #include <string.h>
 #include <graphics.h>
 #include <unistd.h>
+#include <time.h>
 
 int main()
 {
-    for(int y = 200; y < 250; y++)
-    {
-        sleepms(100);
-        drawline(200, y, 600, y, 0xFFFF);
-    }
+    time_t t = time(NULL);
+    struct tm tim = localtime(&t);
+    printf("%llu = %llu\n", t, mktime(&tim));
 
     printf("\n-------------\n");
     while(1);

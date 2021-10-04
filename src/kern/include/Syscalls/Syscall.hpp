@@ -126,7 +126,7 @@ struct Registers
 // Gets current time.
 // Return value: 64-bit integer
 // Bits from lsb:
-// 6 - seconds, 6 - minutes, 5 - hours, 3 - weekday, 5 - day, 4 - month, 35 - year (signed; positive - CE, negative - BCE)
+// 6 - seconds, 6 - minutes, 5 - hours, 3 - weekday, 5 - day, 4 - month, 32 - year (signed; positive - CE, negative - BCE)
 
 
 // Display System Calls
