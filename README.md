@@ -34,13 +34,11 @@
 - Minimal C Library
 - Single Tasking Processes
 - Inter-process Communication
-
----
-
-### Features currently being implemented:
 - Time
 
 ---
 
-### Features to be implemented:
+### Features currently being implemented:
 - Shell
+
+---
