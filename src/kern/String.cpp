@@ -175,3 +175,42 @@ char *LiteralizeString(const char *string, char *buffer)
     }
     return buffer;
 }
+
+
+// strtok()
+
+static int isdelim(int c, const char *delim)
+{
+    for( ; *delim; delim++) if(*delim == c) return 1;
+    return 0;
+}
+
+static char *nextdelim(char *s, const char *delim)
+{
+    for(; *s && !isdelim(*s, delim); s++);
+    return s; 
+}
+
+static char *nextnondelim(char *s, const char *delim)
+{
+    for(; *s && isdelim(*s, delim); s++);
+    return s; 
+}
+
+char *strtok(char *str, const char *delim)
+{
+    static char *s = nullptr;
+    if(str) 
+    {
+        s = str;
+        s = nextnondelim(s, delim);
+    }
+    if(!s) return nullptr;
+
+    if(!*s) return nullptr;
+    char *tok = s;
+    char *del = nextdelim(s, delim);
+    s = nextnondelim(del, delim);
+    *del = 0;
+    return tok;
+}

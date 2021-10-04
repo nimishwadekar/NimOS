@@ -21,3 +21,6 @@ int strcmp(const char *a, const char *b);
 
 // Replaces escape sequences with their literalized counterparts.
 char *LiteralizeString(const char *string, char *buffer);
+
+// String tokenizer.
+char *strtok(char *str, const char *delim);
