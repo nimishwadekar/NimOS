@@ -32,11 +32,9 @@ void SysInputN(Registers *regs)
     char *dst = (char*) regs->RDI;
     for( ; n > 0; n--, dst++)
     {
-        MainRenderer.DrawCursor();
         while(KBBuffer.IsEmpty());
 
         *dst = KBBuffer.Dequeue();
-        MainRenderer.EraseCursor();
         MainRenderer.PutChar(*dst);
     }
     regs->RAX = n;
@@ -49,11 +47,9 @@ void SysInput(Registers *regs)
     uint64_t n = 0;
     do
     {
-        MainRenderer.DrawCursor();
         while(KBBuffer.IsEmpty());
 
         *dst = KBBuffer.Dequeue();
-        MainRenderer.EraseCursor();
         MainRenderer.PutChar(*dst);
         n += 1;
     } while(*(dst++) != '\n');
