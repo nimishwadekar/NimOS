@@ -20,8 +20,8 @@ struct PSF2
     uint32_t Flags;
     uint32_t GlyphCount;
     uint32_t BytesPerGlyph;
-    uint32_t Height;
-    uint32_t Width;
+    int32_t Height;
+    int32_t Width;
 
     // The first byte of the glyphs array.
     uint8_t Glyphs;

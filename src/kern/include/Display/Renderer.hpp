@@ -27,11 +27,13 @@ class Renderer
     public:
     Framebuffer Buffer;
     Point Cursor;
-    PSF1 *Font; // The PSF1 font used to print strings.
+    PSF2 *Font; // The PSF1 font used to print strings.
+    int32_t FontWidth;
+    int32_t FontHeight;
     uint32_t ForegroundColour;
     uint32_t BackGroundColour;
 
-    Renderer(Framebuffer framebuffer, PSF1 *font, uint32_t foregroundColour, uint32_t backgroundColour);
+    Renderer(Framebuffer framebuffer, PSF2 *font, uint32_t foregroundColour, uint32_t backgroundColour);
     void Printf(const char *format, ...);
     void PrintErrorf(const char *format, ...);
     void PutChar(const int32_t xOffset, const int32_t yOffset, const char character);
