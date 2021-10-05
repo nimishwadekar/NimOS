@@ -42,6 +42,9 @@ class Renderer
     void SetCursor(const int32_t xOffset, const int32_t yOffset);
     void ClearScreen();
     void ScrollUp(const int32_t pixels);
+    // Top left - inclusive, Bottom right - exclusive
+    void LockArea(Point topLeft, Point bottomRight);
+    void UnlockArea();
     void DrawCursor();
     void EraseCursor();
 };

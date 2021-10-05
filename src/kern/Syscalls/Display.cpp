@@ -111,3 +111,28 @@ void SysDrawR(Registers *regs)
         MainRenderer.PutPixel(x1 + width - 1, y, colour);
     }
 }
+
+
+void SysLockScr(Registers *regs)
+{
+    int32_t x1 = (int32_t) regs->RDI;
+    int32_t y1 = (int32_t) regs->RSI;
+    int32_t x2 = (int32_t) regs->RDX;
+    int32_t y2 = (int32_t) regs->R10;
+
+    if(x1 < 0 || x1 >= MainRenderer.Buffer.Width || y1 < 0 || y1 >= MainRenderer.Buffer.Height ||
+        x2 <= 0 || x2 > MainRenderer.Buffer.Width || y2 <= 0 || y2 > MainRenderer.Buffer.Height)
+    {
+        regs->RAX = -1;
+        return;
+    }
+
+    MainRenderer.LockArea({x1, y1}, {x2, y2});
+    regs->RAX = 0;
+}
+
+
+void SysUnlockScr(Registers *regs)
+{
+    MainRenderer.UnlockArea();
+}

@@ -10,6 +10,14 @@ Renderer::Renderer(Framebuffer framebuffer, PSF1 *font, uint32_t foregroundColou
     Cursor = {0, 0};
 }
 
+static bool IsLocked = false;
+static Point LockedTopLeft, LockedBottomRight;
+
+static inline bool InLock(Point p)
+{
+    return p.X >= LockedTopLeft.X && p.X < LockedBottomRight.X && p.Y >= LockedTopLeft.Y && p.Y < LockedBottomRight.Y;
+}
+
 char FormattedStringBuffer[200];
 void Renderer::Printf(const char *format, ...)
 {
@@ -147,16 +155,22 @@ void Renderer::ClearScreen()
             BackGroundColour, Buffer.Width);
     }
     Cursor.X = Cursor.Y = 0;
+    IsLocked = false;
 }
 
 void Renderer::ScrollUp(const int32_t pixels)
 {
-    int32_t y;
+    int32_t x, y;
+    uint32_t *to, *from;
     for(y = 0; y < Buffer.Height - pixels; y++)
     {
-         memcpy(Buffer.BaseAddress + Buffer.PixelsPerScanLine * (pixels + y), 
-            Buffer.BaseAddress + Buffer.PixelsPerScanLine * y,
-            Buffer.Width << 2);
+        from = Buffer.BaseAddress + Buffer.PixelsPerScanLine * (pixels + y);
+        to = Buffer.BaseAddress + Buffer.PixelsPerScanLine * y;
+        for(x = 0; x < Buffer.Width; x++)
+        {
+            if(IsLocked && InLock({x, y})) continue;
+            *(to + x) = *(from + x);
+        }
     }
     /* memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * (Buffer.Height - pixels),
         BackGroundColour, Buffer.PixelsPerScanLine * pixels); */
@@ -164,7 +178,25 @@ void Renderer::ScrollUp(const int32_t pixels)
     for( ; y < Buffer.Height; y++)
     {
         memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * y, BackGroundColour, Buffer.Width >> 2);
+        to = Buffer.BaseAddress + Buffer.PixelsPerScanLine * y;
+        for(x = 0; x < Buffer.Width; x++)
+        {
+            if(IsLocked && InLock({x, y})) continue;
+            *(to + x) = BackGroundColour;
+        }
     }
+}
+
+void Renderer::LockArea(Point topLeft, Point bottomRight)
+{
+    IsLocked = true;
+    LockedTopLeft = topLeft;
+    LockedBottomRight = bottomRight;
+}
+
+void Renderer::UnlockArea()
+{
+    IsLocked = false;
 }
 
 void Renderer::DrawCursor()

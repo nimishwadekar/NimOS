@@ -51,3 +51,15 @@ int setcrsrpos(unsigned int x, unsigned int y)
     _syscall_2(SYS_SETCRSR, x, y);
     return 0;
 }
+
+
+int lockscr(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2)
+{
+    return _syscall_4(SYS_LOCKSCR, x1, y1, x2, y2);
+}
+
+
+void unlockscr(void)
+{
+    _syscall_0(SYS_UNLOCKSCR);
+}

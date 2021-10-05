@@ -181,3 +181,13 @@ struct Registers
 // rdx - width
 // r10 - height
 // r8 - colour
+
+#define SYS_LOCKSCR     0x8B
+// Locks a rectangular portion of screen in place.
+// rdi - top left x
+// rsi - top left y
+// rdx - bottom right x
+// r10 - bottom right y
+
+#define SYS_UNLOCKSCR   0x8C
+// Unlocks locked portion.

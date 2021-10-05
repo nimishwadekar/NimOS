@@ -58,6 +58,8 @@ extern "C" void SyscallHandler(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_
         case SYS_DRAWP: SysDrawP(&regs); break;
         case SYS_DRAWL: SysDrawL(&regs); break;
         case SYS_DRAWR: SysDrawR(&regs); break;
+        case SYS_LOCKSCR: SysLockScr(&regs); break;
+        case SYS_UNLOCKSCR: SysUnlockScr(&regs); break;
 
         default: regs.RAX = -1; // Invalid system call.
     }
