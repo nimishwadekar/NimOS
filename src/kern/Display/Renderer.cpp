@@ -95,18 +95,15 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
     {
         uint8_t *glyphPtr = &Font->Glyphs + character * Font->BytesPerGlyph;
         uint8_t bytesPerLine = (FontWidth + 7) >> 3;
-        //uint32_t line = 0x80 << ((FontWidth >> 3) << 3);
         uint32_t shift;
         for(int32_t y = yOffset; y < yOffset + FontHeight; y++)
         {
             for(int32_t x = xOffset; x < xOffset + FontWidth; x++)
             {
-                //PutPixel(x, y, BackGroundColour); // To erase an earlier pixel.
                 *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = BackGroundColour;
                 shift = x - xOffset;
                 if((glyphPtr[shift >> 3] & (0b10000000 >> (shift & 0b111))))
                 {
-                    //PutPixel(x, y, ForegroundColour);
                     *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = ForegroundColour;
                 }
             }
@@ -180,8 +177,6 @@ void Renderer::ScrollUp(const int32_t pixels)
             *(to + x) = *(from + x);
         }
     }
-    /* memset32(Buffer.BaseAddress + Buffer.PixelsPerScanLine * (Buffer.Height - pixels),
-        BackGroundColour, Buffer.PixelsPerScanLine * pixels); */
 
     for( ; y < Buffer.Height; y++)
     {
@@ -213,7 +208,7 @@ void Renderer::DrawCursor()
     {
         for(int32_t x = Cursor.X; x < Cursor.X + FontWidth; x++)
         {
-            PutPixel(x, y, ForegroundColour);
+            *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = ForegroundColour;
         }
     }
 }
@@ -224,7 +219,7 @@ void Renderer::EraseCursor()
     {
         for(int32_t x = Cursor.X; x < Cursor.X + FontWidth; x++)
         {
-            PutPixel(x, y, BackGroundColour);
+            *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = BackGroundColour;
         }
     }
 }
