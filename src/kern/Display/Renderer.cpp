@@ -83,6 +83,8 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
                 Cursor.Y -= FontHeight;
                 Cursor.X = Buffer.Width - FontWidth;
             }
+            if(IsLocked && InLock(Cursor)) break;
+
             for(int32_t y = Cursor.Y; y < Cursor.Y + FontHeight; y++) 
                 for(int32_t x = Cursor.X; x < Cursor.X + FontWidth; x++) 
                     *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = BackGroundColour;
@@ -96,18 +98,21 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
         uint8_t *glyphPtr = &Font->Glyphs + character * Font->BytesPerGlyph;
         uint8_t bytesPerLine = (FontWidth + 7) >> 3;
         uint32_t shift;
-        for(int32_t y = yOffset; y < yOffset + FontHeight; y++)
+        if(!IsLocked || !InLock(Cursor))
         {
-            for(int32_t x = xOffset; x < xOffset + FontWidth; x++)
+            for(int32_t y = yOffset; y < yOffset + FontHeight; y++)
             {
-                *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = BackGroundColour;
-                shift = x - xOffset;
-                if((glyphPtr[shift >> 3] & (0b10000000 >> (shift & 0b111))))
+                for(int32_t x = xOffset; x < xOffset + FontWidth; x++)
                 {
-                    *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = ForegroundColour;
+                    *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = BackGroundColour;
+                    shift = x - xOffset;
+                    if((glyphPtr[shift >> 3] & (0b10000000 >> (shift & 0b111))))
+                    {
+                        *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = ForegroundColour;
+                    }
                 }
+                glyphPtr += bytesPerLine;
             }
-            glyphPtr += bytesPerLine;
         }
 
         Cursor.X = xOffset + FontWidth;
@@ -133,6 +138,8 @@ void Renderer::PutChar(const char character)
 
 void Renderer::PutPixel(const int32_t xOffset, const int32_t yOffset, const uint32_t colour)
 {
+    if(IsLocked && InLock({xOffset, yOffset})) return;
+    
     *(Buffer.BaseAddress + (yOffset * Buffer.PixelsPerScanLine) + xOffset) = colour;
 }
 
@@ -204,6 +211,8 @@ void Renderer::UnlockArea()
 
 void Renderer::DrawCursor()
 {
+    if(IsLocked && InLock(Cursor)) return;
+
     for(int32_t y = Cursor.Y + FontHeight - CURSOR_THICKNESS; y < Cursor.Y + FontHeight; y++)
     {
         for(int32_t x = Cursor.X; x < Cursor.X + FontWidth; x++)
@@ -215,6 +224,8 @@ void Renderer::DrawCursor()
 
 void Renderer::EraseCursor()
 {
+    if(IsLocked && InLock(Cursor)) return;
+
     for(int32_t y = Cursor.Y + FontHeight - CURSOR_THICKNESS; y < Cursor.Y + FontHeight; y++)
     {
         for(int32_t x = Cursor.X; x < Cursor.X + FontWidth; x++)

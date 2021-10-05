@@ -44,7 +44,11 @@ class Renderer
     void SetCursor(const int32_t xOffset, const int32_t yOffset);
     void ClearScreen();
     void ScrollUp(const int32_t pixels);
-    // Top left - inclusive, Bottom right - exclusive
+    /* 
+    Locks an area of the screen in place.
+    Renders are not displayed in locked areas.
+    Top left - inclusive, Bottom right - exclusive.
+    */
     void LockArea(Point topLeft, Point bottomRight);
     void UnlockArea();
     void DrawCursor();
