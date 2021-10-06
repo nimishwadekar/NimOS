@@ -27,18 +27,6 @@ void SetupFileSystem(Partition *partition, uint8_t device)
             name = "EFI SYS ";
             break;
 
-        case PartitionType::FAT:
-        {
-            name = "FAT     ";
-            /* FAT::FATSystem *fat = new FAT::FATSystem(&partition->Entry);
-            newFS->FS = fat;
-            newFS->Open = FAT::Open;
-            newFS->Close = FAT::Close;
-            newFS->Read = FAT::Read;
-            newFS->Write = FAT::Write; */
-            break;
-        }
-
         case PartitionType::EXT2:
         {
             name = "EXT2    ";
