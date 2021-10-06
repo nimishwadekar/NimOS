@@ -151,7 +151,7 @@ static int _vascanf(const char *buffer, const char *format, va_list args)
                 else
                 {
                     unsigned int *d = va_arg(args, unsigned int*);
-                    *d = (int) strtoul(buffer + bIndex, &endptr, 10);
+                    *d = (unsigned int) strtoul(buffer + bIndex, &endptr, 10);
                     bIndex += endptr - (buffer + bIndex);
                 }
                 fIndex++;
@@ -176,7 +176,7 @@ static int _vascanf(const char *buffer, const char *format, va_list args)
                 else
                 {
                     unsigned int *d = va_arg(args, unsigned int*);
-                    *d = (int) strtoul(buffer + bIndex, &endptr, 8);
+                    *d = (unsigned int) strtoul(buffer + bIndex, &endptr, 8);
                     bIndex += endptr - (buffer + bIndex);
                 }
                 fIndex++;
@@ -202,7 +202,7 @@ static int _vascanf(const char *buffer, const char *format, va_list args)
                 else
                 {
                     unsigned int *d = va_arg(args, unsigned int*);
-                    *d = (int) strtoul(buffer + bIndex, &endptr, 16);
+                    *d = (unsigned int) strtoul(buffer + bIndex, &endptr, 16);
                     bIndex += endptr - (buffer + bIndex);
                 }
                 fIndex++;
@@ -215,9 +215,24 @@ static int _vascanf(const char *buffer, const char *format, va_list args)
             case 'G':
             case 'g':
             {
-                float *d = va_arg(args, float*);
-                strtof(buffer + bIndex, &endptr);
-                bIndex += endptr - (buffer + bIndex);
+                if(llmod)
+                {
+                    long double *d = va_arg(args, long double*);
+                    *d = strtold(buffer + bIndex, &endptr);
+                    bIndex += endptr - (buffer + bIndex);
+                }
+                else if(lmod)
+                {
+                    double *d = va_arg(args, double*);
+                    *d = strtod(buffer + bIndex, &endptr);
+                    bIndex += endptr - (buffer + bIndex);
+                }
+                else
+                {
+                    float *d = va_arg(args, float*);
+                    *d = strtof(buffer + bIndex, &endptr);
+                    bIndex += endptr - (buffer + bIndex);
+                }
                 fIndex++;
             }
             entries++;
