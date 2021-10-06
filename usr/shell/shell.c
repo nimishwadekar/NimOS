@@ -24,6 +24,7 @@ int main()
         {
             drawCursor(crsrpos = getcrsrpos());
             c = getchar();
+            if(scrscrolled()) crsrpos.y -= FONT_HEIGHT; // Erase cursor at correct position if screen has scrolled.
             eraseCursor(crsrpos);
             
             if(c == '\n')
