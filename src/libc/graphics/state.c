@@ -40,8 +40,8 @@ crsr_pos_t getcrsrpos(void)
 {
     uint64_t pos = (uint64_t) _syscall_0(SYS_GETCRSR);
     crsr_pos_t ret;
-    ret.x = (unsigned int) (pos >> 32);
-    ret.y = (unsigned int) pos;
+    ret.x = (int) (pos >> 32);
+    ret.y = (int) pos;
     return ret;
 }
 

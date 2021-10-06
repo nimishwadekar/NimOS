@@ -9,8 +9,8 @@ typedef struct _screen_res
 
 typedef struct _crsr_pos
 {
-    unsigned int x;
-    unsigned int y;
+    int x;
+    int y;
 } crsr_pos_t;
 
 typedef int pid_t;
