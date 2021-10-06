@@ -38,11 +38,3 @@ void eraseCursor(crsr_pos_t pos)
 {
     drawline(pos.x, pos.y + FONT_HEIGHT - 1, pos.x + FONT_WIDTH - 1, pos.y + FONT_HEIGHT - 1, background);
 }
-
-
-crsr_pos_t getCursorBack(char cur)
-{
-    putchar('\b');
-    crsr_pos_t pos = getcrsrpos();
-    putchar(cur);
-}

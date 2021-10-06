@@ -14,6 +14,4 @@ void printLogo(void);
 void drawCursor(crsr_pos_t pos);
 void eraseCursor(crsr_pos_t pos);
 
-crsr_pos_t getCursorBack(char cur);
-
 #endif
