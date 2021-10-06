@@ -52,5 +52,6 @@ int64_t _syscall_5(int64_t syscall, int64_t arg0, int64_t arg1, int64_t arg2, in
 #define SYS_DRAWR       0x8A
 #define SYS_LOCKSCR     0x8B
 #define SYS_UNLOCKSCR   0x8C
+#define SYS_SCRSCROLLED 0x8D
 
 #endif

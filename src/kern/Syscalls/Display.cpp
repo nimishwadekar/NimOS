@@ -136,3 +136,10 @@ void SysUnlockScr(Registers *regs)
 {
     MainRenderer.UnlockArea();
 }
+
+
+void SysScrScrolled(Registers *regs)
+{
+    if(MainRenderer.Scrolled) regs->RAX = 1;
+    else regs->RAX = 0;
+}

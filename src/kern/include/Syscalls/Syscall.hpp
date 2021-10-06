@@ -191,3 +191,6 @@ struct Registers
 
 #define SYS_UNLOCKSCR   0x8C
 // Unlocks locked portion.
+
+#define SYS_SCRSCROLLED    0x8D
+// Checks if screen scrolled during the last character output.

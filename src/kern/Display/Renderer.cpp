@@ -5,7 +5,7 @@
 #include <String.hpp>
 
 Renderer::Renderer(Framebuffer framebuffer, PSF2 *font, uint32_t foregroundColour, uint32_t backgroundColour) :
-    Buffer(framebuffer), Font(font), ForegroundColour(foregroundColour), BackGroundColour(backgroundColour)
+    Buffer(framebuffer), Font(font), ForegroundColour(foregroundColour), BackGroundColour(backgroundColour), Scrolled(false)
 {
     Cursor = {0, 0};
     FontWidth = font->Width;
@@ -124,10 +124,12 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
         }
     }
 
+    Scrolled = false;
     if(Cursor.Y + 2 * FontHeight >= Buffer.Height)
     {
         ScrollUp(FontHeight);
         Cursor.Y -= FontHeight;
+        Scrolled = true;
     }
 }
 

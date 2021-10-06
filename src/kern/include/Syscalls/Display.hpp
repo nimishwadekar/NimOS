@@ -14,3 +14,4 @@ void SysDrawL(Registers *regs);
 void SysDrawR(Registers *regs);
 void SysLockScr(Registers *regs);
 void SysUnlockScr(Registers *regs);
+void SysScrScrolled(Registers *regs);

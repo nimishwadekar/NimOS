@@ -32,6 +32,7 @@ class Renderer
     int32_t FontHeight;
     uint32_t ForegroundColour;
     uint32_t BackGroundColour;
+    bool Scrolled;
 
     Renderer(Framebuffer framebuffer, PSF2 *font, uint32_t foregroundColour, uint32_t backgroundColour);
     void Printf(const char *format, ...);
