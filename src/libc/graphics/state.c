@@ -53,6 +53,12 @@ int setcrsrpos(unsigned int x, unsigned int y)
 }
 
 
+int scrscrolled(void)
+{
+    return (int) _syscall_0(SYS_SCRSCROLLED);
+}
+
+
 int lockscr(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2)
 {
     return _syscall_4(SYS_LOCKSCR, x1, y1, x2, y2);

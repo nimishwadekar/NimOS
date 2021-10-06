@@ -3,6 +3,9 @@
 
 #include <sys/types.h>
 
+#define FONT_WIDTH  10
+#define FONT_HEIGHT 20
+
 /*
 Get foreground colour (ARGB).
 */
@@ -44,6 +47,26 @@ Set cursor position.
 */
 int setcrsrpos(unsigned int x, unsigned int y);
 
+
+/*
+Checks if screen scrolled during the last character output.
+*/
+int scrscrolled(void);
+
+
+/*
+Locks a rectangular portion of the screen with left diagonal ends at (x1,y1) and (x2,y2).
+*/
+int lockscr(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
+
+
+/*
+Unlocks locked portion of screen.
+*/
+void unlockscr(void);
+
+
+
 /*
 Draws pixel at (x, y) in colour argb.
 */
@@ -60,16 +83,6 @@ int drawline(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2,
 Draws rectangle at (x, y) of width and height in colour argb.
 */
 int drawrect(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int argb);
-
-/*
-Locks a rectangular portion of the screen with left diagonal ends at (x1,y1) and (x2,y2).
-*/
-int lockscr(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
-
-/*
-Unlocks locked portion of screen.
-*/
-void unlockscr(void);
 
 
 #endif
