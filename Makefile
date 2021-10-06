@@ -97,7 +97,7 @@ LIBC_OBJ = $(patsubst src/libc/%.c, lib/libc/%.o, $(LIBC_CSRC))
 LIBC_OBJ += $(patsubst src/libc/%.s, lib/libc/%.o, $(LIBC_SSRC))
 LIBC_INC = src/libc/include
 
-SHELL_SRC = usr/shell/shell.c
+SHELL_SRC = usr/shell/shell.c usr/shell/ui.c
 SHELL_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(SHELL_SRC))
 SHELL_ELF = $(USRELFDIR)/shell.elf
 
