@@ -176,7 +176,7 @@ void runCommand(char *cmd)
 
             time_t t = time(NULL);
             struct tm st = localtime(&t);
-            printf("%d:%d:%d  %s, %d %s, %d\n", st.tm_hour, st.tm_min, st.tm_sec, 
+            printf("%2d:%2d:%2d  %s, %2d %s, %4d\n", st.tm_hour, st.tm_min, st.tm_sec, 
                 time_wday_str(&t, time_wdayBuf, 3), st.tm_mday, time_mon_str(&t, time_monBuf, 3), st.tm_year);
         }
         break;
