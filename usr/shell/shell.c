@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <graphics.h>
-#include <unistd.h>
+#include "command.h"
 #include "ui.h"
 
 #define MAX_BUF_SIZE 255
@@ -15,6 +15,7 @@ int main()
 
     char c;
     char *textbufptr;
+    char *cmdtok;
     crsr_pos_t crsrpos;
     while(1)
     {
@@ -51,7 +52,7 @@ int main()
 
         if(textbufptr == textbuf) continue;
 
-        printf("%s: command not found\n", textbuf);
+        runCommand(textbuf);        
     }
     
     while(1);
