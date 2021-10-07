@@ -19,7 +19,7 @@ OS_IMG = $(BUILDDIR)/$(OS_NAME).img
 
 USRDIR = usr
 USROBJDIR = lib/usr
-USRELFDIR = disk/Volume1/usr
+USRELFDIR = disk/Volume1
 USER_ELF = $(USRELFDIR)/main.elf
 
 SRC = $(call rwildcard,$(SRCDIR),*.cpp)
@@ -91,6 +91,8 @@ clean:
 #############                           User files                         #############
 ########################################################################################
 
+DISK_DIR = disk/Volume1
+
 LIBC_CSRC = $(call rwildcard,src/libc,*.c)
 LIBC_SSRC = $(call rwildcard,src/libc,*.s)
 LIBC_OBJ = $(patsubst src/libc/%.c, lib/libc/%.o, $(LIBC_CSRC))
@@ -99,11 +101,11 @@ LIBC_INC = src/libc/include
 
 SHELL_SRC = usr/shell/shell.c usr/shell/ui.c usr/shell/command.c
 SHELL_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(SHELL_SRC))
-SHELL_ELF = $(USRELFDIR)/shell.elf
+SHELL_ELF = $(USRELFDIR)/usr/shell.elf
 
 USR0_SRC = usr/program.c
 USR0_OBJ = $(patsubst usr/%.c, lib/usr/%.o, $(USR0_SRC))
-USR0_ELF = $(USRELFDIR)/program.elf
+USR0_ELF = $(USRELFDIR)/program
 
 ########################################################################################
 
