@@ -124,13 +124,38 @@ void KeyboardBuffer::RegisterKeyPress(const uint8_t scanCode)
     {
         extern void PICEndOfInterrupt(const uint8_t interrupt);
         PICEndOfInterrupt(1);
-        
+
         KillProcess();
     }
 
-    if(IsModifierSet(SpecialKeys::LSHIFT) || IsModifierSet(SpecialKeys::RSHIFT)) // Add all other shift-keys
+    if(IsModifierSet(SpecialKeys::LSHIFT) || IsModifierSet(SpecialKeys::RSHIFT))
     {
-        input = toUpper(input);
+        if(input >= 'a' && input <= 'z') input = toUpper(input);
+        else switch(input)
+        {
+            case '1': input = '!'; break;
+            case '2': input = '@'; break;
+            case '3': input = '#'; break;
+            case '4': input = '$'; break;
+            case '5': input = '%'; break;
+            case '6': input = '^'; break;
+            case '7': input = '&'; break;
+            case '8': input = '*'; break;
+            case '9': input = '('; break;
+            case '0': input = ')'; break;
+
+            case '-': input = '_'; break;
+            case '=': input = '+'; break;
+            case '[': input = '{'; break;
+            case ']': input = '}'; break;
+            case '\\': input = '|'; break;
+            case ';': input = ':'; break;
+            case '\'': input = '\"'; break;
+            case ',': input = '<'; break;
+            case '.': input = '>'; break;
+            case '/': input = '?'; break;
+            case '`': input = '~'; break;
+        }
     }
 
     Buffer[Right] = input;
