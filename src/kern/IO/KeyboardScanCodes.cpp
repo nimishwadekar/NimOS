@@ -27,11 +27,11 @@ namespace QWERTYKeyboard
 
          0 ,  0 ,  0 ,  0 , // F2, F3, F4, F5
          0 ,  0 ,  0 ,  0 , // F6, F7, F8, F9
-         0 ,  0 ,  0 , '7', // F10, Num Lock, Scroll Lock, Keypad 7
-        '8', '9', '-', '4', // All keypad
+         0 ,  0 ,  0 ,  0 , // F10, Num Lock, Scroll Lock, Keypad 7
+         0 ,  0 ,  0 ,  0 , // All keypad
 
-        '5', '6', '+', '1', // All keypad
-        '2', '3', '0', '.', // All keypad
+         0 ,  0 ,  0 ,  0 , // All keypad
+         0 ,  0 ,  0 ,  0 , // All keypad
          0 ,  0 ,  0 ,  0 , // Null, Null, Null, F11
          0                  // F12
     };
