@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <graphics.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,8 +14,45 @@ int scanf(const char *format, ...)
 {
     char c;
     int i = 0;
-    while(i < BUFSIZ && (c = getchar()) != '\n') stdin_buffer[i++] = c;
-    stdin_buffer[i] = 0;
+    crsr_pos_t crsrpos, crsrpos2;
+    char *bufptr = stdin_buffer;
+    while(1)
+    {
+        drawCursor(crsrpos = getcrsrpos());
+        c = getchar();
+        if(scrscrolled()) crsrpos.y -= FONT_HEIGHT;
+        eraseCursor(crsrpos);
+        
+        if(c == '\n')
+        {
+            *bufptr = 0;
+            break;
+        }
+
+        if(c == '\b')
+        {
+            if(bufptr > stdin_buffer)
+            {
+                crsrpos = moveCursorBack(crsrpos);
+                crsrpos2 = crsrpos;
+                setcrsrpos(crsrpos.x, crsrpos.y);
+                putchar(' ');
+                setcrsrpos(crsrpos2.x, crsrpos2.y);
+                *(--bufptr) = 0;
+            }
+            continue;
+        }
+        
+        if(bufptr - stdin_buffer >= BUFSIZ)
+        {
+            setcrsrpos(crsrpos.x, crsrpos.y);
+            putchar(' ');
+            setcrsrpos(crsrpos.x, crsrpos.y);
+            continue;
+        }
+
+        *(bufptr++) = c;
+    }
 
 	va_list args;
     va_start(args, format);
@@ -60,7 +98,6 @@ static int _vascanf(const char *buffer, const char *format, va_list args)
     while(format[fIndex] && buffer[bIndex])
     {
         if(format[fIndex++] != '%') continue;
-        //while(buffer[bIndex] && isspace(buffer[bIndex])) bIndex++;
 
         if(format[fIndex] == 'l')
         {

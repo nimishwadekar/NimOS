@@ -3,7 +3,10 @@
 
 int main(int argc, char *argv[])
 {
-    printf("%8x\n", 0x7c00);
+    int a;
+    printf("Enter: ");
+    scanf("%d", &a);
+    printf("%d was entered\n", a);
 
     return 0;
 }
