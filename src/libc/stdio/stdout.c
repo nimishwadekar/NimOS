@@ -46,7 +46,7 @@ int putchar(int c)
 
 int _vaprintf(char *buffer, const char *format, va_list args, int stdoutput)
 {
-    int fIndex = 0, bIndex = 0, formatBegin;
+    int fIndex = 0, bIndex = 0, formatBegin, formatNumEnd;
     int lmod = 0, llmod = 0;
     while(format[fIndex] != 0)
     {
@@ -63,6 +63,7 @@ int _vaprintf(char *buffer, const char *format, va_list args, int stdoutput)
         formatBegin = fIndex++;
         if(format[fIndex] == '.') fIndex++;
         while(isdigit(format[fIndex])) fIndex++;
+        formatNumEnd = fIndex;
 
         if(format[fIndex] == 'l')
         {
@@ -89,20 +90,57 @@ int _vaprintf(char *buffer, const char *format, va_list args, int stdoutput)
 
             case 'd':
             {
+                int padding = 0;
                 if(llmod)
                 {
                     long long d = va_arg(args, long long);
-                    bIndex += strlen(lltoa(d, buffer + bIndex, 10));
+                    size_t len = strlen(lltoa(d, buffer + bIndex, 10));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        int neg = d < 0;
+                        if(neg) padding++;
+                        memmove(buffer + bIndex + padding + (neg ? 1 : 0), buffer + bIndex + (neg ? 1 : 0), len - (neg ? 1 : 0));
+                        memset(buffer + bIndex + (neg ? 1 : 0), '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 else if(lmod)
                 {
                     long d = va_arg(args, long);
-                    bIndex += strlen(ltoa(d, buffer + bIndex, 10));
+                    size_t len = strlen(ltoa(d, buffer + bIndex, 10));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        int neg = d < 0;
+                        if(neg) padding++;
+                        memmove(buffer + bIndex + padding + (neg ? 1 : 0), buffer + bIndex + (neg ? 1 : 0), len - (neg ? 1 : 0));
+                        memset(buffer + bIndex + (neg ? 1 : 0), '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 else
                 {
                     int d = va_arg(args, int);
-                    bIndex += strlen(itoa(d, buffer + bIndex, 10));
+                    size_t len = strlen(itoa(d, buffer + bIndex, 10));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        int neg = d < 0;
+                        if(neg) padding++;
+                        memmove(buffer + bIndex + padding + (neg ? 1 : 0), buffer + bIndex + (neg ? 1 : 0), len - (neg ? 1 : 0));
+                        memset(buffer + bIndex + (neg ? 1 : 0), '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 fIndex++;
             }
@@ -110,20 +148,51 @@ int _vaprintf(char *buffer, const char *format, va_list args, int stdoutput)
 
             case 'u':
             {
+                int padding = 0;
                 if(llmod)
                 {
                     unsigned long long d = va_arg(args, unsigned  long long);
-                    bIndex += strlen(ulltoa(d, buffer + bIndex, 10));
+                    size_t len = strlen(ulltoa(d, buffer + bIndex, 10));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        memmove(buffer + bIndex + padding, buffer + bIndex, len);
+                        memset(buffer + bIndex, '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 else if(lmod)
                 {
                     unsigned long d = va_arg(args, unsigned long);
-                    bIndex += strlen(ultoa(d, buffer + bIndex, 10));
+                    size_t len = strlen(ultoa(d, buffer + bIndex, 10));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        memmove(buffer + bIndex + padding, buffer + bIndex, len);
+                        memset(buffer + bIndex, '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 else
                 {
                     unsigned int d = va_arg(args, unsigned int);
-                    bIndex += strlen(utoa(d, buffer + bIndex, 10));
+                    size_t len = strlen(utoa(d, buffer + bIndex, 10));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        memmove(buffer + bIndex + padding, buffer + bIndex, len);
+                        memset(buffer + bIndex, '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 fIndex++;
             }
@@ -131,20 +200,51 @@ int _vaprintf(char *buffer, const char *format, va_list args, int stdoutput)
 
             case 'o':
             {
+                int padding = 0;
                 if(llmod)
                 {
                     unsigned long long d = va_arg(args, unsigned  long long);
-                    bIndex += strlen(ulltoa(d, buffer + bIndex, 8));
+                    size_t len = strlen(ulltoa(d, buffer + bIndex, 8));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        memmove(buffer + bIndex + padding, buffer + bIndex, len);
+                        memset(buffer + bIndex, '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 else if(lmod)
                 {
                     unsigned long d = va_arg(args, unsigned long);
-                    bIndex += strlen(ultoa(d, buffer + bIndex, 8));
+                    size_t len = strlen(ultoa(d, buffer + bIndex, 8));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        memmove(buffer + bIndex + padding, buffer + bIndex, len);
+                        memset(buffer + bIndex, '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 else
                 {
                     unsigned int d = va_arg(args, unsigned int);
-                    bIndex += strlen(utoa(d, buffer + bIndex, 8));
+                    size_t len = strlen(utoa(d, buffer + bIndex, 8));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        memmove(buffer + bIndex + padding, buffer + bIndex, len);
+                        memset(buffer + bIndex, '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 fIndex++;
             }
@@ -153,20 +253,51 @@ int _vaprintf(char *buffer, const char *format, va_list args, int stdoutput)
             case 'X':
             case 'x':
             {
+                int padding = 0;
                 if(llmod)
                 {
                     unsigned long long d = va_arg(args, unsigned  long long);
-                    bIndex += strlen(ulltoa(d, buffer + bIndex, 16));
+                    size_t len = strlen(ulltoa(d, buffer + bIndex, 16));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        memmove(buffer + bIndex + padding, buffer + bIndex, len);
+                        memset(buffer + bIndex, '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 else if(lmod)
                 {
                     unsigned long d = va_arg(args, unsigned long);
-                    bIndex += strlen(ultoa(d, buffer + bIndex, 16));
+                    size_t len = strlen(ultoa(d, buffer + bIndex, 16));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        memmove(buffer + bIndex + padding, buffer + bIndex, len);
+                        memset(buffer + bIndex, '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 else
                 {
                     unsigned int d = va_arg(args, unsigned int);
-                    bIndex += strlen(utoa(d, buffer + bIndex, 16));
+                    size_t len = strlen(utoa(d, buffer + bIndex, 16));
+                    if(formatNumEnd != formatBegin + 1)
+                        padding = atoi(format + formatBegin + 1);
+                    if(len < padding)
+                    {
+                        padding -= len;
+                        memmove(buffer + bIndex + padding, buffer + bIndex, len);
+                        memset(buffer + bIndex, '0', padding);
+                        bIndex += padding;
+                    }
+                    bIndex += len;
                 }
                 fIndex++;
             }
