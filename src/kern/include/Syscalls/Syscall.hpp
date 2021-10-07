@@ -197,5 +197,6 @@ struct Registers
 
 
 // System Syscalls
+
 #define SYS_SHUTDOWN    0xA1
 // Shuts down the system. Only on QEMU.
