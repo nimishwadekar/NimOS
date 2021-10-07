@@ -16,7 +16,7 @@ int main()
     char c;
     char *textbufptr;
     char *cmdtok;
-    crsr_pos_t crsrpos;
+    crsr_pos_t crsrpos, crsrpos2;
     while(1)
     {
         setfg(SHELLTEXT_COLOUR);
@@ -38,14 +38,23 @@ int main()
 
             if(c == '\b')
             {
-                if(textbufptr == textbuf) setcrsrpos(crsrpos.x, crsrpos.y);
-                else *(--textbufptr) = 0;
+                if(textbufptr > textbuf)
+                {
+                    crsrpos = moveCursorBack(crsrpos);
+                    crsrpos2 = crsrpos;
+                    setcrsrpos(crsrpos.x, crsrpos.y);
+                    putchar(' ');
+                    setcrsrpos(crsrpos2.x, crsrpos2.y);
+                    *(--textbufptr) = 0;
+                }
                 continue;
             }
             
             if(textbufptr - textbuf >= MAX_BUF_SIZE)
             {
-                putchar('\b');
+                setcrsrpos(crsrpos.x, crsrpos.y);
+                putchar(' ');
+                setcrsrpos(crsrpos.x, crsrpos.y);
                 continue;
             }
 
