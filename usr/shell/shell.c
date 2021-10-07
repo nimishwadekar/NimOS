@@ -19,7 +19,9 @@ int main()
     crsr_pos_t crsrpos;
     while(1)
     {
+        setfg(SHELLTEXT_COLOUR);
         printf("shell> ");
+        setfg(TEXT_COLOUR);
         textbufptr = textbuf;
         while(1)
         {
