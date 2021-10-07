@@ -1,9 +1,11 @@
+#include <graphics.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/system.h>
 #include <time.h>
 #include <unistd.h>
 #include "command.h"
+#include "ui.h"
 
 static enum COMMANDS identifyCommand(char *cmdname)
 {
@@ -40,6 +42,16 @@ void runCommand(char *cmd)
         break;
 
         case CMD_RUN:
+        cmdtok = strtok(NULL, " ");
+        if(cmdtok == NULL)
+        {
+            printf("run: ");
+            setfg(ERR_TEXT_COLOUR);
+            printf("Fatal error: ");
+            setfg(TEXT_COLOUR);
+            printf("No executable file specified\n");
+            break;
+        }
         break;
 
         case CMD_SHUTDOWN:
