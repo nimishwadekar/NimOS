@@ -3,6 +3,10 @@
 
 #include <stddef.h>
 
+#ifndef NULL
+#define NULL ((void*) 0)
+#endif
+
 // The largest number rand will return (same as INT_MAX).
 #define RAND_MAX    2147483647
 
