@@ -28,8 +28,10 @@ int setbg(unsigned int argb)
 
 screen_res_t getscreenres(void)
 {
+    static screen_res_t ret = {0, 0};
+    if(ret.width > 0) return ret;
+
     uint64_t res = (uint64_t) _syscall_0(SYS_GETRES);
-    screen_res_t ret;
     ret.width = (unsigned int) (res >> 32);
     ret.height = (unsigned int) res;
     return ret;
@@ -68,4 +70,17 @@ int lockscr(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2)
 void unlockscr(void)
 {
     _syscall_0(SYS_UNLOCKSCR);
+}
+
+
+crsr_pos_t moveCursorBack(crsr_pos_t pos)
+{
+    if(pos.x == 0 && pos.y == 0) return pos;
+    pos.x -= FONT_WIDTH;
+    if(pos.x < 0)
+    {
+        pos.y -= FONT_HEIGHT;
+        pos.x = getscreenres().width - FONT_WIDTH;
+    }
+    return pos;
 }

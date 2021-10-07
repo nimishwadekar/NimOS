@@ -88,6 +88,8 @@ int drawrect(unsigned int x, unsigned int y, unsigned int width, unsigned int he
 void drawCursor(crsr_pos_t pos);
 // Erases cursor at pos.
 void eraseCursor(crsr_pos_t pos);
+// Moves cursor back one character.
+crsr_pos_t moveCursorBack(crsr_pos_t pos);
 
 
 #endif
