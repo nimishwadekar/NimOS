@@ -20,3 +20,15 @@ int drawrect(unsigned int x, unsigned int y, unsigned int width, unsigned int he
     _syscall_5(SYS_DRAWR, x, y, width, height, argb);
     return 0;
 }
+
+
+void drawCursor(crsr_pos_t pos)
+{
+    drawline(pos.x, pos.y + FONT_HEIGHT - 1, pos.x + FONT_WIDTH - 1, pos.y + FONT_HEIGHT - 1, getfg());
+}
+
+
+void eraseCursor(crsr_pos_t pos)
+{
+    drawline(pos.x, pos.y + FONT_HEIGHT - 1, pos.x + FONT_WIDTH - 1, pos.y + FONT_HEIGHT - 1, getbg());
+}
