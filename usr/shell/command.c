@@ -58,6 +58,12 @@ void runCommand(char *cmd)
         break;
 
         case CMD_HELP:
+        cmdtok = strtok(NULL, " ");
+        if(cmdtok == NULL)
+        {
+            printError("help", 1, "No command specified");
+            break;
+        }
         break;
 
         case CMD_RUN:
