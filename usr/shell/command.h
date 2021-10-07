@@ -4,6 +4,7 @@
 enum COMMANDS
 {
     CMD_INVALID = -1,
+    CMD_CLS,
     CMD_HELP,
     CMD_RUN,
     CMD_SHUTDOWN,

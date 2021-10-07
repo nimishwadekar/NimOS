@@ -11,6 +11,10 @@ static enum COMMANDS identifyCommand(char *cmdname)
 {
     switch(cmdname[0])
     {
+        case 'c':
+        if(strcmp(cmdname + 1, "ls") == 0) return CMD_CLS;
+        break;
+
         case 'h':
         if(strcmp(cmdname + 1, "elp") == 0) return CMD_HELP;
         break;
@@ -31,6 +35,16 @@ static enum COMMANDS identifyCommand(char *cmdname)
     return CMD_INVALID;
 }
 
+void printError(char *cmd, int fatal, char *errmsg)
+{
+    printf("%s: ", cmd);
+    setfg(ERR_TEXT_COLOUR);
+    printf("%s: ", (fatal ? "Fatal error" : "Error"));
+    setfg(TEXT_COLOUR);
+    printf("%s\n", errmsg);
+}
+
+
 void runCommand(char *cmd)
 {
     char *cmdtok = strtok(cmd, " ");
@@ -38,19 +52,57 @@ void runCommand(char *cmd)
 
     switch(cmdtype)
     {
+        case CMD_CLS:
+        setbg(getbg());
+        printLogo();
+        break;
+
         case CMD_HELP:
         break;
 
         case CMD_RUN:
-        cmdtok = strtok(NULL, " ");
-        if(cmdtok == NULL)
         {
-            printf("run: ");
-            setfg(ERR_TEXT_COLOUR);
-            printf("Fatal error: ");
-            setfg(TEXT_COLOUR);
-            printf("No executable file specified\n");
-            break;
+            static char *argv[256];
+            int showexit = 0;
+
+            cmdtok = strtok(NULL, " ");
+            if(cmdtok == NULL)
+            {
+                printError("run", 1, "No executable specified");
+                break;
+            }
+            if(strcmp(cmdtok, "-e") == 0)
+            {
+                showexit = 1;
+                cmdtok = strtok(NULL, " ");
+                if(cmdtok == NULL)
+                {
+                    printError("run", 1, "No executable specified");
+                    break;
+                }
+            }
+
+            argv[0] = cmdtok;
+
+            int argc = 1;
+            while((cmdtok = strtok(NULL, " ")) != NULL)
+                argv[argc++] = cmdtok;
+            argv[argc] = NULL;
+
+            int exitcode;
+            int spawnresult = spawnv(argv[0], argv, &exitcode);
+            if(spawnresult == -1)
+            {
+                printError("run", 0, "Could not open specified executable");
+                break;
+            }
+            if(spawnresult == -2)
+            {
+                printError("run", 0, "Executable read failed");
+                break;
+            }
+            
+            if(showexit) printf("Process exited with exit code %d\n", exitcode);
         }
         break;
 
