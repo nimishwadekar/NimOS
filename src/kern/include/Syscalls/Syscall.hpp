@@ -192,5 +192,10 @@ struct Registers
 #define SYS_UNLOCKSCR   0x8C
 // Unlocks locked portion.
 
-#define SYS_SCRSCROLLED    0x8D
+#define SYS_SCRSCROLLED 0x8D
 // Checks if screen scrolled during the last character output.
+
+
+// System Syscalls
+#define SYS_SHUTDOWN    0xA1
+// Shuts down the system. Only on QEMU.
