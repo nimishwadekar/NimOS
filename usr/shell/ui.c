@@ -19,12 +19,13 @@ void printLogo(void)
     res_width = res.width;
     res_height = res.height;
 
+    drawline(0, FONT_HEIGHT * 2, res.width, FONT_HEIGHT * 2, foreground);
     crsr_pos_t pos = getcrsrpos();
-    setcrsrpos((res.width - 1 - LOGO_LEN * FONT_WIDTH) / 2, 0);
+    setcrsrpos((res.width - 1 - LOGO_LEN * FONT_WIDTH) / 2, FONT_HEIGHT / 2);
     printf("%s", logo);
     setcrsrpos(pos.x, pos.y);
-    printf("\n\n");
-    lockscr(0, 0, res.width, FONT_HEIGHT);
+    printf("\n\n\n");
+    lockscr(0, 0, res.width, 3 * FONT_HEIGHT);
     #undef LOGO_LEN
 }
 
