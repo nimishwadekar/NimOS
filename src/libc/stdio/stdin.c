@@ -72,14 +72,6 @@ int sscanf(const char *str, const char *format, ...)
 }
 
 
-char *gets(char *s)
-{
-    size_t end = _syscall_1(SYS_INPUT, (int64_t) s);
-    *(s + end) = 0;
-    return s;
-}
-
-
 int getchar(void)
 {
 	char c;
