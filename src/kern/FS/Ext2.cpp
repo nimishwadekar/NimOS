@@ -94,7 +94,7 @@ namespace Ext2
 
         if(!LoadBlock(bg->InodeTableBlock + block, table))
         {
-            errorf("Ext2: GetInode(%u) block load failed.\n", inode);
+            //errorf("Ext2: GetInode(%u) block load failed.\n", inode);
             return nullptr;
         }
         return table + (index % inodesPerBlock);
@@ -110,7 +110,7 @@ namespace Ext2
         {
             if(!LoadBlock(parent->DirectBlocks[i], dirPtr))
             {
-                errorf("Ext2System::FindDirEntry(%s, Inode*) block load failed.\n", dirName);
+                //errorf("Ext2System::FindDirEntry(%s, Inode*) block load failed.\n", dirName);
                 return nullptr;
             }
 
@@ -121,6 +121,7 @@ namespace Ext2
                 if(dir->Inode == 0) return nullptr;
                 if(len == dir->NameLength && memcmp(dirName, dir->Name, len) == 0) return dir;
                 dirPtr += dir->EntrySize;
+                offset += dir->EntrySize;
             }
         }
 
@@ -153,7 +154,7 @@ namespace Ext2
                 dir = ext2->FindDirEntry(dirName, inode);
                 if(!dir)
                 {
-                    errorf("Could not find directory entry for \"%s\"\n", dirName);
+                    //errorf("Could not find directory entry for \"%s\"\n", dirName);
                     return invalidFile;
                 }
                 inode = ext2->GetInode(dir->Inode);
