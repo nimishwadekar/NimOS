@@ -13,7 +13,6 @@ extern unsigned int res_height;
 extern unsigned int foreground;
 extern unsigned int background;
 
-void drawLogoAnim(void);
 void printLogo(void);
 
 #endif

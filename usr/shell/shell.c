@@ -11,7 +11,6 @@ char textbuf[MAX_BUF_SIZE + 1];
 
 int main()
 {
-    drawLogoAnim();
     printLogo();
 
     char c;
