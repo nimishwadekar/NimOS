@@ -7,6 +7,14 @@ unsigned int res_height;
 unsigned int foreground;
 unsigned int background;
 
+void drawLogoAnim(void)
+{
+    
+
+    while(1);
+}
+
+
 void printLogo(void)
 {
     foreground = getfg();
