@@ -76,7 +76,8 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
             break;
 
         case '\b': // Backspace
-            if(Cursor.X == 0 && Cursor.Y == 0) return;
+            return;
+            /* if(Cursor.X == 0 && Cursor.Y == 0) return;
             Cursor.X -= FontWidth;
             if(Cursor.X < 0)
             {
@@ -87,7 +88,7 @@ void Renderer::PutChar(const int32_t xOffset, const int32_t yOffset, const char 
 
             for(int32_t y = Cursor.Y; y < Cursor.Y + FontHeight; y++) 
                 for(int32_t x = Cursor.X; x < Cursor.X + FontWidth; x++) 
-                    *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = BackGroundColour;
+                    *(Buffer.BaseAddress + (y * Buffer.PixelsPerScanLine) + x) = BackGroundColour; */
             break;
 
         default: specialChar = false; break;
