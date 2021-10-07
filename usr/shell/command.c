@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/system.h>
+#include <time.h>
 #include <unistd.h>
 #include "command.h"
 
@@ -30,8 +31,8 @@ static enum COMMANDS identifyCommand(char *cmdname)
 
 void runCommand(char *cmd)
 {
-    char *tok = strtok(cmd, " ");
-    enum COMMANDS cmdtype = identifyCommand(tok);
+    char *cmdtok = strtok(cmd, " ");
+    enum COMMANDS cmdtype = identifyCommand(cmdtok);
 
     switch(cmdtype)
     {
@@ -46,10 +47,25 @@ void runCommand(char *cmd)
         break;
 
         case CMD_TIME:
+        if((cmdtok = strtok(NULL, " ")) != NULL)
+        {
+            printf("%s: Invalid option for 'time'\n", cmdtok);
+            break;
+        }
+
+        {
+            static char time_wdayBuf[10];
+            static char time_monBuf[10];
+
+            time_t t = time(NULL);
+            struct tm st = localtime(&t);
+            printf("%d:%d:%d  %s, %d %s, %d\n", st.tm_hour, st.tm_min, st.tm_sec, 
+                time_wday_str(&t, time_wdayBuf, 3), st.tm_mday, time_mon_str(&t, time_monBuf, 3), st.tm_year);
+        }
         break;
 
         case CMD_INVALID:
-        printf("%s: Unrecognized command\n", tok);
+        printf("%s: Unrecognized command\n", cmdtok);
         break;
     }
 }
