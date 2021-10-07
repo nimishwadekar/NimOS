@@ -5,14 +5,14 @@
 
 enum class SpecialKeys
 {
-    LCTRL = 0,
-    LSHIFT = 1,
-    LALT = 2,
-    LGUI = 3,
-    RCTRL = 4,
-    RSHIFT = 5,
-    RALT = 6,
-    RGUI = 7
+    LCTRL = 1,
+    LSHIFT,
+    LALT,
+    LGUI,
+    RCTRL,
+    RSHIFT,
+    RALT,
+    RGUI
 };
 
 #define KB_BUFFER_CAPACITY 16
