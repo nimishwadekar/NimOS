@@ -52,20 +52,65 @@ void runCommand(char *cmd)
 
     switch(cmdtype)
     {
+        /*********************************************************/
         case CMD_CLS:
         setbg(getbg());
         printLogo();
         break;
 
+        /*********************************************************/
         case CMD_HELP:
         cmdtok = strtok(NULL, " ");
         if(cmdtok == NULL)
         {
-            printError("help", 1, "No command specified");
+            printError("help", 0, "No command specified");
             break;
+        }
+        {
+            char *helpcmd = cmdtok;
+            cmdtok = strtok(NULL, " ");
+            if(cmdtok != NULL)
+            {
+                printError("help", 0, "More than one command specified");
+                break;
+            }
+
+            switch(identifyCommand(helpcmd))
+            {
+                case CMD_CLS:
+                printf("\nClears the screen and resets the text cursor to the beginning\nFormat:\n");
+                printf("        cls\n\n");
+                break;
+
+                case CMD_HELP:
+                printf("Displays brief information about a command\nFormat:\n");
+                printf("        help    <command>\n\n");
+                break;
+
+                case CMD_RUN:
+                printf("\nRuns an executable file\nFormat:\n");
+                printf("        run     [-e]    <file>\n\nOptions:\n");
+                printf("        -e      Displays exit code after program has terminated\n\n");
+                break;
+
+                case CMD_SHUTDOWN:
+                printf("\nShuts down the computer\nFormat:\n");
+                printf("        shutdown\n\n");
+                break;
+
+                case CMD_TIME:
+                printf("\nDisplays the current time in the format Hour:Minute:Second  Weekday, Day Month, Year\nFormat:\n");
+                printf("        time\n\n");
+                break;
+
+                case CMD_INVALID:
+                printError("help", 0, "Unrecognized command");
+                break;
+            }
         }
         break;
 
+        /*********************************************************/
         case CMD_RUN:
         {
             static char *argv[256];
@@ -112,10 +157,12 @@ void runCommand(char *cmd)
         }
         break;
 
+        /*********************************************************/
         case CMD_SHUTDOWN:
         shutdown();
         break;
 
+        /*********************************************************/
         case CMD_TIME:
         if((cmdtok = strtok(NULL, " ")) != NULL)
         {
@@ -134,6 +181,7 @@ void runCommand(char *cmd)
         }
         break;
 
+        /*********************************************************/
         case CMD_INVALID:
         printf("%s: Unrecognized command\n", cmdtok);
         break;
