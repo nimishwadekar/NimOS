@@ -134,7 +134,8 @@ void KillProcess()
     else // Exit Process with code 'c'
     {
         printf("^C\nProcess killed\n");
-        asm volatile("movq $0x23, %rax\n \
+        asm volatile("sti\n \
+            movq $0x23, %rax\n \
             movq $99, %rdi\n \
             syscall\n");
     }

@@ -122,6 +122,9 @@ void KeyboardBuffer::RegisterKeyPress(const uint8_t scanCode)
 
     if(input == 'c' && (IsModifierSet(SpecialKeys::LCTRL) || IsModifierSet(SpecialKeys::RCTRL)))
     {
+        extern void PICEndOfInterrupt(const uint8_t interrupt);
+        PICEndOfInterrupt(1);
+        
         KillProcess();
     }
 
