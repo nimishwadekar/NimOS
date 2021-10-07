@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <sys/system.h>
 #include <unistd.h>
 #include "command.h"
 
@@ -41,6 +42,7 @@ void runCommand(char *cmd)
         break;
 
         case CMD_SHUTDOWN:
+        shutdown();
         break;
 
         case CMD_TIME:
