@@ -78,7 +78,6 @@ void SysSpawn(Registers *regs)
         argc++;
     }
 
-    printf("In spawn\n");
     Process *oldProcess = PeekProcess();
     oldProcess->PC = (void*) STATE_RIP;
     oldProcess->Regs.R12 = STATE_R12;
