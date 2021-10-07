@@ -35,10 +35,6 @@
 - Single Tasking Processes
 - Inter-process Communication
 - Time
-
----
-
-### Features currently being implemented:
 - Shell
 
 ---
