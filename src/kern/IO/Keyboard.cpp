@@ -1,6 +1,9 @@
 #include <IO/Keyboard.hpp>
 #include <Utility.hpp>
 
+// Called when Ctrl+C is pressed.
+extern void KillProcess();
+
 KeyboardBuffer KBBuffer;
 
 void HandleKeyboard(const uint8_t scanCode)
@@ -116,6 +119,11 @@ void KeyboardBuffer::RegisterKeyPress(const uint8_t scanCode)
 
     char input = QWERTYKeyboard::TranslateScanCode(scanCode);
     if(input == 0) return;
+
+    if(input == 'c' && (IsModifierSet(SpecialKeys::LCTRL) || IsModifierSet(SpecialKeys::RCTRL)))
+    {
+        KillProcess();
+    }
 
     if(IsModifierSet(SpecialKeys::LSHIFT) || IsModifierSet(SpecialKeys::RSHIFT)) // Add all other shift-keys
     {

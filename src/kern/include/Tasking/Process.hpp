@@ -67,3 +67,4 @@ void RestoreTopProcess();
 
 // Used by exception handlers to exit current process.
 void ProcessException();
+void KillProcess();

@@ -122,3 +122,20 @@ void ProcessException()
         movq $-2147, %rdi\n \
         syscall\n");
 }
+
+
+void KillProcess()
+{
+    if(ProcessCount == 2) // Shutdown if only Kernel and Shell active.
+    {
+        asm volatile("movq $0xA1, %rax\n \
+            syscall\n");
+    }
+    else // Exit Process with code 'c'
+    {
+        printf("^C\nProcess killed\n");
+        asm volatile("movq $0x23, %rax\n \
+            movq $99, %rdi\n \
+            syscall\n");
+    }
+}
