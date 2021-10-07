@@ -4,10 +4,10 @@
 enum COMMANDS
 {
     CMD_INVALID = -1,
-    CMD_RUN,
     CMD_HELP,
-    CMD_TIME,
-    CMD_EXIT
+    CMD_RUN,
+    CMD_SHUTDOWN,
+    CMD_TIME
 };
 
 void runCommand(char *cmd);
