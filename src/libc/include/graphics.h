@@ -84,5 +84,10 @@ Draws rectangle at (x, y) of width and height in colour argb.
 */
 int drawrect(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned int argb);
 
+// Draws cursor at pos.
+void drawCursor(crsr_pos_t pos);
+// Erases cursor at pos.
+void eraseCursor(crsr_pos_t pos);
+
 
 #endif

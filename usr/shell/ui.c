@@ -28,14 +28,3 @@ void printLogo(void)
     lockscr(0, 0, res.width, 3 * FONT_HEIGHT);
     #undef LOGO_LEN
 }
-
-
-void drawCursor(crsr_pos_t pos)
-{
-    drawline(pos.x, pos.y + FONT_HEIGHT - 1, pos.x + FONT_WIDTH - 1, pos.y + FONT_HEIGHT - 1, foreground);
-}
-
-void eraseCursor(crsr_pos_t pos)
-{
-    drawline(pos.x, pos.y + FONT_HEIGHT - 1, pos.x + FONT_WIDTH - 1, pos.y + FONT_HEIGHT - 1, background);
-}
