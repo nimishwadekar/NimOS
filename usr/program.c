@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     fread(buf, 1, size, f);
     fclose(f);
 
-    printf("%s\n", buf);
+    printf("Read file:\n%s\n", buf);
 
     return 0;
 }
