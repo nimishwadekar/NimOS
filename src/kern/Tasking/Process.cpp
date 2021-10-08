@@ -117,6 +117,8 @@ void RestoreTopProcess()
 
 void ProcessException()
 {
+    if(ProcessCount == 2) // Only kernel and shell active.
+        while(true);
     // Exit syscall with code -2147.
     asm volatile("movq $0x23, %rax\n \
         movq $-2147, %rdi\n \
