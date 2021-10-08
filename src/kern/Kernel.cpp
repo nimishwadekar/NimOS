@@ -1,14 +1,8 @@
 #include <stdint.h>
 #include <Display/Renderer.hpp>
 #include <FS/VFS.hpp>
-#include <IO/Keyboard.hpp>
 #include <IO/PIT.hpp>
-#include <IO/Port.hpp>
-#include <Logging.hpp>
 #include <Memory/Heap.hpp>
-#include <Memory/PageFrameAllocator.hpp>
-#include <Memory/PageTableManager.hpp>
-#include <String.hpp>
 #include <Syscalls/Syscall.hpp>
 #include <Tasking/Process.hpp>
 #include <Usermode/ELF.hpp>
@@ -54,7 +48,6 @@ void KernelStart(void)
         errorf("Could not create root process.\n");
         while(true);
     }
-
 
     Process *root = PeekProcess();
     JumpToUserMode((void*) &SyscallEntry, root->StackTop, root->HeapBase, programEntry); // Does not return here.

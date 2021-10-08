@@ -4,8 +4,6 @@
 
 DateTime SystemDateTime;
 
-#include <Display/Renderer.hpp>
-
 void DateTime::Initialise(uint8_t datetime[8])
 {
     Year = (datetime[0] >> 4) * 1000 + (datetime[0] & 0x0F) * 100 +

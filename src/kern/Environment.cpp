@@ -2,8 +2,6 @@
 #include <Memory/Memory.hpp>
 #include <String.hpp>
 
-#include <Display/Renderer.hpp>
-
 Env Environment;
 
 #define KernelKey       "kernel"

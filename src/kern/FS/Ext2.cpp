@@ -92,11 +92,7 @@ namespace Ext2
         uint32_t inodesPerBlock = (BlockSizeBytes) / InodeSizeBytes;
         Inode *table = (Inode*) (Buffer + INODE_TABLE_BUF_OFFSET);
 
-        if(!LoadBlock(bg->InodeTableBlock + block, table))
-        {
-            //errorf("Ext2: GetInode(%u) block load failed.\n", inode);
-            return nullptr;
-        }
+        if(!LoadBlock(bg->InodeTableBlock + block, table)) return nullptr;
         return table + (index % inodesPerBlock);
     }
 
@@ -108,11 +104,7 @@ namespace Ext2
         uint32_t len = strlen(dirName);
         for(int i = 0; blocks > 0; blocks--, i++)
         {
-            if(!LoadBlock(parent->DirectBlocks[i], dirPtr))
-            {
-                //errorf("Ext2System::FindDirEntry(%s, Inode*) block load failed.\n", dirName);
-                return nullptr;
-            }
+            if(!LoadBlock(parent->DirectBlocks[i], dirPtr)) return nullptr;
 
             uint32_t offset = 0;
             while(offset < BlockSizeBytes)
@@ -152,13 +144,8 @@ namespace Ext2
             {
                 char *dirName = NameBuffer + DirIndices[diri];
                 dir = ext2->FindDirEntry(dirName, inode);
-                if(!dir)
-                {
-                    //errorf("Could not find directory entry for \"%s\"\n", dirName);
-                    return invalidFile;
-                }
+                if(!dir) return invalidFile;
                 inode = ext2->GetInode(dir->Inode);
-
                 diri += 1;
             } while(DirIndices[diri] != 0);
 
@@ -263,82 +250,28 @@ namespace Ext2
         return 0;
     }
 
-    char GetChar(void *fs, FILE *file)
-    {
-        /* if(file->Position == file->Length) return FILE_EOF;
-        uint64_t pos = file->Position;
-        Ext2System *ext2 = (Ext2System*) fs;
-        Ext2File *ext2File = ext2->OpenFiles[file->ID];
-
-        if(pos % ext2->BlockSizeBytes == 0 || ext2File->LoadedBlock1 != file->CurrentBlock)
-        {
-            *ext2File->Buf1 = 1;
-            printf("here\ncur=%u\n", file->CurrentBlock);
-            if(!ext2->LoadBlock(file->CurrentBlock, ext2File->Buf1))
-            {
-                errorf("Ext2 GetChar() block load failed.\n");
-                return FILE_EOF;
-            }
-            ext2File->LoadedBlock1 = file->CurrentBlock;
-        }
-        char c = ext2File->Buf1[pos % ext2->BlockSizeBytes];
-        for(int i = 0; i < 4096; i++) MainRenderer.PutChar(ext2File->Buf1[i]);
-        file->Position += 1;
-        if(file->Position % ext2->BlockSizeBytes == 0) file->CurrentBlock = ext2->GetNextBlock(ext2File);
-        return c; */
-
-        if(file->Position == file->Length) return FILE_EOF;
-        char c;
-        Read(fs, file, &c, 1);
-        return c;
-    }
-
     uint32_t Ext2System::GetNextBlock(Ext2File *file)
     {
         if(!file->Increment()) return 0;
         if(file->Current[3] == 1)
         {
-            if(!LoadBlock(file->inode.IndirectBlock3, file->Buf0))
-            {
-                errorf("Ext2 GetNextBlock() level 3 load failed.\n");
-                return -1;
-            }
+            if(!LoadBlock(file->inode.IndirectBlock3, file->Buf0)) return -1;
             uint32_t lev2 = ((uint32_t*) file->Buf0)[file->Current[2]];
-            if(!LoadBlock(lev2, file->Buf0))
-            {
-                errorf("Ext2 GetNextBlock() level 2 load failed.\n");
-                return -1;
-            }
+            if(!LoadBlock(lev2, file->Buf0)) return -1;
             uint32_t lev1 = ((uint32_t*) file->Buf0)[file->Current[1]];
-            if(!LoadBlock(lev1, file->Buf0))
-            {
-                errorf("Ext2 GetNextBlock() level 1 load failed.\n");
-                return -1;
-            }
+            if(!LoadBlock(lev1, file->Buf0)) return -1;
             return ((uint32_t*) file->Buf0)[file->Current[0]];
         }
         else if(file->Current[2] == 1)
         {
-            if(!LoadBlock(file->inode.IndirectBlock2, file->Buf0))
-            {
-                errorf("Ext2 GetNextBlock() level 2 load failed.\n");
-                return -1;
-            }
+            if(!LoadBlock(file->inode.IndirectBlock2, file->Buf0)) return -1;
             uint32_t lev1 = ((uint32_t*) file->Buf0)[file->Current[1]];
-            if(!LoadBlock(lev1, file->Buf0))
-            {
-                errorf("Ext2 GetNextBlock() level 1 load failed.\n");
-                return -1;
-            }
+            if(!LoadBlock(lev1, file->Buf0)) return -1;
             return ((uint32_t*) file->Buf0)[file->Current[0]];
         }
         else if(file->Current[1] == 1)
         {
-            if(!LoadBlock(file->inode.IndirectBlock1, file->Buf0))
-            {
-                errorf("Ext2 GetNextBlock() level 1 load failed.\n");
-                return -1;
-            }
+            if(!LoadBlock(file->inode.IndirectBlock1, file->Buf0)) return -1;
             return ((uint32_t*) file->Buf0)[file->Current[0]];
         }
         else return file->inode.DirectBlocks[file->Current[0]];
@@ -360,12 +293,6 @@ namespace Ext2
 
     bool Ext2File::Increment(void)
     {
-        /* if(Current[3] == 0xFFFF)
-        {
-            memset(Current, 0, 4 * sizeof(uint16_t));
-            return true;
-        } */
-
         uint64_t cur = *(uint64_t*) Current;
         if(cur == ((1UL << 48) | ((EntryCount - 1UL) << 32) | ((EntryCount - 1UL) << 16) | (EntryCount - 1UL))) return false;
         cur += 1;

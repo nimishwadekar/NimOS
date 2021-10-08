@@ -48,7 +48,7 @@ void *malloc(size_t size)
             {
                 heaphdr_t *part2 = _heap_split(currentSegment, size);
                 currentSegment->free = 0;
-                //if(part2 == NULL) continue;
+                if(part2 == NULL) continue;
                 return (void*) ((uint64_t) currentSegment + sizeof(heaphdr_t));
             }
             else if(currentSegment->size == size)

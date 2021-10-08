@@ -2,8 +2,6 @@
 #include <sys/syscall.h>
 #include <time.h>
 
-#include <stdio.h>
-
 time_t time(time_t *time)
 {
     time_t t = (unsigned long long) _syscall_0(SYS_TIME);

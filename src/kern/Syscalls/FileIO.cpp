@@ -2,8 +2,6 @@
 #include <Syscalls/FileIO.hpp>
 #include <Tasking/Process.hpp>
 
-#include <Display/Renderer.hpp>
-
 void SysFOpen(Registers *regs)
 {
     const char *mode = 0;

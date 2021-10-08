@@ -1,6 +1,4 @@
 #include <stdint.h>
-#include <Display/Renderer.hpp>
-#include <Logging.hpp>
 #include <Memory/Memory.hpp>
 #include <Memory/PageFrameAllocator.hpp>
 #include <Memory/PageMapIndexer.hpp>
@@ -24,10 +22,6 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress, bool
     if(!entry.GetFlag(PageTableFlags::Present))
     {
         level3Table = (PageTable*) FrameAllocator.RequestPageFrame();
-        #ifdef LOGGING
-        logf("PageTableManager::MapPage(void*, void*) : Page Frame at 0x%x allocated for Level 3 Table.\n", level3Table);
-        #endif
-
         memset(level3Table, 0, 0x1000);
         entry.SetAddress((uint64_t) level3Table);
         entry.SetFlag(PageTableFlags::Present, true);
@@ -46,10 +40,6 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress, bool
     if(!entry.GetFlag(PageTableFlags::Present))
     {
         level2Table = (PageTable*) FrameAllocator.RequestPageFrame();
-        #ifdef LOGGING
-        logf("PageTableManager::MapPage(void*, void*) : Page Frame at 0x%x allocated for Level 2 Table.\n", level2Table);
-        #endif
-
         memset(level2Table, 0, 0x1000);
         entry.SetAddress((uint64_t) level2Table);
         entry.SetFlag(PageTableFlags::Present, true);
@@ -68,10 +58,6 @@ void PageTableManager::MapPage(void *virtualAddress, void *physicalAddress, bool
     if(!entry.GetFlag(PageTableFlags::Present))
     {
         level1Table = (PageTable*) FrameAllocator.RequestPageFrame();
-        #ifdef LOGGING
-        logf("PageTableManager::MapPage(void*, void*) : Page Frame at 0x%x allocated for Level 1 Table.\n", level1Table);
-        #endif
-
         memset(level1Table, 0, 0x1000);
         entry.SetAddress((uint64_t) level1Table);
         entry.SetFlag(PageTableFlags::Present, true);

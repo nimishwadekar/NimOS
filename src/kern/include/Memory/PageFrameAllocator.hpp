@@ -13,18 +13,11 @@ class PageFrameAllocator
     uint64_t UsedMemory; // Memory in use by processes.
 
     void Initialize(MemoryMap memoryMap);
-
     // Returns the physical address of a free page frame, and marks it as used.
     void *RequestPageFrame(void);
-
     // Marks the page frame as free.
     void FreePageFrame(void *physicalAddress);
-
-    void *RequestPageFrameAboveAddress(const uint64_t address);
-
     void *RequestPageFrames(const uint64_t frames);
-
-    void *RequestPageFramesAboveAddress(const uint64_t address, const uint64_t frames);
 };
 
 extern PageFrameAllocator FrameAllocator;

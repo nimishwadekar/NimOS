@@ -8,13 +8,6 @@
 #include <Usermode/ELF.hpp>
 #include <Usermode/Usermode.hpp>
 
-#include <Display/Renderer.hpp>
-#include <Memory/PageMapIndexer.hpp>
-
-/**
- *     DUPLICATE PAGE TABLES
- */ 
-
 extern uint64_t STATE_RIP;
 extern uint64_t STATE_RBX;
 extern uint64_t STATE_RBP;

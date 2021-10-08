@@ -2,8 +2,6 @@
 #include <IO/PIT.hpp>
 #include <Syscalls/Timer.hpp>
 
-#include <Display/Renderer.hpp>
-
 void SysSleep(Registers *regs)
 {
     int factor = 1;

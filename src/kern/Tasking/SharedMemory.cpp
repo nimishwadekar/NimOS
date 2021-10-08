@@ -2,8 +2,6 @@
 #include <Memory/PageTableManager.hpp>
 #include <Tasking/SharedMemory.hpp>
 
-#include <Display/Renderer.hpp>
-
 SharedMemoryManager ShmManager;
 
 void SharedMemoryManager::Initialise()

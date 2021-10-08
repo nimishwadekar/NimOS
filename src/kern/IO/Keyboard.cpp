@@ -1,9 +1,6 @@
 #include <IO/Keyboard.hpp>
 #include <Utility.hpp>
 
-// Called when Ctrl+C is pressed.
-extern void KillProcess();
-
 KeyboardBuffer KBBuffer;
 
 void HandleKeyboard(const uint8_t scanCode)
@@ -125,6 +122,7 @@ void KeyboardBuffer::RegisterKeyPress(const uint8_t scanCode)
         extern void PICEndOfInterrupt(const uint8_t interrupt);
         PICEndOfInterrupt(1);
 
+        extern void KillProcess();
         KillProcess();
     }
 

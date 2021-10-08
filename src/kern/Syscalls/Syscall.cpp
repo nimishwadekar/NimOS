@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <Display/Renderer.hpp>
 #include <Syscalls/Display.hpp>
 #include <Syscalls/FileIO.hpp>
 #include <Syscalls/Memory.hpp>

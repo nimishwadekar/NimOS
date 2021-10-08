@@ -4,7 +4,6 @@ extern TaskStateSegment
 extern SyscallHandler
 
 global SyscallEntry
-global SyscallExit
 
 global STATE_RBX
 STATE_RBX: dq 0
@@ -46,7 +45,6 @@ SyscallEntry:
     call SyscallHandler
     pop rax
     
-SyscallExit:
     mov rsp, [STATE_RSP]
     mov rbx, [STATE_RBX]
     mov rbp, [STATE_RBP]

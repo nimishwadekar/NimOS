@@ -1,9 +1,8 @@
+#include <Display/Renderer.hpp>
 #include <Memory/PageFrameAllocator.hpp>
 #include <Memory/PageTableManager.hpp>
 #include <Tasking/Process.hpp>
 #include <Tasking/SharedMemory.hpp>
-
-#include <Display/Renderer.hpp>
 
 Process *ProcessTop;
 int ProcessCount;
@@ -135,7 +134,7 @@ void KillProcess()
     }
     else // Exit Process with code 'c'
     {
-        printf("^C\nProcess killed\n");
+        printf("\n\n^C Process killed\n");
         asm volatile("sti\n \
             movq $0x23, %rax\n \
             movq $99, %rdi\n \

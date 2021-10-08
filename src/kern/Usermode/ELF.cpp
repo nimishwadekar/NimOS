@@ -1,4 +1,3 @@
-#include <Display/Renderer.hpp>
 #include <Memory/Memory.hpp>
 #include <Memory/PageFrameAllocator.hpp>
 #include <Memory/PageTableManager.hpp>

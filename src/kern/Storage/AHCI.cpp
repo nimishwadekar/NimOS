@@ -229,11 +229,7 @@ namespace AHCI
         {
             spin += 1;
         }
-        if(spin == TIMEOUT)
-        {
-            errorf("AHCI Disk Read Timeout.\n");
-            return false;
-        }
+        if(spin == TIMEOUT) return false;
 
         hbaPort->InterruptStatus = (uint32_t) -1; // Clear pending interrupt bits.
 
@@ -275,13 +271,8 @@ namespace AHCI
         while(true)
         {
             if(hbaPort->CommandIssue == 0) break;
-            if(hbaPort->InterruptStatus & HBA_PxIS_TFES)
-            {
-                errorf("AHCI Read Task File Error.\n");
-                return false;
-            }
+            if(hbaPort->InterruptStatus & HBA_PxIS_TFES) return false;
         }
-
         return true;
     }
 
@@ -292,11 +283,7 @@ namespace AHCI
         {
             spin += 1;
         }
-        if(spin == TIMEOUT)
-        {
-            errorf("AHCI Disk Write Timeout.\n");
-            return false;
-        }
+        if(spin == TIMEOUT) return false;
 
         hbaPort->InterruptStatus = (uint32_t) -1; // Clear pending interrupt bits.
 
@@ -338,13 +325,8 @@ namespace AHCI
         while(true)
         {
             if(hbaPort->CommandIssue == 0) break;
-            if(hbaPort->InterruptStatus & HBA_PxIS_TFES)
-            {
-                errorf("AHCI Write Task File Error.\n");
-                return false;
-            }
+            if(hbaPort->InterruptStatus & HBA_PxIS_TFES) return false;
         }
-
         return true;
     }
 }

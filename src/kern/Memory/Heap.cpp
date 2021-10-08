@@ -1,15 +1,8 @@
-#include <Display/Renderer.hpp>
-#include <Logging.hpp>
 #include <Memory/Heap.hpp>
 #include <Memory/PageFrameAllocator.hpp>
 #include <Memory/PageTableManager.hpp>
-#include <IO/PIT.hpp>
 
 Heap KernelHeap;
-
-/* void *HeapStart;
-void *HeapEnd;
-HeapSegmentHeader *LastHeader; */
 
 // HEAP FUNCTIONS
 
@@ -19,20 +12,11 @@ void Heap::InitializeHeap(void *heapAddress, uint64_t pageCount)
     for(uint64_t i = 0; i < pageCount; i++)
     {
         void *positionPhys = FrameAllocator.RequestPageFrame();
-        #ifdef LOGGING
-        logf("InitializeHeap(void*, uint64_t) : Page Frame at 0x%x allocated for heap.\n", positionPhys);
-        #endif
-
         PagingManager.MapPage(position, positionPhys, true);
-        #ifdef LOGGING
-        logf("InitializeHeap(void*, uint64_t) : 0x%x mapped to phys 0x%x for heap.\n", position, positionPhys);
-        #endif
-
         position = (void*) ((uint64_t) position + 0x1000);
     }
 
     uint64_t heapSize = pageCount * 0x1000;
-
     HeapStart = heapAddress;
     HeapEnd = (void*) ((uint64_t) heapAddress + heapSize);
     HeapSegmentHeader *startSegmentHeader = (HeapSegmentHeader*) heapAddress;
@@ -45,7 +29,7 @@ void Heap::InitializeHeap(void *heapAddress, uint64_t pageCount)
 
 void *Heap::Malloc(uint64_t size)
 {
-    if(size % BLOCK_SIZE > 0) // size % BLOCK_SIZE
+    if(size % BLOCK_SIZE > 0)
     {
         size -= (size % BLOCK_SIZE);
         size += BLOCK_SIZE;
@@ -88,9 +72,9 @@ void Heap::Free(void *address)
 
 void Heap::ExtendHeap(uint64_t size)
 {
-    if((size & (0x1000 - 1)) > 0) // size % 0x1000
+    if((size & (0xFFF)) > 0) // size % 0x1000
     {
-        size -= (size & (0x1000 - 1));
+        size -= (size & 0xFFF);
         size += 0x1000;
     }
 
@@ -99,15 +83,7 @@ void Heap::ExtendHeap(uint64_t size)
     for(uint64_t i = 0; i < pageCount; i++)
     {
         void *heapExtensionPhysical = FrameAllocator.RequestPageFrame();
-        #ifdef LOGGING
-        logf("ExtendHeap(void*, uint64_t) : Page Frame at 0x%x allocated for heap extension.\n", heapExtensionPhysical);
-        #endif
-
         PagingManager.MapPage(HeapEnd, heapExtensionPhysical, true);
-        #ifdef LOGGING
-        logf("ExtendHeap(void*, uint64_t) : 0x%x mapped to phys 0x%x for heap extension.\n", HeapEnd, heapExtensionPhysical);
-        #endif
-
         HeapEnd = (void*) ((uint64_t) HeapEnd + 0x1000);
     }
 
@@ -124,7 +100,6 @@ void Heap::ExtendHeap(uint64_t size)
 
 HeapSegmentHeader *HeapSegmentHeader::Split(Heap *heap, uint64_t firstPartSize)
 {
-    //if(firstPartSize < BLOCK_SIZE) return NULL;
     int64_t splitSegmentSize = Size - firstPartSize - sizeof(HeapSegmentHeader);
     if(splitSegmentSize < BLOCK_SIZE) return NULL;
 

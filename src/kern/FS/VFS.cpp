@@ -106,7 +106,6 @@ FILE *VFSOpenFile(const char *fileName, const char *mode)
             file.Flags |= flags;
 
             FILE *dynFile = new FILE;
-            //memcpy(&file, dynFile, sizeof(FILE));
             *dynFile = file;
 
             dynFile->Handle = OpenedFiles.Add(dynFile);
@@ -203,16 +202,6 @@ int VFSFlushFile(FILE *file)
     uint8_t index = file->Device - 'A';
     return FILE_SYSTEMS[index]->Flush(FILE_SYSTEMS[index]->FS, file);
 }
-
-/* char VFSGetChar(FILE *file)
-{
-    if(!file) return 0; // No file.
-    if((file->Flags & FS_VALID) == 0) return 0; // File not open.
-    if((file->Flags & FS_FILE) == 0) return 0; // Not a file.
-    
-    uint8_t index = file->Device - 'A';
-    return FILE_SYSTEMS[index]->GetChar(FILE_SYSTEMS[index]->FS, file);
-} */
 
 void VFSRegisterFileSystem(FileSystem *fileSystem, const uint8_t deviceID)
 {

@@ -1,5 +1,3 @@
-#include <Display/Renderer.hpp>
-#include <Logging.hpp>
 #include <Memory/PageFrameAllocator.hpp>
 
 // The page frame allocator.
@@ -28,9 +26,6 @@ void PageFrameAllocator::Initialize(MemoryMap memoryMap)
 
     uint64_t bitmapBufferSize = (memoryMap.MemorySizeKB + 31) / (4 * 8);
     PageFrameBitmap.Initialize((void*) largestFreeMemoryChunk, bitmapBufferSize, true); // Initialise all page frames as used initially.
-    #ifdef LOGGING
-    logf("Page Frame Allocator Bitmap stored at 0x%x, size = 0x%x bytes\n", largestFreeMemoryChunk, bitmapBufferSize);
-    #endif
 
     // Mark the page frames currently free according to the memory map as free.
     FreeMemory = ReservedMemory = UsedMemory = 0;
@@ -78,11 +73,7 @@ void *PageFrameAllocator::RequestPageFrame(void)
         FirstFreePageFrame++;
 
     if(FirstFreePageFrame >= PageFrameBitmap.BufferSize - 1) // Consider at most last 8 page frames of memory as non existent for now
-    {
-        // Replace with out of memory exception.
-        errorf("PAGE FRAME ALLOCATOR :  OUT OF MEMORY\n");
-        while(true);
-    }
+        return nullptr;
 
     uint64_t index = FirstFreePageFrame << 3; // FirstFreePageFrame * 8
     while(PageFrameBitmap.Get(index) == true) index++;
@@ -96,12 +87,8 @@ void *PageFrameAllocator::RequestPageFrame(void)
 void PageFrameAllocator::FreePageFrame(void *physicalAddress)
 {
     uint64_t index = (uint64_t) physicalAddress / 4096;
-    if(PageFrameBitmap.Get(index) == false)
-    {
-        // Replace with page frame freed twice exception.
-        errorf("PAGE FRAME ALLOCATOR :  PAGE FRAME AT PHYSICAL ADDRESS 0x%x FREED TWICE.\n", physicalAddress);
-        while(true);
-    }
+    if(PageFrameBitmap.Get(index) == false) 
+        return;
 
     PageFrameBitmap.Clear(index);
     UsedMemory -= 4096;
@@ -110,22 +97,13 @@ void PageFrameAllocator::FreePageFrame(void *physicalAddress)
     if(FirstFreePageFrame > index / 8) FirstFreePageFrame = index / 8;
 }
 
-void *PageFrameAllocator::RequestPageFrameAboveAddress(const uint64_t address)
-{
-    return nullptr;
-}
-
 void *PageFrameAllocator::RequestPageFrames(const uint64_t frames)
 {
     while(FirstFreePageFrame < PageFrameBitmap.BufferSize - 1 && PageFrameBitmap.Buffer[FirstFreePageFrame] == 0xFF) 
         FirstFreePageFrame++;
 
     if(FirstFreePageFrame >= PageFrameBitmap.BufferSize - 1) // Consider at most last 8 page frames of memory as non existent for now
-    {
-        // Replace with out of memory exception.
-        errorf("PAGE FRAME ALLOCATOR :  OUT OF MEMORY\n");
-        while(true);
-    }
+        return nullptr;
 
     uint64_t index = FirstFreePageFrame << 3; // FirstFreePageFrame * 8
     uint64_t used = 0;
@@ -147,9 +125,4 @@ void *PageFrameAllocator::RequestPageFrames(const uint64_t frames)
     FreeMemory -= 4096 * frames;
 
     return (void*) (index * 4096);
-}
-
-void *PageFrameAllocator::RequestPageFramesAboveAddress(const uint64_t address, const uint64_t frames)
-{
-    return nullptr;
 }
