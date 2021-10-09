@@ -80,8 +80,8 @@ Two files can be edited to change the configuration of the OS:
 
 The above steps can be followed for any number of user programs.
 
-### Compiling the OS (only required if modified):
-- Run the file `build.sh` after making any required modifications.
+### Compiling the OS:
+- Execute the file `build.sh`.
 
 ### Running the OS:
 NOTE: Make sure to compile first.
