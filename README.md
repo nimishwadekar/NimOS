@@ -53,12 +53,10 @@ Two files can be edited to change the configuration of the OS:
 
 ## Usage
 ### Requirements:
-1. For running the OS:
-   - `qemu-system-x86_64` : The virtual machine to run the OS on.
-2. For modifying the OS / adding user programs:
-   - A utility that runs Makefiles.
-   - `gcc` : To compile and link C and C++ code.
-   - `nasm` : To assemble x86 assembly code.
+- `qemu-system-x86_64` : The virtual machine to run the OS on.
+- A utility that runs Makefiles.
+- `gcc` : To compile and link C and C++ code.
+- `nasm` : To assemble x86 assembly code.
 
 ### Adding a user program:
 1. Go to the following section of the Makefile:
