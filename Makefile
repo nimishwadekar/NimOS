@@ -143,6 +143,3 @@ linkShell:
 linkUser0:
 	@echo !==== LINKING USER
 	$(LD) $(LDFLAGS) $(USR0_OBJ) $(LIBC_OBJ) -o $(USR0_ELF)
-
-info:
-	$(info $$LIBC_OBJ is [${LIBC_OBJ}])
