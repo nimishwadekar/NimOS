@@ -80,6 +80,8 @@ Two files can be edited to change the configuration of the OS:
 8. Open `build.sh`.
 9. Add the line `make user1` anywhere between the lines `make shell` and `make`, and save the file. 
 
+The above steps can be followed for any number of user programs.
+
 ### Compiling the OS (only required if modified):
 - Run the file `build.sh` after making any required modifications.
 
