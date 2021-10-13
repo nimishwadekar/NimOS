@@ -3,4 +3,3 @@ bin/TokyoOS.img
 disk/Volume1/usr/*.elf
 disk/Volume1/program
 util.py
-log/*

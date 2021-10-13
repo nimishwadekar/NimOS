@@ -1,0 +1,67 @@
+[2J[01;01H[=3h[2J[01;01H[0m[35m[40m[0m[37m[40mBdsDxe: failed to load Boot0001 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0): Not Found
+BdsDxe: loading Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+Booting OS...
+ * Locate initrd in Option ROMs
+ * Locate initrd in \BOOTBOOT\INITRD
+ * Gzip compressed initrd @232B000 26696 bytes
+ * Initrd loaded @22E9000 90112 bytes
+ * Environment @2571000 46 bytes
+ * Screen 1024 x 768, scanline 4096, fb @C0000000 3145728 bytes, type 1 ARGB
+ * System tables
+ * System time 2021-10-13 19:34:13 GMT+0:00 
+ * cpio sys/core
+ * Parsing ELF64 @22E914A
+ * fb          @FFFFFFFFFC000000
+ * bootboot    @FFFFFFFFFEFFE000
+ * environment @FFFFFFFFFEFFF000
+ * Entry point @FFFFFFFFFF00172B, text @22D3000 89760 bytes
+ * SMP numcores 1
+ * Pagetables PML4 @22AD000
+ * Memory Map @232E000 5808 bytes try #1
+Serial port COM1 initialized for logging.
+
+******************************************************************************************
+
+Intel Corp. / Express DRAM Controller / Bridge Device / Host Bridge / 0
+QEMU / Virtual Video Controller / Display Controller / VGA Controller / VGA Controller
+Intel Corp. / 10D3 / Network Controller / 10D3 / 10D3
+Intel Corp. / LPC Interface Controller / Bridge Device / ISA Bridge / 0
+Intel Corp. / 6 port SATA Controller [AHCI mode] / Mass Storage Controller / Serial ATA / AHCI 1.0
+AHCI Driver initialised.
+Port 0 IDENTIFY:
+Hard disk: 0x40
+LBA48 enable: 1
+LBA28 sectors: 98560
+LBA48 sectors: 98560
+Intel Corp. / SMBus Controller / Serial Bus Controller / SMBus / 0
+
+Disk Partition Count = 2
+Partition 0:
+LBA 0x80 - LBA 0x807F
+Attributes = 0x0
+EFI System Partition
+Name: EFI System Partition
+
+Partition 1:
+LBA 0x8080 - LBA 0x1807F
+Attributes = 0x0
+Ext2 Partition
+Name: Volume1
+
+
+EXT2 File System:
+Signature = 0xEF53
+Version = 1.0
+blocks = 8192
+inodes = 8192
+block size = 4096
+fragment size = 4096
+group size = 32768 blocks, 8192 inodes
+
+Kernel initialized.
+
+
+
+
+Initializing kernel ....
