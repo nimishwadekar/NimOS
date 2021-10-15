@@ -15,8 +15,8 @@ void printLogo(void)
     res_width = res.width;
     res_height = res.height;
 
-    #define LOGO_LEN 7
-    char logo[] = "TokyoOS";
+    #define LOGO_LEN 5
+    char logo[] = "NimOS";
 
     drawline(0, FONT_HEIGHT * 2, res_width, FONT_HEIGHT * 2, foreground);
     crsr_pos_t pos = getcrsrpos();

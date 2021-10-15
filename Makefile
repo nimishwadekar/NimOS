@@ -1,4 +1,4 @@
-OS_NAME = TokyoOS
+OS_NAME = NimOS
 
 OVMF = bin/OVMF.fd
 CC = gcc
@@ -80,7 +80,7 @@ linkKern:
 	readelf -hls $(KERNEL_ELF) > $(LOGDIR)/kernel.x86_64.txt
 	
 run:
-	qemu-system-x86_64 -machine q35 -cpu qemu64 -bios bin/OVMF.fd -m 64 -drive file=bin/TokyoOS.img,format=raw -rtc clock=host -serial file:log/serial.log
+	qemu-system-x86_64 -machine q35 -cpu qemu64 -bios bin/OVMF.fd -m 64 -drive file=bin/NimOS.img,format=raw -rtc clock=host -serial file:log/serial.log
 
 clean:
 	rm -rf lib/*
