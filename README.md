@@ -16,7 +16,7 @@ The OS also has a few drivers built-in, namely drivers for:
 - ext2 File System (Read-only)
 
 ## The Shell
-![Shell](https://i.imgur.com/NrG8dOE.png)
+![Shell](https://i.imgur.com/H73debO.png)
 
 The shell is the interface provided by the OS for the user to perform actions using the OS. Supported commands are:
 - `cls` : Clears the screen.
