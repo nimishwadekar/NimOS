@@ -1,8 +1,8 @@
-# TokyoOS
-TokyoOS is an operating system implementation written from scratch. It has been designed to run on UEFI systems running on 64-bit Intel x86 processors. It follows the *bootboot* protocol for bootloading.
+# NimOS
+NimOS is an operating system implementation written from scratch. It has been designed to run on UEFI systems running on 64-bit Intel x86 processors. It follows the *bootboot* protocol for bootloading.
 
 ## Features
-TokyoOS is a monotasking OS, complete with user space, system calls to perform privileged actions, a limited C library, and a shell for user interaction. The capabilities of the OS also include a virtual file system, loading ELF64 executable files into memory, and inter-process communication using shared memory.
+NimOS is a monotasking OS, complete with user space, system calls to perform privileged actions, a limited C library, and a shell for user interaction. The capabilities of the OS also include a virtual file system, loading ELF64 executable files into memory, and inter-process communication using shared memory.
 
 The OS also has a few drivers built-in, namely drivers for:
 - Graphics Mode Display
