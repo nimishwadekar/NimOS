@@ -8,7 +8,7 @@ ELF Header:
   Type:                              EXEC (Executable file)
   Machine:                           Advanced Micro Devices X86-64
   Version:                           0x1
-  Entry point address:               0xffffffffff00172b
+  Entry point address:               0xffffffffff00176a
   Start of program headers:          64 (bytes into file)
   Start of section headers:          89040 (bytes into file)
   Flags:                             0x0

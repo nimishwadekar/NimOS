@@ -57,6 +57,7 @@ JumpToUserMode:
 ; Parameters: Stack top, Heap base, Program entry.
 global JumpToUserAddress_Syscall
 JumpToUserAddress_Syscall:
+    cli
     mov rcx, rdx
     mov r11, 0x202
 

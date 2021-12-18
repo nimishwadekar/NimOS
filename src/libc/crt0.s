@@ -3,6 +3,8 @@
 section .text
 global _start
 
+DEBUG: db 'crt0'
+
 extern _heap_initialize
 extern main
 

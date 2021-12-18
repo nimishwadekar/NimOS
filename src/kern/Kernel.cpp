@@ -33,11 +33,11 @@ void KernelStart(void)
 
     printf("\n\n\n");
     printf("Initializing kernel .");
-    for(int i = 0; i < 3; i++)
+    /* for(int i = 0; i < 3; i++)
     {
         PIT::Sleep(400);
         printf(".");
-    }
+    } */
 
     MainRenderer.SetBackgroundColour(USER_COLOUR_BACK);
     MainRenderer.SetForegroundColour(USER_COLOUR_FRONT);

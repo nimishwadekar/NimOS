@@ -347,6 +347,7 @@ _intr_ static void IntHandler0x5(InterruptFrame *frame)
 _intr_ static void IntHandler0x6(InterruptFrame *frame)
 {
     printf("%s\n", InterruptMessages[0x6]);
+    printf("CS : RIP = 0x%x : 0x%x\n", frame->CS, frame->RIP);
     ProcessException();
 }
 
